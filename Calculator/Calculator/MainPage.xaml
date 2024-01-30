@@ -22,7 +22,7 @@
             </Grid.RowDefinitions>
             <TextBlock Name="EquationTBlock" FontSize="24" HorizontalAlignment="Right" VerticalAlignment="Bottom" Foreground="#FF7B7B7B" Text=""  ></TextBlock>
 			<!-- chatGPT gav mig denna viewbox för att wrappa TextBlocket i-->
-			<Viewbox Grid.Row="1" StretchDirection="DownOnly">
+			<Viewbox Grid.Row="1" StretchDirection="DownOnly" HorizontalAlignment="Right">
 				<TextBlock Name="NumberTBlock" Text="0" FontSize="64" FontWeight="SemiBold" HorizontalAlignment="Right" VerticalAlignment="Bottom"></TextBlock>
 			</Viewbox>
         </Grid>

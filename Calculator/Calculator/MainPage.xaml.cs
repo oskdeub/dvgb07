@@ -15,7 +15,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// Oskar Deubler, oskdeub100 @ Karlstads Universitet
+// Oskar Deubler, oskadeub100 @ Karlstads Universitet
 
 namespace Calculator
 {

@@ -15,7 +15,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
+// Oskar Deubler, oskdeub100 @ Karlstads Universitet
 
 namespace Calculator
 {
@@ -191,10 +191,6 @@ namespace Calculator
 			ClearCalculator();
 			NumberTBlock_set(0);
 			EquationTBlock.Text = "";
-		}
-		private void CalculatorNegativeButton_Click(object sender, RoutedEventArgs e)
-		{
-			//Inte ett krav i laborationen, så inget händer
 		}
 
 		/// <summary>

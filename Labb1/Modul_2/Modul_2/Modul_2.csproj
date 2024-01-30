@@ -7,8 +7,8 @@
     <ProjectGuid>{9B798E95-4731-4EE8-A041-EE8EAAC64055}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Modul_2</RootNamespace>
-    <AssemblyName>Modul_2</AssemblyName>
+    <RootNamespace>LotteryApp</RootNamespace>
+    <AssemblyName>LotteryApp</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.22621.0</TargetPlatformVersion>

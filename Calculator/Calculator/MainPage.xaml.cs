@@ -136,6 +136,11 @@ namespace Calculator
 		/// <param name="e"></param>
 		private void CalculatorEqualsButton_Click(object sender, RoutedEventArgs e)
 		{
+			if(calculatorState == CalcState.cleared)
+			{
+				return;
+			}
+
 			int result;
 			int curr_num;
 			if (!int.TryParse(NumberTBlock.Text, out curr_num))

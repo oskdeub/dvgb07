@@ -1,0 +1,70 @@
+﻿<Page
+    x:Class="Calculator.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Calculator"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"></RowDefinition>
+            <RowDefinition Height="4*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Grid Margin="12" HorizontalAlignment="Right">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="5*"></RowDefinition>
+                <RowDefinition Height="4*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBlock Name="EquationTBlock" FontSize="24" HorizontalAlignment="Right" VerticalAlignment="Bottom" Foreground="#FF7B7B7B" Text=""  ></TextBlock>
+            <TextBlock Name="NumberTBlock" Grid.Row="1" Text="0" FontSize="64" FontWeight="SemiBold" HorizontalAlignment="Right" VerticalAlignment="Bottom"></TextBlock>
+        </Grid>
+        
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Row="0" Grid.Column="0" Click="CalculatorNumberButton_Click" Style="{StaticResource CalculatorButtonStyle}">1</Button>
+            <Button Grid.Row="0" Grid.Column="1" Click="CalculatorNumberButton_Click" Style="{StaticResource CalculatorButtonStyle}">2</Button>
+            <Button Grid.Row="0" Grid.Column="2" Click="CalculatorNumberButton_Click" Style="{StaticResource CalculatorButtonStyle}">3</Button>
+			<Button Grid.Row="0" Grid.Column="3" Click="CalculatorBackspaceButton_Click" Style="{StaticResource CalculatorButtonStyle}">
+				<SymbolIcon Symbol="Back"/>
+			</Button>
+			
+			<Button Grid.Row="1" Grid.Column="0" Click="CalculatorNumberButton_Click" Style="{StaticResource CalculatorButtonStyle}">4</Button>
+            <Button Grid.Row="1" Grid.Column="1" Click="CalculatorNumberButton_Click" Style="{StaticResource CalculatorButtonStyle}">5</Button>
+            <Button Grid.Row="1" Grid.Column="2" Click="CalculatorNumberButton_Click" Style="{StaticResource CalculatorButtonStyle}">6</Button>
+            <Button Grid.Row="1" Grid.Column="3" Name="OperandBtnAdd" Click="CalculatorOperandButton_Click" Style="{StaticResource CalculatorButtonStyle}">+</Button>
+
+            <Button Grid.Row="2" Grid.Column="0" Click="CalculatorNumberButton_Click" Style="{StaticResource CalculatorButtonStyle}">7</Button>
+            <Button Grid.Row="2" Grid.Column="1" Click="CalculatorNumberButton_Click" Style="{StaticResource CalculatorButtonStyle}" >8</Button>
+            <Button Grid.Row="2" Grid.Column="2" Click="CalculatorNumberButton_Click" Style="{StaticResource CalculatorButtonStyle}">9</Button>
+            <Button Grid.Row="2" Grid.Column="3" Name="OperandBtnSub" Click="CalculatorOperandButton_Click" Style="{StaticResource CalculatorButtonStyle}">-</Button>
+
+            <Button Grid.Row="3" Grid.Column="0" Name="ToggleNegativeBtn" IsEnabled="False" Click="CalculatorNegativeButton_Click" Style="{StaticResource CalculatorButtonStyle}">(-)</Button>
+            <Button Grid.Row="3" Grid.Column="1" Click="CalculatorNumberButton_Click" Style="{StaticResource CalculatorButtonStyle}">0</Button>
+            <Button Grid.Row="3" Grid.Column="2" Name="OperandBtnDiv" Click="CalculatorOperandButton_Click" Style="{StaticResource CalculatorButtonStyle}">/</Button>
+			<Button Grid.Row="3" Grid.Column="3" Name="OperandBtnMult" Click="CalculatorOperandButton_Click" Style="{StaticResource CalculatorButtonStyle}">x</Button>
+
+            <Button Grid.Row="4" Grid.Column="0" Click="CalculatorClearButton_Click" Style="{StaticResource CalculatorButtonStyle}">C</Button>
+            <Button Grid.Row="4" Grid.ColumnSpan="3" Grid.Column="1" Click="CalculatorEqualsButton_Click" Style="{StaticResource CalculatorButtonStyle}">=</Button>
+            
+        </Grid>
+     </Grid>
+
+</Page>

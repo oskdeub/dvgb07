@@ -1,0 +1,39 @@
+﻿<Page
+    x:Class="texteditor.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:texteditor"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Margin="12">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="1*"></RowDefinition>
+			<RowDefinition Height="11*"></RowDefinition>
+		</Grid.RowDefinitions>
+		
+		<Grid Grid.Row="0" Margin="10">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="40"></ColumnDefinition>
+				<ColumnDefinition Width="40"></ColumnDefinition>
+				<ColumnDefinition Width="40"></ColumnDefinition>
+			</Grid.ColumnDefinitions>
+
+			<Button Grid.Row="0" Grid.Column="0">:)</Button>
+			<Button Grid.Row="0" Grid.Column="1">X</Button>
+			<Button Grid.Row="0" Grid.Column="2">Hi</Button>
+		</Grid>
+
+		<Grid Grid.Row="1">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="30"></ColumnDefinition>
+				<ColumnDefinition ></ColumnDefinition>
+			</Grid.ColumnDefinitions>
+
+			<TextBox Grid.Row="1" Grid.Column="1" AcceptsReturn="True" ></TextBox>
+		</Grid>
+		
+	</Grid>
+</Page>

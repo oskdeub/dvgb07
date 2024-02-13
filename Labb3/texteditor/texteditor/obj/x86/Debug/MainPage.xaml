@@ -14,16 +14,21 @@
 			<RowDefinition Height="11*"></RowDefinition>
 		</Grid.RowDefinitions>
 		
-		<Grid Grid.Row="0" Margin="10">
+		<Grid Grid.Row="0" Margin="30, 0, 0, 0">
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="40"></ColumnDefinition>
-				<ColumnDefinition Width="40"></ColumnDefinition>
-				<ColumnDefinition Width="40"></ColumnDefinition>
+				<ColumnDefinition Width="Auto"></ColumnDefinition>
+				<ColumnDefinition Width="Auto"></ColumnDefinition>
+				<ColumnDefinition Width="Auto"></ColumnDefinition>
+				<ColumnDefinition Width="Auto"></ColumnDefinition>
+				<ColumnDefinition Width="Auto"></ColumnDefinition>
+
 			</Grid.ColumnDefinitions>
 
-			<Button Grid.Row="0" Grid.Column="0">:)</Button>
-			<Button Grid.Row="0" Grid.Column="1">X</Button>
-			<Button Grid.Row="0" Grid.Column="2">Hi</Button>
+			<Button x:ConnectionId='3' Grid.Row="0" Grid.Column="0" Margin="10"                          >Rensa</Button>
+			<Button x:ConnectionId='4' Grid.Row="0" Grid.Column="1" Margin="10"                         >Öppna</Button>
+			<Button x:ConnectionId='5' Grid.Row="0" Grid.Column="2" Margin="10"                         >Spara</Button>
+			<Button x:ConnectionId='6' Grid.Row="0" Grid.Column="3" Margin="10"                           >Spara som...</Button>
+			<Button x:ConnectionId='7' Grid.Row="0" Grid.Column="4" Margin="10"                          >Avsluta</Button>
 		</Grid>
 
 		<Grid Grid.Row="1">
@@ -32,7 +37,7 @@
 				<ColumnDefinition ></ColumnDefinition>
 			</Grid.ColumnDefinitions>
 
-			<TextBox Grid.Row="1" Grid.Column="1" AcceptsReturn="True" ></TextBox>
+			<TextBox x:ConnectionId='2' Grid.Row="1" Grid.Column="1" AcceptsReturn="True" Name="MainTextBox"                                      ></TextBox>
 		</Grid>
 		
 	</Grid>

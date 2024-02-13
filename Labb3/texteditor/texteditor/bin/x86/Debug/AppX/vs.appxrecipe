@@ -30,13 +30,13 @@
     <AppXManifest Include="D:\UNI\DVGB07\Labb3\texteditor\texteditor\bin\x86\Debug\Core\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2024-02-13T10:18:16.373</Modified>
+      <Modified>2024-02-13T11:43:34.599</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
     <AppxPackagedFile Include="D:\UNI\DVGB07\Labb3\texteditor\texteditor\bin\x86\Debug\texteditor.exe">
       <PackagePath>entrypoint\texteditor.exe</PackagePath>
-      <Modified>2024-02-13T10:18:15.800</Modified>
+      <Modified>2024-02-13T11:43:33.977</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Microsoft SDKs\UWPNuGetPackages\runtime.win10-x86.microsoft.netcore.universalwindowsplatform\6.2.14\runtimes\win10-x86\lib\uap10.0.15138\System.Runtime.dll">
       <PackagePath>System.Runtime.dll</PackagePath>
@@ -90,11 +90,11 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\UNI\DVGB07\Labb3\texteditor\texteditor\bin\x86\Debug\App.xbf">
       <PackagePath>App.xbf</PackagePath>
-      <Modified>2024-02-13T10:18:15.747</Modified>
+      <Modified>2024-02-13T11:43:33.920</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\UNI\DVGB07\Labb3\texteditor\texteditor\bin\x86\Debug\MainPage.xbf">
       <PackagePath>MainPage.xbf</PackagePath>
-      <Modified>2024-02-13T10:18:15.747</Modified>
+      <Modified>2024-02-13T11:43:33.920</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Windows Kits\10\UnionMetadata\10.0.22621.0\Windows.winmd">
       <PackagePath>WinMetadata\Windows.winmd</PackagePath>
@@ -102,11 +102,11 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\UNI\DVGB07\Labb3\texteditor\texteditor\bin\x86\Debug\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2024-02-06T20:29:53.689</Modified>
+      <Modified>2024-02-13T11:24:25.022</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\UNI\DVGB07\Labb3\texteditor\texteditor\bin\x86\Debug\Core\texteditor.exe">
       <PackagePath>texteditor.exe</PackagePath>
-      <Modified>2024-02-13T10:18:16.368</Modified>
+      <Modified>2024-02-13T11:43:34.594</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>

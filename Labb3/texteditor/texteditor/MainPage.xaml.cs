@@ -26,13 +26,11 @@ namespace texteditor
     /// </summary>
     public sealed partial class MainPage : Page
     {
-		Windows.Storage.StorageFile savefile;
-		Boolean unsaved_changes;
-		Boolean fileExists;
-		String filename;
+		private Windows.Storage.StorageFile savefile;
+		private Boolean unsaved_changes;
+		private Boolean fileExists;
 		public MainPage()
         {
-			filename = "fil";
 			unsaved_changes = false;
 			fileExists = false;
             this.InitializeComponent();
@@ -40,11 +38,21 @@ namespace texteditor
 
 		private void ClearButton_Click(object sender, RoutedEventArgs e)
 		{
-			if (unsaved_changes)
-			{
+			Clear_Dialog($"All text försvinner om du rensar.");
+		}
 
-			}
-            MainTextBox.Text = string.Empty;
+		private async void Clear_Dialog(string msg)
+		{
+			MessageDialog sure_Dialog = new MessageDialog(msg);
+			sure_Dialog.Commands.Add(new UICommand("Rensa", x =>
+			{
+				MainTextBox.Text = string.Empty;
+			}));
+			sure_Dialog.Commands.Add(new UICommand("Avbryt", x =>
+			{
+				return;
+			}));
+			await sure_Dialog.ShowAsync();
 		}
 
 		private void SaveButton_Click(object sender, RoutedEventArgs e)
@@ -57,9 +65,6 @@ namespace texteditor
 				Save();
 			}
 		}
-
-		
-		
 		private void OpenButton_Click(object sender, RoutedEventArgs e)
 		{
 			openFile();
@@ -118,7 +123,7 @@ namespace texteditor
 				SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary
 			};
 			fileSavePicker.FileTypeChoices.Add("Plain Text", new List<string>() {".txt"});
-			fileSavePicker.SuggestedFileName = filename;
+			fileSavePicker.SuggestedFileName = "dokument";
 
 			savefile = await fileSavePicker.PickSaveFileAsync();
 			if (savefile != null)

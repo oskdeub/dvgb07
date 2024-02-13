@@ -57,17 +57,46 @@ namespace texteditor
 
 		private void SaveButton_Click(object sender, RoutedEventArgs e)
 		{
+			SaveFile();
+		}
+		private void OpenButton_Click(object sender, RoutedEventArgs e)
+		{
+				if (unsaved_changes)
+				{
+					DiscardChanges_Dialog("Du har osparade ändringar.");
+				} else
+				{
+					openFile();
+				}
+		}
+		private void SaveFile()
+		{
 			if (!fileExists)
 			{
 				SaveAs();
-			} else
+			}
+			else
 			{
 				Save();
 			}
 		}
-		private void OpenButton_Click(object sender, RoutedEventArgs e)
+		private async void DiscardChanges_Dialog(string msg)
 		{
-			openFile();
+			MessageDialog discard_Dialog = new MessageDialog(msg);
+			discard_Dialog.Commands.Add(new UICommand("Spara och Öppna", x =>
+			{
+				SaveFile();
+				openFile();
+			}));
+			discard_Dialog.Commands.Add(new UICommand("Öppna utan att spara", x =>
+			{
+				openFile();
+			}));
+			discard_Dialog.Commands.Add(new UICommand("Avbryt", x =>
+			{
+				return;
+			}));
+			await discard_Dialog.ShowAsync();
 		}
 
 		private void SaveAsButton_Click(object sender, RoutedEventArgs e)
@@ -139,8 +168,8 @@ namespace texteditor
 			if (fileExists && !unsaved_changes)
 			{
 				changeTitle("*" + savefile.Name);
-				unsaved_changes = true;
 			}
+			unsaved_changes = true;
 		}
 		private void changeTitle(String title)
 		{

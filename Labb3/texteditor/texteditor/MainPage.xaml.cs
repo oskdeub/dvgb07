@@ -248,6 +248,27 @@ namespace texteditor
 		}
 		private void MainTextBox_TextChanged(object sender, TextChangedEventArgs e)
 		{
+			AddAsterixToTitle();
+			updateCounters(MainTextBox.Text);
+		}
+		private void updateCounters(string text) {
+			update_CharWithSpaceCounter(text);
+			update_CharNoSpaceCounter(text);
+		}
+		private void update_CharWithSpaceCounter(string text)
+		{
+			int textLength = text.Length;
+			CharWithSpaceCounter.Text = textLength.ToString();
+		}
+		private void update_CharNoSpaceCounter(string text)
+		{
+			text = text.Replace(" ", "").Replace("\n","").Replace("\r","");
+			int textLength = text.Length;
+			CharNoSpaceCounter.Text = textLength.ToString();
+		}
+
+		private void AddAsterixToTitle()
+		{
 			if (fileExists && !unsaved_changes)
 			{
 				changeTitle("*" + savefile.Name);

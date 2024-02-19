@@ -36,31 +36,39 @@
 		</Grid>
 		
 		<!-- Textruta -->
-		<Grid Grid.Row="1">
+		<Grid Grid.Row="1" Margin="30, 0, 30, 0">
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="30"></ColumnDefinition>
 				<ColumnDefinition ></ColumnDefinition>
 			</Grid.ColumnDefinitions>
 
 			
-			<TextBox Grid.Row="1" Grid.Column="1" AcceptsReturn="True" Name="MainTextBox" TextChanged="MainTextBox_TextChanged" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Auto"></TextBox>
+			<TextBox Grid.Row="0" Grid.Column="1" AcceptsReturn="True" Name="MainTextBox" TextChanged="MainTextBox_TextChanged" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Auto"></TextBox>
 		</Grid>
 
 		<!-- Informationsrad -->
-		<Grid Grid.Row="2" Margin="30, 0, 0, 0">
+		<Viewbox Grid.Row="2" HorizontalAlignment="Left" Width="1256" Stretch="Fill" StretchDirection="DownOnly">
+		<Grid Grid.Row="2" Margin="30, 0, 30, 0">
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition></ColumnDefinition>
-				<ColumnDefinition></ColumnDefinition>
-				<ColumnDefinition></ColumnDefinition>
-				<ColumnDefinition></ColumnDefinition>
+				<ColumnDefinition Width="Auto"></ColumnDefinition>
+				<ColumnDefinition Width="75"></ColumnDefinition>
+				<ColumnDefinition Width="Auto"></ColumnDefinition>
+				<ColumnDefinition Width="75"></ColumnDefinition>
+				<ColumnDefinition Width="Auto"></ColumnDefinition>
+				<ColumnDefinition Width="75"></ColumnDefinition>
+				<ColumnDefinition Width="Auto"></ColumnDefinition>
+				<ColumnDefinition Width="75"></ColumnDefinition>
 			</Grid.ColumnDefinitions>
 
-			<TextBlock Grid.Row="2" Grid.Column="0" >Tecken med mellanslag:</TextBlock>
-			<TextBlock Grid.Row="2" Grid.Column="1" >Tecken utan mellanslag:</TextBlock>
-			<TextBlock Grid.Row="2" Grid.Column="2" >Antal ord:</TextBlock>
-			<TextBlock Grid.Row="2" Grid.Column="3" >Antal rader:</TextBlock>
+			<TextBlock Grid.Row="2" Grid.Column="0" Margin="5, 0, 5, 0">Tecken med mellanslag:</TextBlock>
+			<TextBlock Grid.Row="2" Grid.Column="1" Name="CharWithSpaceCounter" Margin="5, 0, 5, 0">200</TextBlock>
+			<TextBlock Grid.Row="2" Grid.Column="2" Margin="5, 0, 5, 0">Tecken utan mellanslag:</TextBlock>
+			<TextBlock Grid.Row="2" Grid.Column="3" Name="CharNoSpaceCounter" Margin="5, 0, 5, 0">69</TextBlock>
+			<TextBlock Grid.Row="2" Grid.Column="4" Margin="5, 0, 5, 0">Antal ord:</TextBlock>
+			<TextBlock Grid.Row="2" Grid.Column="5" Name="WordCounter" Margin="5, 0, 5, 0">9999999</TextBlock>
+			<TextBlock Grid.Row="2" Grid.Column="6" Margin="5, 0, 5, 0">Antal rader:</TextBlock>
+			<TextBlock Grid.Row="2" Grid.Column="7" Name="RowCounter" Margin="5, 0, 5, 0">1</TextBlock>
 
 		</Grid>
-		
+		</Viewbox>
 	</Grid>
 </Page>

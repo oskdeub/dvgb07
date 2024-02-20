@@ -20,7 +20,7 @@ using System.Reflection.Metadata;
 using System.ComponentModel;
 using Windows.ApplicationModel;
 using Windows.UI.Core.Preview;
-
+// Oskar Deubler
 namespace texteditor
 {
     /// <summary>
@@ -37,6 +37,7 @@ namespace texteditor
             this.InitializeComponent();
 			NewSheet();
 			// från https://stackoverflow.com/questions/62910280/is-it-possible-to-pop-up-my-dialog-box-when-click-the-close-icon-on-the-upper-ri
+			// Adds the Exit_Dialog when pressing 'X'
 			Windows.UI.Core.Preview.SystemNavigationManagerPreview.GetForCurrentView().CloseRequested +=
 				async (sender, args) =>
 				{
@@ -134,7 +135,7 @@ namespace texteditor
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void MainTextBox_TextChanged(object sender, TextChangedEventArgs e)
+		private void MainTextBox_TextChanged(object sender, TextChangedEventArgs e)													//Oskar Deubler
 		{
 			AddAsterixToTitle();
 			updateCounters(MainTextBox.Text);
@@ -240,7 +241,7 @@ namespace texteditor
 		/// </summary>
 		/// <param name="msg">Dialog message</param>
 		private async void Clear_Dialog(string msg)
-		{
+		{																																																																																			//Oskar Deubler
 			MessageDialog clearDialog = new MessageDialog(msg);
 			clearDialog.Title = "Rensa text?";
 			clearDialog.Commands.Add(new UICommand("Rensa", x =>

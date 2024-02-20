@@ -60,13 +60,13 @@
 			</Grid.ColumnDefinitions>
 
 			<TextBlock Grid.Row="2" Grid.Column="0" Margin="5, 0, 5, 0">Tecken med mellanslag:</TextBlock>
-			<TextBlock Grid.Row="2" Grid.Column="1" Name="CharWithSpaceCounter" Margin="5, 0, 5, 0">200</TextBlock>
+			<TextBlock Grid.Row="2" Grid.Column="1" Name="CharWithSpaceCounter" Margin="5, 0, 5, 0">0</TextBlock>
 			<TextBlock Grid.Row="2" Grid.Column="2" Margin="5, 0, 5, 0">Tecken utan mellanslag:</TextBlock>
-			<TextBlock Grid.Row="2" Grid.Column="3" Name="CharNoSpaceCounter" Margin="5, 0, 5, 0">69</TextBlock>
+			<TextBlock Grid.Row="2" Grid.Column="3" Name="CharNoSpaceCounter" Margin="5, 0, 5, 0">0</TextBlock>
 			<TextBlock Grid.Row="2" Grid.Column="4" Margin="5, 0, 5, 0">Antal ord:</TextBlock>
-			<TextBlock Grid.Row="2" Grid.Column="5" Name="WordCounter" Margin="5, 0, 5, 0">9999999</TextBlock>
+			<TextBlock Grid.Row="2" Grid.Column="5" Name="WordCounter" Margin="5, 0, 5, 0">0</TextBlock>
 			<TextBlock Grid.Row="2" Grid.Column="6" Margin="5, 0, 5, 0">Antal rader:</TextBlock>
-			<TextBlock Grid.Row="2" Grid.Column="7" Name="RowCounter" Margin="5, 0, 5, 0">1</TextBlock>
+			<TextBlock Grid.Row="2" Grid.Column="7" Name="RowCounter" Margin="5, 0, 5, 0">0</TextBlock>
 
 		</Grid>
 		</Viewbox>

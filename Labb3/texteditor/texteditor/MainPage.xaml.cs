@@ -232,6 +232,7 @@ namespace texteditor
 				MainTextBox.Text = await Windows.Storage.FileIO.ReadTextAsync(savefile);
 				changeTitle(savefile.Name);
 				toggleTextChange(true);
+				updateCounters(MainTextBox.Text);
 			}
 		}
 
@@ -254,17 +255,30 @@ namespace texteditor
 		private void updateCounters(string text) {
 			update_CharWithSpaceCounter(text);
 			update_CharNoSpaceCounter(text);
+			update_WordCounter(text);
+			update_RowCounter(text);
 		}
 		private void update_CharWithSpaceCounter(string text)
 		{
-			int textLength = text.Length;
-			CharWithSpaceCounter.Text = textLength.ToString();
+			CharWithSpaceCounter.Text = text.Length.ToString();
 		}
 		private void update_CharNoSpaceCounter(string text)
 		{
 			text = text.Replace(" ", "").Replace("\n","").Replace("\r","");
-			int textLength = text.Length;
-			CharNoSpaceCounter.Text = textLength.ToString();
+			CharNoSpaceCounter.Text = text.Length.ToString();
+		}
+
+		private void update_WordCounter(string text)
+		{
+			char[] delimiters = new char[] {' ', '\r', '\n', '\t'};
+			int wordCounter = text.Split(delimiters, StringSplitOptions.RemoveEmptyEntries).Length;
+			WordCounter.Text = wordCounter.ToString();
+		}
+		private void update_RowCounter(string text)
+		{
+			char[] delimiters = new char[] { '\r', '\n' };
+			int rowCounter = text.Split(delimiters, StringSplitOptions.RemoveEmptyEntries).Length;
+			RowCounter.Text = rowCounter.ToString();
 		}
 
 		private void AddAsterixToTitle()

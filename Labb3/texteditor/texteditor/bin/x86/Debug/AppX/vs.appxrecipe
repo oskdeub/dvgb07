@@ -30,13 +30,13 @@
     <AppXManifest Include="D:\UNI\DVGB07\Labb3\texteditor\texteditor\bin\x86\Debug\Core\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2024-02-19T20:43:27.278</Modified>
+      <Modified>2024-02-20T08:48:12.713</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
     <AppxPackagedFile Include="D:\UNI\DVGB07\Labb3\texteditor\texteditor\bin\x86\Debug\texteditor.exe">
       <PackagePath>entrypoint\texteditor.exe</PackagePath>
-      <Modified>2024-02-19T20:43:26.014</Modified>
+      <Modified>2024-02-20T08:48:12.145</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Microsoft SDKs\UWPNuGetPackages\runtime.win10-x86.microsoft.netcore.universalwindowsplatform\6.2.14\runtimes\win10-x86\lib\uap10.0.15138\System.Runtime.dll">
       <PackagePath>System.Runtime.dll</PackagePath>
@@ -90,11 +90,11 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\UNI\DVGB07\Labb3\texteditor\texteditor\bin\x86\Debug\App.xbf">
       <PackagePath>App.xbf</PackagePath>
-      <Modified>2024-02-19T20:43:25.927</Modified>
+      <Modified>2024-02-20T08:48:12.080</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\UNI\DVGB07\Labb3\texteditor\texteditor\bin\x86\Debug\MainPage.xbf">
       <PackagePath>MainPage.xbf</PackagePath>
-      <Modified>2024-02-19T20:43:25.927</Modified>
+      <Modified>2024-02-20T08:48:12.081</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Windows Kits\10\UnionMetadata\10.0.22621.0\Windows.winmd">
       <PackagePath>WinMetadata\Windows.winmd</PackagePath>
@@ -106,7 +106,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\UNI\DVGB07\Labb3\texteditor\texteditor\bin\x86\Debug\Core\texteditor.exe">
       <PackagePath>texteditor.exe</PackagePath>
-      <Modified>2024-02-19T20:43:27.265</Modified>
+      <Modified>2024-02-20T08:48:12.709</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>

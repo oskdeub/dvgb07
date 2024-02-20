@@ -51,18 +51,6 @@ namespace texteditor
 				};
 		}
 
-		private async void SaveBeforeClose(object sender, Windows.UI.Core.Preview.SystemNavigationCloseRequestedPreviewEventArgs e)
-		{
-			//var deferral = e.GetDeferral(); // Get a deferral because we are awaiting async operations
-											//Från Windows.UI.Core.Preview... i MainPage() till denna rad är från chatGPT.
-			if (unsaved_changes)
-			{
-				e.Handled = true;
-				await Exit_Dialog("Du har osparade ändringar.");
-			}
-			//deferral.Complete(); //Från chatGPT
-		}
-
 		private void ClearButton_Click(object sender, RoutedEventArgs e)
 		{
 			Clear_Dialog("All text försvinner om du rensar.");
@@ -84,6 +72,9 @@ namespace texteditor
 			if (unsaved_changes)
 			{ 
 			NewDocument_Dialog("Du har osparade ändringar.");
+			} else
+			{
+				NewSheet();
 			}
 		}
 

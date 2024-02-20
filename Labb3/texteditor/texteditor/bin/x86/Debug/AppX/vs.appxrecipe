@@ -19,7 +19,7 @@
     <DeployOptionalPackages>false</DeployOptionalPackages>
     <WindowsSdkPath>C:\Program Files %28x86%29\Windows Kits\10\</WindowsSdkPath>
     <LayoutDir>D:\UNI\DVGB07\Labb3\texteditor\texteditor\bin\x86\Debug\AppX</LayoutDir>
-    <RegisteredManifestChecksum>AE202042D1BBA6E0A357384A96457DDFBE0368BCEB0314C99ABBA44CF7654ADB</RegisteredManifestChecksum>
+    <RegisteredManifestChecksum>D7AE16D795BEB002CABE7B3998C65F16DA6EE46CE8CE1FA38D42AA908CD2C596</RegisteredManifestChecksum>
     <RegisteredPackageMoniker>9b34a726-4194-49f9-9e6d-fd074768fe69_1.0.0.0_x86__rdqvj7x1jxahw</RegisteredPackageMoniker>
     <RegisteredUserModeAppID>9b34a726-4194-49f9-9e6d-fd074768fe69_rdqvj7x1jxahw!App</RegisteredUserModeAppID>
     <RegisteredPackageID>9b34a726-4194-49f9-9e6d-fd074768fe69</RegisteredPackageID>
@@ -30,13 +30,13 @@
     <AppXManifest Include="D:\UNI\DVGB07\Labb3\texteditor\texteditor\bin\x86\Debug\Core\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2024-02-20T08:48:12.713</Modified>
+      <Modified>2024-02-20T10:36:03.470</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
     <AppxPackagedFile Include="D:\UNI\DVGB07\Labb3\texteditor\texteditor\bin\x86\Debug\texteditor.exe">
       <PackagePath>entrypoint\texteditor.exe</PackagePath>
-      <Modified>2024-02-20T08:48:12.145</Modified>
+      <Modified>2024-02-20T10:36:02.389</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Microsoft SDKs\UWPNuGetPackages\runtime.win10-x86.microsoft.netcore.universalwindowsplatform\6.2.14\runtimes\win10-x86\lib\uap10.0.15138\System.Runtime.dll">
       <PackagePath>System.Runtime.dll</PackagePath>
@@ -90,11 +90,11 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\UNI\DVGB07\Labb3\texteditor\texteditor\bin\x86\Debug\App.xbf">
       <PackagePath>App.xbf</PackagePath>
-      <Modified>2024-02-20T08:48:12.080</Modified>
+      <Modified>2024-02-20T10:36:02.310</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\UNI\DVGB07\Labb3\texteditor\texteditor\bin\x86\Debug\MainPage.xbf">
       <PackagePath>MainPage.xbf</PackagePath>
-      <Modified>2024-02-20T08:48:12.081</Modified>
+      <Modified>2024-02-20T10:36:02.310</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Windows Kits\10\UnionMetadata\10.0.22621.0\Windows.winmd">
       <PackagePath>WinMetadata\Windows.winmd</PackagePath>
@@ -102,11 +102,11 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\UNI\DVGB07\Labb3\texteditor\texteditor\bin\x86\Debug\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2024-02-13T11:24:25.022</Modified>
+      <Modified>2024-02-20T10:36:02.832</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\UNI\DVGB07\Labb3\texteditor\texteditor\bin\x86\Debug\Core\texteditor.exe">
       <PackagePath>texteditor.exe</PackagePath>
-      <Modified>2024-02-20T08:48:12.709</Modified>
+      <Modified>2024-02-20T10:36:03.458</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>

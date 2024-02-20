@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Package
-  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
-  xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
-  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
-  IgnorableNamespaces="uap mp">
-
-  <Identity
+	xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+	xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
+	xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+	xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+	IgnorableNamespaces="uap mp rescap">
+	<Identity
     Name="9b34a726-4194-49f9-9e6d-fd074768fe69"
     Publisher="CN=deubl"
     Version="1.0.0.0" />
@@ -45,5 +45,6 @@
 
   <Capabilities>
     <Capability Name="internetClient" />
+	<rescap:Capability Name="confirmAppClose"/>
   </Capabilities>
 </Package>

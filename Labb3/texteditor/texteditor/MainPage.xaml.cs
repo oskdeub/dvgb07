@@ -17,6 +17,9 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using System.Threading.Tasks;
 using System.Reflection.Metadata;
+using System.ComponentModel;
+using Windows.ApplicationModel;
+using Windows.UI.Core.Preview;
 
 namespace texteditor
 {
@@ -35,19 +38,29 @@ namespace texteditor
 			fileExists = false;
 			changeTitle(defaultDocname);
             this.InitializeComponent();
-			Windows.UI.Core.Preview.SystemNavigationManagerPreview.GetForCurrentView().CloseRequested += Close_Click;
+			// från https://stackoverflow.com/questions/62910280/is-it-possible-to-pop-up-my-dialog-box-when-click-the-close-icon-on-the-upper-ri
+			Windows.UI.Core.Preview.SystemNavigationManagerPreview.GetForCurrentView().CloseRequested +=
+				async (sender, args) =>
+				{
+					args.Handled = true;// slut referens
+					if (unsaved_changes)
+					{
+						await Exit_Dialog("Du har osparade ändringar.");
+					} else { Application.Current.Exit(); }
+					
+				};
 		}
-		private async void Close_Click(object sender, Windows.UI.Core.Preview.SystemNavigationCloseRequestedPreviewEventArgs e)
+
+		private async void SaveBeforeClose(object sender, Windows.UI.Core.Preview.SystemNavigationCloseRequestedPreviewEventArgs e)
 		{
-			var deferral = e.GetDeferral(); // Get a deferral because we are awaiting async operations
+			//var deferral = e.GetDeferral(); // Get a deferral because we are awaiting async operations
 											//Från Windows.UI.Core.Preview... i MainPage() till denna rad är från chatGPT.
 			if (unsaved_changes)
 			{
+				e.Handled = true;
 				await Exit_Dialog("Du har osparade ändringar.");
-
 			}
-
-			deferral.Complete(); //Från chatGPT
+			//deferral.Complete(); //Från chatGPT
 		}
 
 		private void ClearButton_Click(object sender, RoutedEventArgs e)

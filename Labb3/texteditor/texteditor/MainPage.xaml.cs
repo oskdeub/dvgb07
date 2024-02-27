@@ -371,6 +371,7 @@ namespace texteditor
 		/// <param name="text">MainTextBox.Text</param>
 		private void update_WordCounter(string text)
 		{
+			//https://stackoverflow.com/a/8784662
 			char[] delimiters = new char[] {' ', '\r', '\n', '\t'};
 			int wordCounter = text.Split(delimiters, StringSplitOptions.RemoveEmptyEntries).Length;
 			WordCounter.Text = wordCounter.ToString();
@@ -382,7 +383,7 @@ namespace texteditor
 		private void update_RowCounter(string text)
 		{
 			char[] delimiters = new char[] { '\r', '\n' };
-			int rowCounter = text.Split(delimiters, StringSplitOptions.RemoveEmptyEntries).Length;
+			int rowCounter = text.Split(delimiters, StringSplitOptions.None).Length;
 			RowCounter.Text = rowCounter.ToString();
 		}
 		/// <summary>

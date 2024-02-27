@@ -28,15 +28,19 @@ namespace texteditor
     /// </summary>
     public sealed partial class MainPage : Page
     {
+		//Keeps track of file information
 		private Windows.Storage.StorageFile savefile;
+		//True if unsaved changes to text
 		private Boolean unsaved_changes;
+		//True if a file is being edited
 		private Boolean fileExists;
+		//Default document name
 		private String defaultDocname = "nytt_dokument";
 		public MainPage()
         {
             this.InitializeComponent();
 			NewSheet();
-			// från https://stackoverflow.com/questions/62910280/is-it-possible-to-pop-up-my-dialog-box-when-click-the-close-icon-on-the-upper-ri
+			// Funktion för 'X'-knapp från https://stackoverflow.com/questions/62910280/is-it-possible-to-pop-up-my-dialog-box-when-click-the-close-icon-on-the-upper-ri
 			// Adds the Exit_Dialog when pressing 'X'
 			Windows.UI.Core.Preview.SystemNavigationManagerPreview.GetForCurrentView().CloseRequested +=
 				async (sender, args) =>
@@ -148,11 +152,11 @@ namespace texteditor
 		/// </summary>
 		private void NewSheet()
 		{
-			savefile = null;
-			MainTextBox.Text = string.Empty;
-			changeTitle(defaultDocname);
-			unsaved_changes = false;
-			fileExists = false;
+			savefile = null;					//Null savefile
+			MainTextBox.Text = string.Empty;	//Empty TextBox
+			changeTitle(defaultDocname);		//Change title to default
+			unsaved_changes = false;			//Set no unsaved changes
+			fileExists = false;					//Set "new" file
 		}
 		/// <summary>
 		/// if file exists, then the SaveFile functions makes sure the user gets to Save As... 

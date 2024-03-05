@@ -13,20 +13,25 @@ namespace Business_system
 		public int Price { get; set; }
 		public int Qty {  get; set; }
 
-		protected Product(int ID, string Title, int Price, int Qty)
+		protected Product(int ID, string Name, int Price, int Qty)
 		{
 			this.ID = ID;
-			this.Name = Title;
+			this.Name = Name;
 			this.Price = Price;
 			this.Qty = Qty;
 		}
-		protected Product(int ID, string Title, int Price)
+		protected Product(int ID, string Name, int Price)
 		{
 			this.ID = ID;
-			this.Name = Title;
+			this.Name = Name;
 			this.Price = Price;
 			this.Qty = 0;
 		}
+
+		public Product()
+		{
+		}
+
 		public void IncreaseQty(int amount)
 		{
 			//handle negative amount here?

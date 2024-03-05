@@ -12,12 +12,6 @@ namespace Business_system
 		public string bookGenre { get; set; }
 		public BookFormat BookFormat { get; set; }
 		public BookLanguage Language { get; set; }
-		public Book(int ID, string Title, int Price) : base(ID, Title, Price)
-		{
-		}
-
-		public Book(int ID, string Title, int Price, int Qty) : base(ID, Title, Price, Qty)
-		{
-		}
+		public Book() : base() { }
 	}
 }

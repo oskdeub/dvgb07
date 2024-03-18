@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Business_system
 {
-	internal class Product
+	internal class Product : ICsvSerializable
 	{
 		public int ID { get; set; }
 		public string Name { get; set; }
@@ -41,6 +42,16 @@ namespace Business_system
 			//handle negative qty after subtracting here?
 			Qty -= amount;
 		}
-		
+
+		public virtual string[] ToCsv()
+		{
+			return new string[]
+			{
+				ID.ToString(),
+				Name,
+				Price.ToString(),
+				Qty.ToString(),
+			};
+		}
 	}
 }

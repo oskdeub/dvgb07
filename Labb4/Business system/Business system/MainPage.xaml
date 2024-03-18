@@ -9,6 +9,32 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-		<TextBlock Name="MyText"></TextBlock>
-    </Grid>
+		<NavigationView PaneDisplayMode="Top" IsSettingsVisible="False" IsBackButtonVisible="Collapsed" ItemInvoked="NavigationView_ItemInvoked">
+			<NavigationView.MenuItems>
+				<NavigationViewItem Content="Kassa" Tag="Kassa"></NavigationViewItem>
+				<NavigationViewItemSeparator Opacity="0"></NavigationViewItemSeparator>
+				<NavigationViewItem Content="Lager" Tag="Lager"></NavigationViewItem>
+				
+			</NavigationView.MenuItems>
+		</NavigationView>
+		<Grid Margin="0, 40, 0, 0">
+
+			<Grid.RowDefinitions>
+				<RowDefinition></RowDefinition>
+				<RowDefinition></RowDefinition>
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition></ColumnDefinition>
+				<ColumnDefinition></ColumnDefinition>
+			</Grid.ColumnDefinitions>
+			<TextBlock Grid.Row="0" Name="TBTEST">TextBlock</TextBlock >
+			<ListView Grid.Row="1">
+				<ListViewItem>ListViewItem</ListViewItem>
+			</ListView>
+
+			<Frame Grid.Column="1" Grid.RowSpan="2" BorderThickness="2" BorderBrush="Black" x:Name="ContentFrame" Margin="0,0,0,0"/>
+		</Grid>
+		
+		
+	</Grid>
 </Page>

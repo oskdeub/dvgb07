@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -37,6 +38,18 @@ namespace Business_system
             List<string[]> data = await ReadCSVFile("data.csv");
             TBTEST.Text = data.Count.ToString();
 
+            var dProducts = new List<Product>();
+
+
+            var displayItems = new ObservableCollection<string>();
+            foreach (var line in data)
+            {
+                var lineDisplay = string.Join("; ", line);
+                displayItems.Add(lineDisplay);
+            }
+            ProductList.ItemsSource = displayItems;
+
+            /*
 			Movie newMovie = (Movie)ProductFactory.CreateProduct(ProductType.Movie, 6, "Nyckeln till frihet", 99);
 			newMovie.Playtime = 142;
 			newMovie.MovieFormat = MovieFormat.DVD;
@@ -63,6 +76,7 @@ namespace Business_system
             var pList2 = new List<Product>();
             //await WriteToCsv("data.csv", pList2);
             await WriteToCsv("data.csv", pList);
+            */
 
 		}
 
@@ -79,12 +93,6 @@ namespace Business_system
                 data.Add(parts);
             }
             return data;
-		}
-        public async Task WriteCSVFile(string filename, List<string[]> data)
-        {
-            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
-			var file = await localFolder.GetFileAsync(filename);
-            await FileIO.WriteLinesAsync(file, data.ConvertAll(array => string.Join(";", array)));
 		}
 
         internal async Task WriteToCsv(string filename, List<Product> products)
@@ -114,6 +122,5 @@ namespace Business_system
                 }
             }
 		}
-
 	}
 }

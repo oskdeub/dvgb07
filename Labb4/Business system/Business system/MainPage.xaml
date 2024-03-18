@@ -28,8 +28,13 @@
 				<ColumnDefinition></ColumnDefinition>
 			</Grid.ColumnDefinitions>
 			<TextBlock Grid.Row="0" Name="TBTEST">TextBlock</TextBlock >
-			<ListView Grid.Row="1">
-				<ListViewItem>ListViewItem</ListViewItem>
+			
+			<ListView Name="ProductList" Grid.Row="1">
+				<ListView.ItemTemplate>
+					<DataTemplate>
+						<TextBlock Text="{Binding}" />
+					</DataTemplate>
+				</ListView.ItemTemplate>
 			</ListView>
 
 			<Frame Grid.Column="1" Grid.RowSpan="2" BorderThickness="2" BorderBrush="Black" x:Name="ContentFrame" Margin="0,0,0,0"/>

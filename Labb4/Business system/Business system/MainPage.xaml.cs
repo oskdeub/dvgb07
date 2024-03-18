@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -38,17 +39,19 @@ namespace Business_system
             List<string[]> data = await ReadCSVFile("data.csv");
             TBTEST.Text = data.Count.ToString();
 
-            var dProducts = new List<Product>();
-
-
-            var displayItems = new ObservableCollection<string>();
-            foreach (var line in data)
-            {
-                var lineDisplay = string.Join("; ", line);
-                displayItems.Add(lineDisplay);
-            }
+			List<Product> products = parseCsvData(data);
+			var displayItems = new ObservableCollection<Product>(products);
             ProductList.ItemsSource = displayItems;
 
+			var dItems = new ObservableCollection<string>();
+			foreach (var line in data.Skip(1))
+            {
+                var lineDisplay = string.Join("; ", line);
+                dItems.Add(lineDisplay);
+
+            }
+            CsvList.ItemsSource = dItems;
+            
             /*
 			Movie newMovie = (Movie)ProductFactory.CreateProduct(ProductType.Movie, 6, "Nyckeln till frihet", 99);
 			newMovie.Playtime = 142;
@@ -80,7 +83,79 @@ namespace Business_system
 
 		}
 
-        public async Task<List<string[]>> ReadCSVFile (string filename)
+        internal List<Product> parseCsvData(List<string[]> data)
+        {
+			var products = new List<Product>();
+			foreach (var line in data.Skip(1))
+			{
+                products.Add(parseProductFromCsvLine(line));
+			}
+			return products;
+		}
+
+        //Gör sönder när vissa fält är tomma, kanske pga hårdkodat direkt i csv-filen
+		private Product parseProductFromCsvLine(string[] line)
+		{
+            switch (line[4])
+            {
+                case "Book":
+                    //Book book = createBookFromString(line);
+                    return new Book { 
+                        ID = int.Parse(line[0]), 
+                        Name = line[1], 
+                        Price = int.Parse(line[2]), 
+                        Qty = int.Parse(line[3]), 
+                        Author = line[5], 
+                        bookGenre = line[6], 
+                        BookFormat = (BookFormat)Enum.Parse(typeof(BookFormat), line[7]), 
+                        Language = (BookLanguage)Enum.Parse(typeof(BookLanguage), line[8]), 
+                    };
+                    
+                case "Movie":
+                    return new Movie {
+                        ID = int.Parse(line[0]),
+                        Name = line[1],
+                        Price = int.Parse(line[2]),
+                        Qty = int.Parse(line[3]),
+                        MovieFormat = (MovieFormat)Enum.Parse(typeof(MovieFormat), line[5]),
+                        Playtime = int.Parse(line[6]),
+					};
+				case "Videogame":
+                    return new Videogame { 
+                        ID = int.Parse(line[0]), 
+                        Name = line[1], 
+                        Price = int.Parse(line[2]), 
+                        Qty = int.Parse(line[3]),
+                        Platform = (VideogamePlatform)Enum.Parse(typeof(VideogamePlatform), line[5]),
+					};
+                default:
+                    return new Product {
+						ID = int.Parse(line[0]),
+						Name = line[1],
+						Price = int.Parse(line[2]),
+						Qty = int.Parse(line[3]),
+					};
+            }
+		}
+
+		private Book createBookFromString(string[] line)
+		{
+            Book book = new Book();
+            int id, price, qty;
+            BookFormat format = (BookFormat)Enum.Parse(typeof(BookFormat), line[7]);
+
+
+            if (int.TryParse(line[0], out var id_num) && int.TryParse(line[2], out var price_num) && int.TryParse(line[3], out var qty_num))
+            {
+                id = id_num;
+                price = price_num;
+                qty = qty_num;
+            }
+            return book;
+		}
+
+
+		public async Task<List<string[]>> ReadCSVFile (string filename)
         {
             List<string[]> data = new List<string[]>();
 			StorageFolder localFolder = ApplicationData.Current.LocalFolder;

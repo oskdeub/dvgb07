@@ -13,6 +13,7 @@ namespace Business_system
 		public string Name { get; set; }
 		public int Price { get; set; }
 		public int Qty {  get; set; }
+		public ProductType ProductType { get; set; }
 
 		protected Product(int ID, string Name, int Price, int Qty)
 		{
@@ -27,6 +28,15 @@ namespace Business_system
 			this.Name = Name;
 			this.Price = Price;
 			this.Qty = 0;
+		}
+
+		protected Product(int ID, string Name, int Price, int Qty, ProductType type)
+		{
+			this.ID = ID;
+			this.Name = Name;
+			this.Price = Price;
+			this.Qty = 0;
+			this.ProductType = type;
 		}
 
 		public Product()

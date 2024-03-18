@@ -61,8 +61,8 @@ namespace Business_system
 				newBook,
 			};
             var pList2 = new List<Product>();
-            await WriteToCsv("data.csv", pList2);
-            //await WriteToCsv("data.csv", pList);
+            //await WriteToCsv("data.csv", pList2);
+            await WriteToCsv("data.csv", pList);
 
 		}
 
@@ -75,26 +75,25 @@ namespace Business_system
 
             foreach (var line in lines)
             {
-                string[] parts = line.Split(',');
+                string[] parts = line.Split(';');
                 data.Add(parts);
             }
             return data;
 		}
-
         public async Task WriteCSVFile(string filename, List<string[]> data)
         {
-			StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
 			var file = await localFolder.GetFileAsync(filename);
-            await FileIO.WriteLinesAsync(file, data.ConvertAll(array => string.Join(",", array)));
+            await FileIO.WriteLinesAsync(file, data.ConvertAll(array => string.Join(";", array)));
 		}
 
         internal async Task WriteToCsv(string filename, List<Product> products)
         {
             StringBuilder content = new StringBuilder();
-            content.AppendLine("ID, Name, Price, Qty, Product, Author, Genre, Format, Language");
+            content.AppendLine("ID; Name; Price; Qty; Product;");
             foreach (var product in products)
             {
-                content.AppendLine(string.Join(", ", product.ToCsv()));
+                content.AppendLine(string.Join(";", product.ToCsv()));
             }
 			StorageFolder localFolder = ApplicationData.Current.LocalFolder;
 			var file = await localFolder.GetFileAsync(filename);

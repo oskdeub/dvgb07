@@ -29,61 +29,51 @@ namespace Business_system
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        List<Product> masterProducts = new List<Product>();
+        private int id_counter;
         public MainPage()
         {
+            id_counter = 0;
             this.InitializeComponent();
         }
 
 		private async void Page_Loaded(object sender, RoutedEventArgs e)
 		{
-            List<string[]> data = await ReadCSVFile("data.csv");
-            TBTEST.Text = data.Count.ToString();
-
-			List<Product> products = parseCsvData(data);
-			var displayItems = new ObservableCollection<Product>(products);
-            ProductList.ItemsSource = displayItems;
-
-			var dItems = new ObservableCollection<string>();
-			foreach (var line in data.Skip(1))
-            {
-                var lineDisplay = string.Join("; ", line);
-                dItems.Add(lineDisplay);
-
-            }
-            CsvList.ItemsSource = dItems;
-            
-            /*
-			Movie newMovie = (Movie)ProductFactory.CreateProduct(ProductType.Movie, 6, "Nyckeln till frihet", 99);
-			newMovie.Playtime = 142;
-			newMovie.MovieFormat = MovieFormat.DVD;
-
-			Videogame newVidya = (Videogame)ProductFactory.CreateProduct(ProductType.Videogame, 7, "Demon's Souls", 499);
-			newVidya.Platform = VideogamePlatform.Playstation_5;
-
-			Book newBook = (Book)ProductFactory.CreateProduct(ProductType.Book, 8, "Great Gatsby", 79);
-			newBook.Author = "F. Scoot Fitzgerald";
-			newBook.bookGenre = "Noir";
-			newBook.BookFormat = BookFormat.Ebook;
-			var pList = new List<Product>()
-			{
-
-				new Book { ID = 1, Name = "Bello Gallico et Civili", Price = 449, Qty = 10, Author = "Julius Caesar", BookFormat = BookFormat.Paperback, Language = BookLanguage.Latin, bookGenre = "Historia"},
-				new Book { ID = 2, Name = "How to Read a Book", Price = 149, Qty = 5},
-				new Book { ID = 3, Name = "Moby Dick", Price = 49},
-				new Videogame { ID = 4, Name = "Elden Ring", Price = 599, Platform = VideogamePlatform.Playstation_5, Qty = 1 },
-				new Movie { ID = 5, Name = "Gudfadern", Price = 99, Playtime = 152, MovieFormat = MovieFormat.DVD},
-				newMovie,
-				newVidya,
-				newBook,
-			};
-            var pList2 = new List<Product>();
-            //await WriteToCsv("data.csv", pList2);
-            await WriteToCsv("data.csv", pList);
-            */
-
+			List<string[]> data = await ReadCSVFile("data.csv");
+            populateList(data);
 		}
 
-        internal List<Product> parseCsvData(List<string[]> data)
+        public void populateList(List<string[]> data) {
+			//Clear before reading
+			masterProducts.Clear();
+			//Add allez producten por favor
+			masterProducts.AddRange(parseCsvData(data));
+			id_counter = masterProducts.Count();
+			var displayItems = new ObservableCollection<Product>(masterProducts);
+			ProductList.ItemsSource = displayItems;
+
+			/*
+			var dItems = new ObservableCollection<string>();
+			foreach (var line in data.Skip(1))
+			{
+				var lineDisplay = string.Join("; ", line);
+				dItems.Add(lineDisplay);
+				id_counter++;
+			}
+			CsvList.ItemsSource = dItems;
+
+			XAML
+			<ListView Name="CsvList" Grid.Column="1">
+				<ListView.ItemTemplate>
+					<DataTemplate>
+						<TextBlock Text="{Binding}" />
+					</DataTemplate>
+				</ListView.ItemTemplate>
+			</ListView>
+			*/
+		}
+
+		internal List<Product> parseCsvData(List<string[]> data)
         {
 			var products = new List<Product>();
 			foreach (var line in data.Skip(1))
@@ -93,7 +83,6 @@ namespace Business_system
 			return products;
 		}
 
-        //Gör sönder när vissa fält är tomma, kanske pga hårdkodat direkt i csv-filen
 		private Product parseProductFromCsvLine(string[] line)
 		{
             switch (line[4])
@@ -105,6 +94,7 @@ namespace Business_system
                         Name = line[1], 
                         Price = int.Parse(line[2]), 
                         Qty = int.Parse(line[3]), 
+                        ProductType = ProductType.Book,
                         Author = line[5], 
                         bookGenre = line[6], 
                         BookFormat = (BookFormat)Enum.Parse(typeof(BookFormat), line[7]), 
@@ -117,6 +107,7 @@ namespace Business_system
                         Name = line[1],
                         Price = int.Parse(line[2]),
                         Qty = int.Parse(line[3]),
+                        ProductType = ProductType.Movie,
                         MovieFormat = (MovieFormat)Enum.Parse(typeof(MovieFormat), line[5]),
                         Playtime = int.Parse(line[6]),
 					};
@@ -126,6 +117,7 @@ namespace Business_system
                         Name = line[1], 
                         Price = int.Parse(line[2]), 
                         Qty = int.Parse(line[3]),
+                        ProductType = ProductType.Videogame,
                         Platform = (VideogamePlatform)Enum.Parse(typeof(VideogamePlatform), line[5]),
 					};
                 default:
@@ -182,20 +174,46 @@ namespace Business_system
 			var file = await localFolder.GetFileAsync(filename);
 			await FileIO.WriteTextAsync(file, content.ToString());
 		}
-
-		private void NavigationView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+		private async void Open_Click(object sender, RoutedEventArgs e)
 		{
-            if(args.InvokedItemContainer is NavigationViewItem item)
-            {
-                var tag = item.Tag.ToString();
-                if(tag == "Kassa")
-                {
-                    ContentFrame.Navigate(typeof(Kassa));
-                } else if(tag == "Lager")
-                {
-                    ContentFrame.Navigate(typeof(Lager));
-                }
-            }
+			List<string[]> data = await ReadCSVFile("data.csv");
+			populateList(data);
+		}
+
+		private async void Save_Click(object sender, RoutedEventArgs e)
+		{
+            await WriteToCsv("data.csv", masterProducts);
+		}
+
+		private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+		{
+			if (args.SelectedItem is NavigationViewItem selectedItem)
+			{
+				// Hide all panels
+				KassaPanel.Visibility = Visibility.Collapsed;
+				LagerPanel.Visibility = Visibility.Collapsed;
+
+				// Show the selected panel
+				switch (selectedItem.Tag.ToString())
+				{
+					case "Kassa":
+						KassaPanel.Visibility = Visibility.Visible;
+						break;
+					case "Lager":
+						LagerPanel.Visibility = Visibility.Visible;
+						break;
+				}
+			}
+		}
+
+		private void Button_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void Button_Click_1(object sender, RoutedEventArgs e)
+		{
+
 		}
 	}
 }

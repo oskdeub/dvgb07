@@ -9,60 +9,115 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-		<NavigationView PaneDisplayMode="Top" IsSettingsVisible="False" IsBackButtonVisible="Collapsed" ItemInvoked="NavigationView_ItemInvoked">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"></RowDefinition>
+			<RowDefinition></RowDefinition>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="2*"></ColumnDefinition>
+			<ColumnDefinition Width="1*"></ColumnDefinition>
+		</Grid.ColumnDefinitions>
+		
+		<!-- Shared UI -->
+		<NavigationView PaneDisplayMode="Top" IsSettingsVisible="False" IsBackButtonVisible="Collapsed" SelectionChanged="NavigationView_SelectionChanged" Grid.ColumnSpan="2">
 			<NavigationView.MenuItems>
 				<NavigationViewItem Content="Kassa" Tag="Kassa"></NavigationViewItem>
 				<NavigationViewItemSeparator Opacity="0"></NavigationViewItemSeparator>
 				<NavigationViewItem Content="Lager" Tag="Lager"></NavigationViewItem>
-				
+
 			</NavigationView.MenuItems>
 		</NavigationView>
-		<Grid Margin="0, 40, 0, 0">
 
-			<Grid.RowDefinitions>
-				<RowDefinition></RowDefinition>
-				<RowDefinition></RowDefinition>
-			</Grid.RowDefinitions>
+		<Grid Grid.Row="0" Grid.Column="1" Margin="0, 5, 0 ,0">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition></ColumnDefinition>
 				<ColumnDefinition></ColumnDefinition>
 			</Grid.ColumnDefinitions>
-			<TextBlock Grid.Row="0" Name="TBTEST">TextBlock</TextBlock >
+			<Button Grid.Column="0" Click="Open_Click">Läs</Button>
+			<Button Grid.Column="1" Click="Save_Click">Spara</Button>
 
-			<Grid Grid.Row="1">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition></ColumnDefinition>
-					<ColumnDefinition></ColumnDefinition>
-				</Grid.ColumnDefinitions>
-
-
-				<ListView Name="ProductList" Grid.Column="0">
-					<ListView.ItemTemplate>
-						<DataTemplate x:DataType="local:Product">
-							<StackPanel Orientation="Horizontal">
-								<TextBlock Text="{Binding ID}" Margin="10"/>
-								<TextBlock Text="{Binding ProductName}" Margin="10"/>
-								<TextBlock Text="{Binding Price}" Margin="10"/>
-								<TextBlock Text="{Binding Qty}" Margin="10"/>
-								<TextBlock Text="{Binding ProductType}" Margin="10" />
-							</StackPanel>
-						</DataTemplate>
-					</ListView.ItemTemplate>
-				</ListView>
-
-				<ListView Name="CsvList" Grid.Column="1">
-					<ListView.ItemTemplate>
-						<DataTemplate>
-							<TextBlock Text="{Binding}" />
-						</DataTemplate>
-					</ListView.ItemTemplate>
-				</ListView>
-			</Grid>
-			
-			
-			<Frame Grid.Column="1" Grid.RowSpan="2" BorderThickness="2" BorderBrush="Black" x:Name="ContentFrame" Margin="0,0,0,0"/>
 		</Grid>
+		<!--List Cell-->
+
+		<ListView Name="ProductList" Grid.Row="1"  Grid.Column="1" ScrollViewer.HorizontalScrollBarVisibility="Auto" Margin="16, 0, 16, 0">
+			<ListView.Header>
+				<StackPanel Orientation="Horizontal">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="150"></ColumnDefinition>
+							<ColumnDefinition Width="100"></ColumnDefinition>
+							<ColumnDefinition Width="50"></ColumnDefinition>
+							<ColumnDefinition Width="50"></ColumnDefinition>
+						</Grid.ColumnDefinitions>
+						<TextBlock Text="Name" Grid.Column="0" Margin="4" FontWeight="Bold"/>
+						<TextBlock Text="Type" Grid.Column="1" Margin="4" FontWeight="Bold"/>
+						<TextBlock Text="Price" Grid.Column="2" Margin="4" FontWeight="Bold"/>
+						<TextBlock Text="Qty" Grid.Column="3" Margin="4" FontWeight="Bold"/>
+
+					</Grid>
+				
+				</StackPanel>
+			</ListView.Header>
+			<ListView.ItemTemplate>
+				<DataTemplate x:DataType="local:Product">
+					<StackPanel Orientation="Horizontal" >
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="150"></ColumnDefinition>
+								<ColumnDefinition Width="100"></ColumnDefinition>
+								<ColumnDefinition Width="50"></ColumnDefinition>
+								<ColumnDefinition Width="50"></ColumnDefinition>
+							</Grid.ColumnDefinitions>
+
+							<TextBlock Text="{Binding Name}"		Grid.Column="0" Margin="4"/>
+							<TextBlock Text="{Binding ProductType}" Grid.Column="1" Margin="4"/>
+							<TextBlock Text="{Binding Price}"		Grid.Column="2" Margin="4"/>
+							<TextBlock Text="{Binding Qty}"			Grid.Column="3" Margin="4" />
+						</Grid>
+					</StackPanel>
+				</DataTemplate>
+			</ListView.ItemTemplate>
+		</ListView>
+
+		<!-- Kassa UI -->
+		<StackPanel Name="KassaPanel" Visibility="Collapsed" Grid.Column="0" Grid.Row="1">
+			<TextBlock Text="Kassa UI"/>
+		</StackPanel>
+		<!-- END Kassa UI -->
 		
+		<!-- Lager UI -->
+		<StackPanel Name="LagerPanel" Visibility="Visible" Grid.Column="0" Grid.Row="1" Margin="16,0,16,0">
+			
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"></RowDefinition>
+					<RowDefinition ></RowDefinition>
+					<RowDefinition ></RowDefinition>
+				</Grid.RowDefinitions>
+				
+				<TextBlock Grid.Row="0" Text="Lager UI" FontSize="25"/>
+				<Grid Grid.Row="1" Margin="16">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition></ColumnDefinition>
+						<ColumnDefinition></ColumnDefinition>
+						<ColumnDefinition></ColumnDefinition>
+						<ColumnDefinition></ColumnDefinition>
+						<ColumnDefinition></ColumnDefinition>
+					</Grid.ColumnDefinitions>
+					<Button Content="Lägg till ny produkt"	Grid.Column="0" Click="NewProduct_Click" HorizontalAlignment="Stretch" CornerRadius="5" Height="100"></Button>
+					<Button Content="Ta bort produkt"		Grid.Column="2" Click="RemoveProduct_Click"  HorizontalAlignment="Stretch" CornerRadius="5"></Button>
+					<Button Content="Registrera inleverans" Grid.Column="4" HorizontalAlignment="Stretch" CornerRadius="5"></Button>
+					
+				</Grid>
+				
+			</Grid>
+				
+			
+		</StackPanel>
+		<!-- END Lager UI -->
 		
+		<!--Button cell-->
+		
+
 	</Grid>
 </Page>

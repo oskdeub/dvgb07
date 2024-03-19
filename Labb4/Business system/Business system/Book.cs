@@ -11,14 +11,21 @@ namespace Business_system
 	{
 		public string Author { get; set; }
 		public string bookGenre { get; set; }
-		public BookFormat BookFormat { get; set; }
-		public BookLanguage Language { get; set; }
-		public Book() : base() { }
+		public BookFormat? BookFormat { get; set; }
+		public BookLanguage? Language { get; set; }
+		public Book() : base() {
+			ProductType = Business_system.ProductType.Book;
+		}
 
 		public override string[] ToCsv()
 		{
 			var csv_s = base.ToCsv().ToList();
-			csv_s.AddRange(new string[] {ProductType.Book.ToString(), Author, bookGenre, BookFormat.ToString(), Language.ToString() });
+			csv_s.AddRange(new string[] { 
+				Author, 
+				bookGenre, 
+				BookFormat.ToString(), 
+				Language.ToString() 
+			});
 			return csv_s.ToArray();
 		}
 	}

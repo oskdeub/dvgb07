@@ -123,12 +123,6 @@
     <Compile Include="BookFormat.cs" />
     <Compile Include="BookLanguage.cs" />
     <Compile Include="ICsvSerializable.cs" />
-    <Compile Include="Kassa.xaml.cs">
-      <DependentUpon>Kassa.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Lager.xaml.cs">
-      <DependentUpon>Lager.xaml</DependentUpon>
-    </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -161,14 +155,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Kassa.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Lager.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

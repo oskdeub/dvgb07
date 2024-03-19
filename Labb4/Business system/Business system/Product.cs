@@ -13,7 +13,7 @@ namespace Business_system
 		public string Name { get; set; }
 		public int Price { get; set; }
 		public int Qty {  get; set; }
-		public ProductType ProductType { get; set; }
+		public ProductType? ProductType { get; set; }
 
 		protected Product(int ID, string Name, int Price, int Qty)
 		{
@@ -21,13 +21,15 @@ namespace Business_system
 			this.Name = Name;
 			this.Price = Price;
 			this.Qty = Qty;
+			this.ProductType = null;
 		}
-		protected Product(int ID, string Name, int Price)
+		protected Product(int ID, string Name, int Price, ProductType type)
 		{
 			this.ID = ID;
 			this.Name = Name;
 			this.Price = Price;
 			this.Qty = 0;
+			this.ProductType = type;
 		}
 
 		protected Product(int ID, string Name, int Price, int Qty, ProductType type)
@@ -35,7 +37,7 @@ namespace Business_system
 			this.ID = ID;
 			this.Name = Name;
 			this.Price = Price;
-			this.Qty = 0;
+			this.Qty = Qty;
 			this.ProductType = type;
 		}
 
@@ -61,6 +63,7 @@ namespace Business_system
 				Name,
 				Price.ToString(),
 				Qty.ToString(),
+				ProductType.ToString(),
 			};
 		}
 	}

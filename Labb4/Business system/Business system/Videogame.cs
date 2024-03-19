@@ -8,14 +8,18 @@ namespace Business_system
 {
 	internal class Videogame : Product
 	{
-		public VideogamePlatform Platform { get; set; }
+		public VideogamePlatform? Platform { get; set; }
 		
-		public Videogame() : base() { }
+		public Videogame() : base() {
+			ProductType = Business_system.ProductType.Videogame;
+		}
 
 		public override string[] ToCsv()
 		{
 			var csv_s = base.ToCsv().ToList();
-			csv_s.AddRange(new string[] { ProductType.Videogame.ToString(), Platform.ToString() });
+			csv_s.AddRange(new string[] { 
+				Platform.ToString() 
+			});
 			return csv_s.ToArray();
 		}
 	}

@@ -20,6 +20,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 
+
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
 namespace Business_system
@@ -42,12 +43,14 @@ namespace Business_system
 			List<string[]> data = await ReadCSVFile("data.csv");
             populateList(data);
 		}
+		
 
         public void populateList(List<string[]> data) {
 			//Clear before reading
 			masterProducts.Clear();
 			//Add allez producten por favor
 			masterProducts.AddRange(parseCsvData(data));
+
 			id_counter = masterProducts.Count();
 			var displayItems = new ObservableCollection<Product>(masterProducts);
 			ProductList.ItemsSource = displayItems;
@@ -205,13 +208,18 @@ namespace Business_system
 				}
 			}
 		}
-
-		private void Button_Click(object sender, RoutedEventArgs e)
+		private async void ShowAddProductDialog()
 		{
-
+			AddProductDialog addDialog = new AddProductDialog();
+			await addDialog.ShowAsync();
+		}
+		private void NewProduct_Click(object sender, RoutedEventArgs e)
+		{
+			
+			ShowAddProductDialog();
 		}
 
-		private void Button_Click_1(object sender, RoutedEventArgs e)
+		private void RemoveProduct_Click(object sender, RoutedEventArgs e)
 		{
 
 		}

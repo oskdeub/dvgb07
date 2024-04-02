@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Business_system
 {
-	internal class Product : ICsvSerializable
+	public class Product : ICsvSerializable
 	{
 		public int ID { get; set; }
 		public string Name { get; set; }

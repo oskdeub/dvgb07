@@ -10,8 +10,8 @@ namespace Business_system
 	
 	internal class Movie : Product
 	{
-		public MovieFormat MovieFormat { get; set; }
-		public int Playtime { get; set; }
+		public MovieFormat? MovieFormat { get; set; }
+		public int? Playtime { get; set; }
 		public Movie() : base() {
 			ProductType = Business_system.ProductType.Movie;
 		}

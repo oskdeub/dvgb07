@@ -19,22 +19,93 @@ namespace Business_system
 {
 	public sealed partial class AddProductDialog : ContentDialog
 	{
+		public Product NewProduct { get; private set; }
 		public AddProductDialog()
 		{
 			this.InitializeComponent();
+			BookFormatComboBox.ItemsSource = Enum.GetValues(typeof(BookFormat));
+			BookLanguageComboBox.ItemsSource = Enum.GetValues(typeof (BookLanguage));
+			MovieFormatComboBox.ItemsSource = Enum.GetValues(typeof(MovieFormat));
+			PlatformComboBox.ItemsSource = Enum.GetValues(typeof(VideogamePlatform));
 		}
-		
-
 		private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
 		{
+			args.Cancel = !isFormValid();
+			NewProduct = ExtractProductInfo();
 			
-			args.Cancel = isFormValid();
-			Product newProduct = ExtractProductInfo();
+		}
+		private bool isFormValid()
+		{
+			// Initial form validation: Name, Price given. QTY can be left empty
 			
+			
+			if (isRequiredFieldEmpty(NameTextBox) ||
+				isRequiredFieldEmpty(PriceTextBox) ||
+				!isFieldInteger(PriceTextBox) ||
+				!isFieldInteger(QtyTextBox))
+			{
+				return false;
+			}
 
+
+			var selectedProduct = ProductComboBox.SelectedItem as ComboBoxItem;
+
+			string productType = selectedProduct.Content.ToString();
+			switch (productType)
+			{
+				case "Book":
+					//return validateBookFields();
+				case "Movie":
+					//return validateMovieFields();
+				case "Videogame":
+					//return validateVideogameFields();
+					return true;
+				default:
+					ProductComboBox.BorderBrush = new SolidColorBrush(Windows.UI.Colors.Red);
+					return false;
+			}
+			
+		}
+		/*
+		private bool validateBookFields()
+		{
+			throw new NotImplementedException();
+		}
+		private bool validateMovieFields()
+		{
 
 		}
+		private bool validateVideogameFields()
+		{
+			throw new NotImplementedException();
+		}
+		*/
+		private bool isFieldInteger(TextBox textBox)
+		{
+			if(textBox.Text != string.Empty)
+			{
+				if (!int.TryParse(textBox.Text, out int result))
+				{
+					textBox.Text = "";
+					textBox.PlaceholderText = "Input must be an integer!";
+					textBox.BorderBrush = new SolidColorBrush(Windows.UI.Colors.Red);
+					return false;
+				}
+			}
+			return true;
+		}
 
+		private bool isRequiredFieldEmpty(TextBox textBox)
+		{
+			if (textBox.Text == string.Empty)
+			{
+				textBox.PlaceholderText = "required";
+				textBox.BorderBrush = new SolidColorBrush(Windows.UI.Colors.Red);
+				return true;
+			}
+			textBox.BorderBrush = default;
+			return false;
+		}
 		private Product ExtractProductInfo()
 		{
 			var selectedProduct = ProductComboBox.SelectedItem as ComboBoxItem;
@@ -53,59 +124,92 @@ namespace Business_system
 					return null;
 			}
 		}
-
+		private void GetCommonProductInfo(Product pr)
+		{
+			pr.Name = NameTextBox.Text;
+			pr.Price = int.Parse(PriceTextBox.Text);
+			//Handles empty Qty field
+			if(int.TryParse(QtyTextBox.Text, out var qty))
+			{
+				pr.Qty = qty;
+			} else
+			{
+				pr.Qty = 0;
+			}
+			
+		}
 
 		private Book ExtractBookInfo()
 		{
 			var book = new Book();
 			GetCommonProductInfo(book);
 
-			book.Author = FindTextBoxValueByTag("Author");
-			book.bookGenre = FindTextBoxValueByTag("Genre");
-			book.BookFormat = FindComboBoxValueByTag<BookFormat>("BookFormat");
-			book.Language = FindComboBoxValueByTag<BookLanguage>("Language");
-			return book;
+			book.Author = AuthorTextBox.Text;
+			book.bookGenre = GenreTextBox.Text;
 			
+			if (BookFormatComboBox.SelectedItem is BookFormat selectedBookFormat)
+			{
+				book.BookFormat = selectedBookFormat;
+			} else
+			{
+				book.BookFormat = null;
+			}
+
+			if (BookLanguageComboBox.SelectedItem is BookLanguage selectedLanguage)
+			{
+				book.Language = selectedLanguage;
+			}
+			else
+			{
+				book.Language = null;
+			}
+
+			return book;
 		}
 		
 		private Movie ExtractMovieInfo()
 		{
 			var movie = new Movie();
 			GetCommonProductInfo(movie);
-			//movie.Playtime = FindTextBoxValueByTag("Playtime");
-			movie.MovieFormat = FindComboBoxValueByTag<MovieFormat>("MovieFormat");
+			
+			if(int.TryParse(PlaytimeTextBox.Text, out var playtime))
+			{
+				movie.Playtime = playtime;
+			} else
+			{
+				movie.Playtime = null;
+			}
+
+			if (MovieFormatComboBox.SelectedItem is MovieFormat selectedFormat)
+			{
+				movie.MovieFormat = selectedFormat;
+			}
+			else
+			{
+				movie.MovieFormat = null;
+			}
+
 			return movie;
 		}
-		private void GetCommonProductInfo(Product pr)
-		{
-			pr.Name = NameTextBox.Text;
-			pr.Price = int.Parse(PriceTextBox.Text);
-			//Handles empty Qty field
-			int.TryParse(QtyTextBox.Text, out var qty);
-			pr.Qty = qty;
-		}
+		
 
 		private Videogame ExtractVideogameInfo()
 		{
-			throw new NotImplementedException();
-		}
+			var videogame = new Videogame();
+			GetCommonProductInfo(videogame);
 
-		private bool isFormValid()
-		{
-			// Initial form validation: Name, Price given. QTY can be left empty
-			bool isValid = true;
-			if(	isRequiredFieldEmpty(NameTextBox)	&& 
-				isRequiredFieldEmpty(PriceTextBox) && 
-				!isFieldInteger(PriceTextBox)		&& 
-				!isFieldInteger(QtyTextBox))
+			if(PlatformComboBox.SelectedItem is VideogamePlatform selectedPlatform)
 			{
-				isValid = false;
+				videogame.Platform = selectedPlatform;
+			} else
+			{
+				videogame.Platform = null;
 			}
 
-			// Product-specific validation
-			var productType = ProductComboBox.SelectedItem.ToString();
-			return isValid;
+			return videogame;
 		}
+
+		
 		/* Referens: ChatGPT */
 		private string FindTextBoxValueByTag(string tag)
 		{
@@ -123,28 +227,7 @@ namespace Business_system
 			return default;
 		}
 		/* Slut referens */
-		private bool isFieldInteger(TextBox textBox) {
-			if(!int.TryParse(textBox.Text, out int result))
-			{
-				textBox.Header = textBox.Header + ": Input must be integer";
-				textBox.BorderBrush = new SolidColorBrush(Windows.UI.Colors.Red);
-				return false;
-			}
-			return true;
-		}
 		
-
-		private bool isRequiredFieldEmpty(TextBox textBox)
-		{
-			if (textBox.Text == string.Empty)
-			{
-				textBox.PlaceholderText = "required";
-				textBox.BorderBrush = new SolidColorBrush(Windows.UI.Colors.Red);
-				return true;
-			}
-			textBox.BorderBrush = default;
-			return false;
-		}
 	
 
 		private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)

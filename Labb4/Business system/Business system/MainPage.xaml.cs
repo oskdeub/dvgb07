@@ -44,7 +44,12 @@ namespace Business_system
             populateList(data);
 		}
 		
-
+		private void updateList()
+		{
+			id_counter = masterProducts.Count();
+			var displayItems = new ObservableCollection<Product>(masterProducts);
+			ProductList.ItemsSource = displayItems;
+		}
         public void populateList(List<string[]> data) {
 			//Clear before reading
 			masterProducts.Clear();
@@ -88,21 +93,34 @@ namespace Business_system
 
 		private Product parseProductFromCsvLine(string[] line)
 		{
+			//Handle empty fields
             switch (line[4])
             {
                 case "Book":
-                    //Book book = createBookFromString(line);
-                    return new Book { 
-                        ID = int.Parse(line[0]), 
-                        Name = line[1], 
-                        Price = int.Parse(line[2]), 
-                        Qty = int.Parse(line[3]), 
-                        ProductType = ProductType.Book,
-                        Author = line[5], 
-                        bookGenre = line[6], 
-                        BookFormat = (BookFormat)Enum.Parse(typeof(BookFormat), line[7]), 
-                        Language = (BookLanguage)Enum.Parse(typeof(BookLanguage), line[8]), 
-                    };
+					Book book = new Book();
+					book.ID = int.Parse(line[0]);
+					book.Name = line[1];
+					book.Price = int.Parse(line[2]);
+					book.Qty = int.Parse(line[3]);
+					book.ProductType = ProductType.Book;
+					book.Author = line[5];
+					book.bookGenre = line[6];
+					if (Enum.TryParse<BookFormat>(line[7], out BookFormat format))
+					{
+						book.BookFormat = format;
+					} else
+					{
+						book.BookFormat = null;
+					}
+					if (Enum.TryParse<BookLanguage>(line[8], out BookLanguage language))
+					{
+						book.Language = language;
+					} else
+					{
+						book.Language = null;
+					}
+					return book;
+
                     
                 case "Movie":
                     return new Movie {
@@ -112,7 +130,7 @@ namespace Business_system
                         Qty = int.Parse(line[3]),
                         ProductType = ProductType.Movie,
                         MovieFormat = (MovieFormat)Enum.Parse(typeof(MovieFormat), line[5]),
-                        Playtime = int.Parse(line[6]),
+                        Playtime = int.Parse(line[6]), 
 					};
 				case "Videogame":
                     return new Videogame { 
@@ -211,11 +229,17 @@ namespace Business_system
 		private async void ShowAddProductDialog()
 		{
 			AddProductDialog addDialog = new AddProductDialog();
-			await addDialog.ShowAsync();
+			var result = await addDialog.ShowAsync();
+			if(result == ContentDialogResult.Primary)
+			{
+				Product newProduct = addDialog.NewProduct;
+				newProduct.ID = ++id_counter;
+				masterProducts.Add(newProduct);
+				updateList();
+			}
 		}
 		private void NewProduct_Click(object sender, RoutedEventArgs e)
 		{
-			
 			ShowAddProductDialog();
 		}
 

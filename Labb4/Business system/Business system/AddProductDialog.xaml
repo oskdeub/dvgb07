@@ -25,13 +25,13 @@
 				
 				<TextBox Name="AuthorTextBox" Header="Author" Visibility="Collapsed"></TextBox>
 				<TextBox Name="GenreTextBox" Header="Genre" Visibility="Collapsed"></TextBox>
-				<ComboBox Name="BookFormatComboBox" Header="Format" Visibility="Collapsed"></ComboBox>
-				<ComboBox Name="BookLanguageComboBox" Header="Language" Visibility="Collapsed"></ComboBox>
+				<ComboBox Name="BookFormatComboBox" Header="Format" Visibility="Collapsed" PlaceholderText="Select"></ComboBox>
+				<ComboBox Name="BookLanguageComboBox" Header="Language" Visibility="Collapsed" PlaceholderText="Select"></ComboBox>
 
 				<TextBox Name="PlaytimeTextBox" Header="Playtime" Visibility="Collapsed"></TextBox>
-				<ComboBox Name="MovieFormatComboBox" Header="Format" Visibility="Collapsed"></ComboBox>
+				<ComboBox Name="MovieFormatComboBox" Header="Format" Visibility="Collapsed" PlaceholderText="Select"></ComboBox>
 
-				<ComboBox Name="PlatformComboBox" Header="Platform" Visibility="Collapsed"></ComboBox>
+				<ComboBox Name="PlatformComboBox" Header="Platform" Visibility="Collapsed" PlaceholderText="Select"></ComboBox>
 				
 			</StackPanel>
 			<TextBox Header="Price*" Name="PriceTextBox" InputScope="Number"></TextBox>

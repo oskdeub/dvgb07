@@ -13,19 +13,29 @@
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
 
     <StackPanel>
-		<ComboBox Name="ProductComboBox" SelectionChanged="ProductComboBox_SelectionChanged" PlaceholderText="Choose Product">
+		<ComboBox Tag="ProductComboBox" Header="Product*" Name="ProductComboBox" SelectionChanged="ProductComboBox_SelectionChanged" PlaceholderText="Select">
 			<ComboBoxItem Content="Book"></ComboBoxItem>
 			<ComboBoxItem Content="Movie"></ComboBoxItem>
 			<ComboBoxItem Content="Videogame"></ComboBoxItem>
 		</ComboBox>
 
 		<StackPanel Name="InputPanel">
-			<TextBox Header="Name"></TextBox>
+			<TextBox Header="Name*" Name="NameTextBox"></TextBox>
 			<StackPanel Name="DynamicPanel">
 				
+				<TextBox Name="AuthorTextBox" Header="Author" Visibility="Collapsed"></TextBox>
+				<TextBox Name="GenreTextBox" Header="Genre" Visibility="Collapsed"></TextBox>
+				<ComboBox Name="BookFormatComboBox" Header="Format" Visibility="Collapsed"></ComboBox>
+				<ComboBox Name="BookLanguageComboBox" Header="Language" Visibility="Collapsed"></ComboBox>
+
+				<TextBox Name="PlaytimeTextBox" Header="Playtime" Visibility="Collapsed"></TextBox>
+				<ComboBox Name="MovieFormatComboBox" Header="Format" Visibility="Collapsed"></ComboBox>
+
+				<ComboBox Name="PlatformComboBox" Header="Platform" Visibility="Collapsed"></ComboBox>
+				
 			</StackPanel>
-			<TextBox Header="Price"></TextBox>
-			<TextBox Header="Qty"></TextBox>
+			<TextBox Header="Price*" Name="PriceTextBox" InputScope="Number"></TextBox>
+			<TextBox Header="Qty" Name="QtyTextBox" InputScope="Number"></TextBox>
 		</StackPanel>
 		
     </StackPanel>

@@ -27,7 +27,125 @@ namespace Business_system
 
 		private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
 		{
+			
+			args.Cancel = isFormValid();
+			Product newProduct = ExtractProductInfo();
+			
+
+
 		}
+
+		private Product ExtractProductInfo()
+		{
+			var selectedProduct = ProductComboBox.SelectedItem as ComboBoxItem;
+			if (selectedProduct == null) return null;
+
+			string productType = selectedProduct.Content.ToString();
+			switch (productType)
+			{
+				case "Book":
+					return ExtractBookInfo();
+				case "Movie":
+					return ExtractMovieInfo();
+				case "Videogame":
+					return ExtractVideogameInfo();
+				default:
+					return null;
+			}
+		}
+
+
+		private Book ExtractBookInfo()
+		{
+			var book = new Book();
+			GetCommonProductInfo(book);
+
+			book.Author = FindTextBoxValueByTag("Author");
+			book.bookGenre = FindTextBoxValueByTag("Genre");
+			book.BookFormat = FindComboBoxValueByTag<BookFormat>("BookFormat");
+			book.Language = FindComboBoxValueByTag<BookLanguage>("Language");
+			return book;
+			
+		}
+		
+		private Movie ExtractMovieInfo()
+		{
+			var movie = new Movie();
+			GetCommonProductInfo(movie);
+			//movie.Playtime = FindTextBoxValueByTag("Playtime");
+			movie.MovieFormat = FindComboBoxValueByTag<MovieFormat>("MovieFormat");
+			return movie;
+		}
+		private void GetCommonProductInfo(Product pr)
+		{
+			pr.Name = NameTextBox.Text;
+			pr.Price = int.Parse(PriceTextBox.Text);
+			//Handles empty Qty field
+			int.TryParse(QtyTextBox.Text, out var qty);
+			pr.Qty = qty;
+		}
+
+		private Videogame ExtractVideogameInfo()
+		{
+			throw new NotImplementedException();
+		}
+
+		private bool isFormValid()
+		{
+			// Initial form validation: Name, Price given. QTY can be left empty
+			bool isValid = true;
+			if(	isRequiredFieldEmpty(NameTextBox)	&& 
+				isRequiredFieldEmpty(PriceTextBox) && 
+				!isFieldInteger(PriceTextBox)		&& 
+				!isFieldInteger(QtyTextBox))
+			{
+				isValid = false;
+			}
+
+			// Product-specific validation
+			var productType = ProductComboBox.SelectedItem.ToString();
+			return isValid;
+		}
+		/* Referens: ChatGPT */
+		private string FindTextBoxValueByTag(string tag)
+		{
+			//Because we're creating dynamic TextBoxes and applying Tags we can find these by searching in DynamicPanel.Children
+			var textBox = DynamicPanel.Children.OfType<TextBox>().FirstOrDefault(tb => tb.Tag?.ToString() == tag);
+			return textBox?.Text;
+		}
+		private T FindComboBoxValueByTag<T>(string tag) where T : Enum
+		{
+			var comboBox = DynamicPanel.Children.OfType<ComboBox>().FirstOrDefault(cb => cb.Tag?.ToString() == tag);
+			if (comboBox?.SelectedItem != null)
+			{
+				return (T)comboBox.SelectedItem;
+			}
+			return default;
+		}
+		/* Slut referens */
+		private bool isFieldInteger(TextBox textBox) {
+			if(!int.TryParse(textBox.Text, out int result))
+			{
+				textBox.Header = textBox.Header + ": Input must be integer";
+				textBox.BorderBrush = new SolidColorBrush(Windows.UI.Colors.Red);
+				return false;
+			}
+			return true;
+		}
+		
+
+		private bool isRequiredFieldEmpty(TextBox textBox)
+		{
+			if (textBox.Text == string.Empty)
+			{
+				textBox.PlaceholderText = "required";
+				textBox.BorderBrush = new SolidColorBrush(Windows.UI.Colors.Red);
+				return true;
+			}
+			textBox.BorderBrush = default;
+			return false;
+		}
+	
 
 		private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
 		{
@@ -35,7 +153,13 @@ namespace Business_system
 
 		private void ProductComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			DynamicPanel.Children.Clear();
+			AuthorTextBox.Visibility = Visibility.Collapsed;
+			GenreTextBox.Visibility = Visibility.Collapsed;
+			BookFormatComboBox.Visibility = Visibility.Collapsed;
+			BookLanguageComboBox.Visibility = Visibility.Collapsed;
+			PlaytimeTextBox.Visibility = Visibility.Collapsed;
+			MovieFormatComboBox.Visibility = Visibility.Collapsed;
+			PlatformComboBox.Visibility = Visibility.Collapsed;
 
 			var type = ProductComboBox.SelectedItem as ComboBoxItem;
 			if (type != null)
@@ -43,13 +167,20 @@ namespace Business_system
 				switch(type.Content.ToString())
 				{
 					case "Book":
-						AddBookFields();
+						//AddBookFields();
+						AuthorTextBox.Visibility = Visibility.Visible;
+						GenreTextBox.Visibility = Visibility.Visible;
+						BookFormatComboBox.Visibility = Visibility.Visible;
+						BookLanguageComboBox.Visibility = Visibility.Visible;
 						break;
 					case "Movie":
-						AddMovieFields();
+						//AddMovieFields();
+						PlaytimeTextBox.Visibility = Visibility.Visible;
+						MovieFormatComboBox.Visibility = Visibility.Visible;
 						break;
 					case "Videogame":
-						AddVideogameFields();
+						//AddVideogameFields();
+						PlatformComboBox.Visibility = Visibility.Visible;
 						break;
 				}
 			}

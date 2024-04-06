@@ -30,9 +30,13 @@ namespace Business_system
 		}
 		private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
 		{
-			args.Cancel = !isFormValid();
-			NewProduct = ExtractProductInfo();
-			
+			if (!isFormValid())
+			{
+				args.Cancel = true;
+			} else
+			{
+				NewProduct = ExtractProductInfo();
+			}
 		}
 		private bool isFormValid()
 		{
@@ -41,59 +45,79 @@ namespace Business_system
 			
 			if (isRequiredFieldEmpty(NameTextBox) ||
 				isRequiredFieldEmpty(PriceTextBox) ||
-				!isFieldInteger(PriceTextBox) ||
-				!isFieldInteger(QtyTextBox))
+				!isFieldPositiveInteger(PriceTextBox) || 
+				!isFieldPositiveInteger(QtyTextBox)) 
 			{
 				return false;
 			}
 
-
 			var selectedProduct = ProductComboBox.SelectedItem as ComboBoxItem;
+			if(selectedProduct == null)
+			{
+				ProductComboBox.BorderBrush = new SolidColorBrush(Windows.UI.Colors.Red);
+				return false;
+			}
 
 			string productType = selectedProduct.Content.ToString();
 			switch (productType)
 			{
 				case "Book":
-					//return validateBookFields();
+					return true;
 				case "Movie":
-					//return validateMovieFields();
+					//Special case for Movie that has int PlayTime.
+					if (!isFieldPositiveInteger(PlaytimeTextBox))
+					{
+						PlaytimeTextBox.BorderBrush = new SolidColorBrush(Windows.UI.Colors.Red);
+						return false;
+					}
+					return true;
 				case "Videogame":
-					//return validateVideogameFields();
 					return true;
 				default:
-					ProductComboBox.BorderBrush = new SolidColorBrush(Windows.UI.Colors.Red);
 					return false;
 			}
-			
 		}
-		/*
-		private bool validateBookFields()
+		private bool isNegative(TextBox textBox)
 		{
-			throw new NotImplementedException();
+			if (textBox.Text != string.Empty)
+			{
+				if (int.TryParse(textBox.Text, out int result))
+				{
+					if (result < 0)
+					{
+						textBox.Text = "";
+						textBox.PlaceholderText = "Input must be a positive number!";
+						textBox.BorderBrush = new SolidColorBrush(Windows.UI.Colors.Red);
+						return true;
+					}
+				}
+			}
+			return false;
 		}
-		private bool validateMovieFields()
-		{
-
-		}
-		private bool validateVideogameFields()
-		{
-			throw new NotImplementedException();
-		}
-		*/
-		private bool isFieldInteger(TextBox textBox)
+		private bool isFieldPositiveInteger(TextBox textBox)
 		{
 			if(textBox.Text != string.Empty)
 			{
-				if (!int.TryParse(textBox.Text, out int result))
+				if (int.TryParse(textBox.Text, out int result))
+				{
+					if(result < 0)
+					{
+						textBox.Text = "";
+						textBox.PlaceholderText = "Input must be a positive number!";
+						textBox.BorderBrush = new SolidColorBrush(Windows.UI.Colors.Red);
+						return false;
+					}
+				} else 
 				{
 					textBox.Text = "";
 					textBox.PlaceholderText = "Input must be an integer!";
 					textBox.BorderBrush = new SolidColorBrush(Windows.UI.Colors.Red);
 					return false;
-				}
+				} 
 			}
 			return true;
 		}
+			
 
 		private bool isRequiredFieldEmpty(TextBox textBox)
 		{
@@ -127,9 +151,15 @@ namespace Business_system
 		private void GetCommonProductInfo(Product pr)
 		{
 			pr.Name = NameTextBox.Text;
-			pr.Price = int.Parse(PriceTextBox.Text);
+			if (int.TryParse(PriceTextBox.Text, out int price))
+			{
+				pr.Price = price;
+			} else
+			{
+				pr.Price = -1;
+			}
 			//Handles empty Qty field
-			if(int.TryParse(QtyTextBox.Text, out var qty))
+			if(int.TryParse(QtyTextBox.Text, out int qty))
 			{
 				pr.Qty = qty;
 			} else

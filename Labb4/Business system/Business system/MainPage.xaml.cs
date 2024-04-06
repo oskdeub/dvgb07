@@ -105,9 +105,9 @@ namespace Business_system
 					book.ProductType = ProductType.Book;
 					book.Author = line[5];
 					book.bookGenre = line[6];
-					if (Enum.TryParse<BookFormat>(line[7], out BookFormat format))
+					if (Enum.TryParse<BookFormat>(line[7], out BookFormat bookFormat))
 					{
-						book.BookFormat = format;
+						book.BookFormat = bookFormat;
 					} else
 					{
 						book.BookFormat = null;
@@ -120,34 +120,48 @@ namespace Business_system
 						book.Language = null;
 					}
 					return book;
-
                     
                 case "Movie":
-                    return new Movie {
-                        ID = int.Parse(line[0]),
-                        Name = line[1],
-                        Price = int.Parse(line[2]),
-                        Qty = int.Parse(line[3]),
-                        ProductType = ProductType.Movie,
-                        MovieFormat = (MovieFormat)Enum.Parse(typeof(MovieFormat), line[5]),
-                        Playtime = int.Parse(line[6]), 
-					};
+					Movie movie = new Movie();
+					movie.ID = int.Parse(line[0]);
+					movie.Name = line[1];
+					movie.Price = int.Parse(line[2]);
+					movie.Qty = int.Parse(line[3]);
+					movie.ProductType = ProductType.Movie;
+					if (Enum.TryParse<MovieFormat>(line[5], out MovieFormat movieFormat))
+					{
+						movie.MovieFormat = movieFormat;
+					} else
+					{
+						movie.MovieFormat = null;
+					}
+					movie.Playtime = int.Parse(line[6]);
+					return movie;
+
 				case "Videogame":
-                    return new Videogame { 
-                        ID = int.Parse(line[0]), 
-                        Name = line[1], 
-                        Price = int.Parse(line[2]), 
-                        Qty = int.Parse(line[3]),
-                        ProductType = ProductType.Videogame,
-                        Platform = (VideogamePlatform)Enum.Parse(typeof(VideogamePlatform), line[5]),
-					};
+					Videogame videogame = new Videogame();
+					videogame.ID = int.Parse(line[0]);
+					videogame.Name = line[1];
+					videogame.Price = int.Parse(line[2]);
+					videogame.Qty = int.Parse(line[3]);
+					videogame.ProductType = ProductType.Videogame;
+					if (Enum.TryParse<VideogamePlatform>(line[5], out VideogamePlatform videogamePlatform))
+					{
+						videogame.Platform = videogamePlatform;
+					} else
+					{
+						videogame.Platform = null;
+					}
+					return videogame;
+
                 default:
-                    return new Product {
-						ID = int.Parse(line[0]),
-						Name = line[1],
-						Price = int.Parse(line[2]),
-						Qty = int.Parse(line[3]),
-					};
+					Product product = new Product();
+					product.ID = int.Parse(line[0]);
+					product.Name = line[1];
+					product.Price = int.Parse(line[2]);
+					product.Qty = int.Parse(line[3]);
+					return product;
+
             }
 		}
 
@@ -246,6 +260,18 @@ namespace Business_system
 		private void RemoveProduct_Click(object sender, RoutedEventArgs e)
 		{
 
+		}
+
+		private void ProductList_ItemClick(object sender, ItemClickEventArgs e)
+		{
+			var clickedItem = (Product)e.ClickedItem;
+
+			var typeClicked = clickedItem.ProductType.ToString();
+			switch(typeClicked)
+			{
+				case "Book":
+
+			}
 		}
 	}
 }

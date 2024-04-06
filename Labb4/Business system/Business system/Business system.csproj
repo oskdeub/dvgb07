@@ -125,6 +125,9 @@
     <Compile Include="Book.cs" />
     <Compile Include="BookFormat.cs" />
     <Compile Include="BookLanguage.cs" />
+    <Compile Include="ContentDialog1.xaml.cs">
+      <DependentUpon>ContentDialog1.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ICsvSerializable.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -133,6 +136,9 @@
     <Compile Include="MovieFormat.cs" />
     <Compile Include="Product.cs" />
     <Compile Include="ProductFactory.cs" />
+    <Compile Include="ProductInfoDialog.xaml.cs">
+      <DependentUpon>ProductInfoDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ProductType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Videogame.cs" />
@@ -162,9 +168,17 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ContentDialog1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ProductInfoDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

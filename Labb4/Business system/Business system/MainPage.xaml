@@ -22,9 +22,9 @@
 			</Grid.ColumnDefinitions>
 			<NavigationView PaneDisplayMode="Top" IsSettingsVisible="False" IsBackButtonVisible="Collapsed" SelectionChanged="NavigationView_SelectionChanged" Grid.ColumnSpan="2">
 				<NavigationView.MenuItems>
-					<NavigationViewItem Content="Kassa" Tag="Kassa"></NavigationViewItem>
+					<NavigationViewItem Content="Cashier" Tag="Kassa"></NavigationViewItem>
 					<NavigationViewItemSeparator Opacity="0"></NavigationViewItemSeparator>
-					<NavigationViewItem Content="Lager" Tag="Lager"></NavigationViewItem>
+					<NavigationViewItem Content="Stock" Tag="Lager"></NavigationViewItem>
 
 				</NavigationView.MenuItems>
 			</NavigationView>
@@ -34,8 +34,8 @@
 					<ColumnDefinition></ColumnDefinition>
 					<ColumnDefinition></ColumnDefinition>
 				</Grid.ColumnDefinitions>
-				<Button Grid.Column="0" Click="Open_Click">Läs</Button>
-				<Button Grid.Column="1" Click="Save_Click">Spara</Button>
+				<Button Grid.Column="0" Click="Open_Click">Read</Button>
+				<Button Grid.Column="1" Click="Save_Click">Write</Button>
 
 			</Grid>
 		</Grid>
@@ -46,7 +46,7 @@
 
 		<!-- Kassa UI -->
 		<StackPanel Name="KassaPanel" Visibility="Collapsed" Grid.Column="0" Grid.Row="1">
-			<TextBlock Text="Kassa UI"/>
+			<TextBlock Text="Cashier UI"/>
 		</StackPanel>
 		<!-- END Kassa UI -->
 		
@@ -60,7 +60,7 @@
 					<RowDefinition ></RowDefinition>
 				</Grid.RowDefinitions>
 				
-				<TextBlock Grid.Row="0" Text="Lager UI" FontSize="25"/>
+				<TextBlock Grid.Row="0" Text="Stock UI" FontSize="25"/>
 				<Grid Grid.Row="1" Margin="16">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition></ColumnDefinition>
@@ -68,35 +68,41 @@
 						<ColumnDefinition></ColumnDefinition>
 						<ColumnDefinition></ColumnDefinition>
 						<ColumnDefinition></ColumnDefinition>
+						<ColumnDefinition></ColumnDefinition>
 					</Grid.ColumnDefinitions>
-					<Button Content="Lägg till ny produkt"	Grid.Column="0" Click="NewProduct_Click" CornerRadius="5"></Button>
-					<Button Content="Ta bort produkt"		Grid.Column="1" Click="RemoveProduct_Click" CornerRadius="5"></Button>
-					<Button Content="Registrera inleverans" Grid.Column="2"  CornerRadius="5"></Button>
-					
+					<Button Content="New product"	Grid.Column="0" Click="NewProduct_Click" CornerRadius="5"></Button>
+					<Button Content="Delivery" Name="DeliveryButton" Grid.Column="3" Click="DeliveryButton_Click" CornerRadius="5"></Button>
+					<Button Content="Done" Name="DoneButton" Grid.Column="4" Visibility="Collapsed" CornerRadius="5" Click="DoneButton_Click"></Button>
+					<Button Content="Cancel" Name="CancelButton" Grid.Column="5" Visibility="Collapsed" CornerRadius="5" Click="CancelButton_Click"></Button>
 				</Grid>
 
 				<Grid Grid.Row="3">
 					<Grid.ColumnDefinitions>
-						<ColumnDefinition></ColumnDefinition>
-						<ColumnDefinition></ColumnDefinition>
+						<ColumnDefinition Width="*"></ColumnDefinition>
+						<ColumnDefinition Width="*"></ColumnDefinition>
+						
 					</Grid.ColumnDefinitions>
 
-					<ListView Name="ProductList" Grid.Column="0" ScrollViewer.HorizontalScrollBarVisibility="Auto" 
-					  ItemClick="ProductList_ItemClick" 
-					  Margin="16, 0, 16, 0" BorderThickness="1" BorderBrush="Black">
+					<ListView Name="ProductList" Grid.Column="0" 
+							  ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+							  ScrollViewer.VerticalScrollBarVisibility="Auto"
+							  ItemClick="ProductList_ItemClick" IsItemClickEnabled="True"
+							  Margin="16, 0, 16, 0" BorderThickness="1" BorderBrush="Black">
 						<ListView.Header>
 							<StackPanel Orientation="Horizontal">
 								<Grid>
 									<Grid.ColumnDefinitions>
+										<ColumnDefinition Width="50"></ColumnDefinition>
 										<ColumnDefinition Width="150"></ColumnDefinition>
 										<ColumnDefinition Width="100"></ColumnDefinition>
 										<ColumnDefinition Width="50"></ColumnDefinition>
 										<ColumnDefinition Width="50"></ColumnDefinition>
 									</Grid.ColumnDefinitions>
-									<TextBlock Text="Name" Grid.Column="0" Margin="4" FontWeight="Bold"/>
-									<TextBlock Text="Type" Grid.Column="1" Margin="4" FontWeight="Bold"/>
-									<TextBlock Text="Price" Grid.Column="2" Margin="4" FontWeight="Bold"/>
-									<TextBlock Text="Qty" Grid.Column="3" Margin="4" FontWeight="Bold"/>
+									<TextBlock Text="ID"	Grid.Column="0" Margin="4" FontWeight="Bold"/>
+									<TextBlock Text="Name"	Grid.Column="1" Margin="4" FontWeight="Bold"/>
+									<TextBlock Text="Type"	Grid.Column="2" Margin="4" FontWeight="Bold"/>
+									<TextBlock Text="Price" Grid.Column="3" Margin="4" FontWeight="Bold"/>
+									<TextBlock Text="Qty"	Grid.Column="4" Margin="4" FontWeight="Bold"/>
 
 								</Grid>
 
@@ -107,130 +113,75 @@
 								<StackPanel Orientation="Horizontal" >
 									<Grid>
 										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="50"></ColumnDefinition>
 											<ColumnDefinition Width="150"></ColumnDefinition>
 											<ColumnDefinition Width="100"></ColumnDefinition>
 											<ColumnDefinition Width="50"></ColumnDefinition>
 											<ColumnDefinition Width="50"></ColumnDefinition>
 										</Grid.ColumnDefinitions>
-
-										<TextBlock Text="{Binding Name}"		Grid.Column="0" Margin="4"/>
-										<TextBlock Text="{Binding ProductType}" Grid.Column="1" Margin="4"/>
-										<TextBlock Text="{Binding Price}"		Grid.Column="2" Margin="4"/>
-										<TextBlock Text="{Binding Qty}"			Grid.Column="3" Margin="4" />
-
+										<TextBlock Text="{Binding ID}"			Grid.Column="0"/>
+										<TextBlock Text="{Binding Name}"		Grid.Column="1"/>
+										<TextBlock Text="{Binding ProductType}" Grid.Column="2"/>
+										<TextBlock Text="{Binding Price}"		Grid.Column="3"/>
+										<TextBlock Text="{Binding Qty}"			Grid.Column="4"/>
 									</Grid>
 								</StackPanel>
 							</DataTemplate>
 						</ListView.ItemTemplate>
 					</ListView>
 					
-					<!-- RIGHT SIDE INFO PANEL -->
-					<StackPanel Name="ProductPanel" Grid.Column="1" BorderThickness="1" BorderBrush="Black" Padding="5" HorizontalAlignment="Center">
-						<StackPanel Name="CommonPanel">
-							<Grid Margin="0,5,0,0">
-								<Grid.RowDefinitions>
-									<RowDefinition></RowDefinition>
-									<RowDefinition></RowDefinition>
-									<RowDefinition></RowDefinition>
-									<RowDefinition></RowDefinition>
-								</Grid.RowDefinitions>
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition></ColumnDefinition>
-									<ColumnDefinition></ColumnDefinition>
-								</Grid.ColumnDefinitions>
-								<TextBlock Grid.Row="0" Grid.Column="0" >Name:</TextBlock>
-								<TextBlock Grid.Row="0" Grid.Column="1">Göran</TextBlock>
+					<!-- RIGHT SIDE Delivery PANEL -->
+					<ListView Name="DeliveryList" Grid.Column="1" 
+							  ScrollViewer.HorizontalScrollBarVisibility="Auto"
+							  ScrollViewer.VerticalScrollBarVisibility="Auto"
+							  ItemClick="DeliveryList_ItemClick" IsItemClickEnabled="True" 
+							  Margin="16, 0, 16, 0" BorderThickness="1" BorderBrush="Black"
+							  Visibility="Collapsed">
+						<ListView.Header>
+							<StackPanel Orientation="Horizontal">
+								<Grid>
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Width="50"></ColumnDefinition>
+										<ColumnDefinition Width="150"></ColumnDefinition>
+										<ColumnDefinition Width="100"></ColumnDefinition>
+										<ColumnDefinition Width="50"></ColumnDefinition>
+										<ColumnDefinition Width="50"></ColumnDefinition>
+									</Grid.ColumnDefinitions>
+									<TextBlock Text="ID"	Grid.Column="0" Margin="4" FontWeight="Bold"/>
+									<TextBlock Text="Name"	Grid.Column="1" Margin="4" FontWeight="Bold"/>
+									<TextBlock Text="Type"	Grid.Column="2" Margin="4" FontWeight="Bold"/>
+									<TextBlock Text="Price" Grid.Column="3" Margin="4" FontWeight="Bold"/>
+									<TextBlock Text="Qty"	Grid.Column="4" Margin="4" FontWeight="Bold"/>
 
-								<TextBlock Grid.Row="1" Grid.Column="0">Type:</TextBlock>
-								<TextBlock Grid.Row="1" Grid.Column="1">Göran</TextBlock>
+								</Grid>
 
-								<TextBlock Grid.Row="2" Grid.Column="0">Price:</TextBlock>
-								<TextBlock Grid.Row="2" Grid.Column="1">Göran</TextBlock>
+							</StackPanel>
+						</ListView.Header>
+						<ListView.ItemTemplate>
+							<DataTemplate x:DataType="local:Product">
+								<StackPanel Orientation="Horizontal" >
+									<Grid>
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="50"></ColumnDefinition>
+											<ColumnDefinition Width="150"></ColumnDefinition>
+											<ColumnDefinition Width="100"></ColumnDefinition>
+											<ColumnDefinition Width="50"></ColumnDefinition>
+											<ColumnDefinition Width="50"></ColumnDefinition>
+											
+										</Grid.ColumnDefinitions>
+										<TextBlock Text="{Binding ID}"			Grid.Column="0"/>
+										<TextBlock Text="{Binding Name}"		Grid.Column="1"/>
+										<TextBlock Text="{Binding ProductType}" Grid.Column="2"/>
+										<TextBlock Text="{Binding Price}"		Grid.Column="3"/>
+										<TextBox Tag="{Binding ID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Qty"			Grid.Column="4"/>
 
-								<TextBlock Grid.Row="3" Grid.Column="0">Quantity:</TextBlock>
-								<TextBlock Grid.Row="3" Grid.Column="1">Göran</TextBlock>
-							</Grid>
-							
-							
-						</StackPanel>
-
-						
-						<StackPanel Name="BookPanel" Visibility="Collapsed">
-							<Grid Margin="0,5,0,0">
-								<Grid.RowDefinitions>
-									<RowDefinition></RowDefinition>
-									<RowDefinition></RowDefinition>
-									<RowDefinition></RowDefinition>
-									<RowDefinition></RowDefinition>
-								</Grid.RowDefinitions>
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition></ColumnDefinition>
-									<ColumnDefinition></ColumnDefinition>
-								</Grid.ColumnDefinitions>
-
-
-								<TextBlock Grid.Row="0" Grid.Column="0" >Author:</TextBlock>
-								<TextBlock Grid.Row="0" Grid.Column="1">Göran</TextBlock>
-
-								<TextBlock Grid.Row="1" Grid.Column="0">Genre:</TextBlock>
-								<TextBlock Grid.Row="1" Grid.Column="1">Göran</TextBlock>
-
-								<TextBlock Grid.Row="2" Grid.Column="0">Format:</TextBlock>
-								<TextBlock Grid.Row="2" Grid.Column="1">Göran</TextBlock>
-
-								<TextBlock Grid.Row="3" Grid.Column="0">Language:</TextBlock>
-								<TextBlock Grid.Row="3" Grid.Column="1">Göran</TextBlock>
-								
-							</Grid>
-								
-						</StackPanel>
-
-						<StackPanel Name="MoviePanel" Visibility="Collapsed">
-							<Grid Margin="0,5,0,0">
-								<Grid.RowDefinitions>
-									<RowDefinition></RowDefinition>
-									<RowDefinition></RowDefinition>
-								</Grid.RowDefinitions>
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition></ColumnDefinition>
-									<ColumnDefinition></ColumnDefinition>
-								</Grid.ColumnDefinitions>
+									</Grid>
+								</StackPanel>
+							</DataTemplate>
+						</ListView.ItemTemplate>
+					</ListView>
 
 
-								<TextBlock Grid.Row="0" Grid.Column="0" >Format:</TextBlock>
-								<TextBlock Grid.Row="0" Grid.Column="1">Göran</TextBlock>
-
-								<TextBlock Grid.Row="1" Grid.Column="0">Playtime:</TextBlock>
-								<TextBlock Grid.Row="1" Grid.Column="1">1231241241241</TextBlock>
-
-								
-
-							</Grid>
-
-						</StackPanel>
-
-						<StackPanel Name="VideogamePanel" Visibility="Collapsed">
-							<Grid Margin="0,5,0,0">
-								
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition></ColumnDefinition>
-									<ColumnDefinition></ColumnDefinition>
-								</Grid.ColumnDefinitions>
-
-
-								<TextBlock Grid.Column="0">Platform:</TextBlock>
-								<TextBlock Grid.Column="1">Göran</TextBlock>
-
-
-
-							</Grid>
-							
-						</StackPanel>
-						<Button Margin="6">Ta bort</Button>
-						
-					</StackPanel>
-					
-					
 				</Grid>
 				
 

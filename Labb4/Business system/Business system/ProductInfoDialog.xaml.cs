@@ -19,11 +19,62 @@ namespace Business_system
 {
 	public sealed partial class ProductInfoDialog : ContentDialog
 	{
-		public ProductInfoDialog()
+		Product CurrentProduct;
+		public ProductInfoDialog(Product product)
 		{
+			this.CurrentProduct = product;
 			this.InitializeComponent();
+			
+			DisplayProductFields();
+			
+			
 		}
 
+		private void DisplayProductFields()
+		{
+			BookPanel.Visibility = Visibility.Collapsed;
+			MoviePanel.Visibility = Visibility.Collapsed;
+			VideogamePanel.Visibility = Visibility.Collapsed;
+			PopulateCommonInfo();
+			if (CurrentProduct is Book book) {
+				BookPanel.Visibility = Visibility.Visible;
+				PopulateBookInfo(book);
+			} else if (CurrentProduct is Movie movie)
+			{
+				MoviePanel.Visibility = Visibility.Visible;
+				PopulateMovieInfo(movie);
+			} else if (CurrentProduct is Videogame videogame)
+			{
+				VideogamePanel.Visibility = Visibility.Visible;
+				PopulateVideogameInfo(videogame);
+			}
+				
+		}
+
+		private void PopulateCommonInfo()
+		{
+			NameTextBlock.Text = CurrentProduct.Name;
+			TypeTextBlock.Text = CurrentProduct.ProductType.ToString();
+			PriceTextBlock.Text = CurrentProduct.Price.ToString();
+			QuantityTextBlock.Text = CurrentProduct.Qty.ToString();
+		}
+
+		private void PopulateBookInfo(Book book)
+		{
+			AuthorTextBlock.Text = book.Author;
+			BookGenreTextBlock.Text = book.bookGenre;
+			BookFormatTextBlock.Text = book.BookFormat.ToString();
+			LanguageTextBlock.Text = book.Language.ToString();
+		}
+		private void PopulateMovieInfo(Movie movie)
+		{
+			MovieFormatTextBlock.Text = movie.MovieFormat.ToString();
+			PlaytimeTextBlock.Text = movie.Playtime.ToString();
+		}
+		private void PopulateVideogameInfo(Videogame videogame)
+		{
+			PlatformTextBlock.Text = videogame.Platform.ToString();
+		}
 		private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
 		{
 		}

@@ -7,9 +7,11 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -25,40 +27,41 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Business_system
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
-    public sealed partial class MainPage : Page
-    {
-        List<Product> masterProducts = new List<Product>();
-        private int id_counter;
-        public MainPage()
-        {
-            id_counter = 0;
-            this.InitializeComponent();
-        }
+	/// <summary>
+	/// An empty page that can be used on its own or navigated to within a Frame.
+	/// </summary>
+	public sealed partial class MainPage : Page
+	{
+		List<Product> masterProducts = new List<Product>();
+		List<Product> deliveryProducts = new List<Product>();
+		private bool deliveryEnabled;
+		private int id_counter;
+		public MainPage()
+		{
+			deliveryEnabled = false;
+			id_counter = 0;
+			this.InitializeComponent();
+		}
 
 		private async void Page_Loaded(object sender, RoutedEventArgs e)
 		{
 			List<string[]> data = await ReadCSVFile("data.csv");
-            populateList(data);
+			populateList(data);
 		}
-		
-		private void updateList()
+
+		private void updateMasterProductsList()
 		{
 			id_counter = masterProducts.Count();
 			var displayItems = new ObservableCollection<Product>(masterProducts);
 			ProductList.ItemsSource = displayItems;
 		}
-        public void populateList(List<string[]> data) {
+		public void populateList(List<string[]> data) {
 			//Clear before reading
 			masterProducts.Clear();
 			//Add allez producten por favor
 			masterProducts.AddRange(parseCsvData(data));
 
-			id_counter = masterProducts.Count();
-			var displayItems = new ObservableCollection<Product>(masterProducts);
-			ProductList.ItemsSource = displayItems;
+			updateMasterProductsList();
 
 			/*
 			var dItems = new ObservableCollection<string>();
@@ -82,11 +85,11 @@ namespace Business_system
 		}
 
 		internal List<Product> parseCsvData(List<string[]> data)
-        {
+		{
 			var products = new List<Product>();
 			foreach (var line in data.Skip(1))
 			{
-                products.Add(parseProductFromCsvLine(line));
+				products.Add(parseProductFromCsvLine(line));
 			}
 			return products;
 		}
@@ -94,9 +97,9 @@ namespace Business_system
 		private Product parseProductFromCsvLine(string[] line)
 		{
 			//Handle empty fields
-            switch (line[4])
-            {
-                case "Book":
+			switch (line[4])
+			{
+				case "Book":
 					Book book = new Book();
 					book.ID = int.Parse(line[0]);
 					book.Name = line[1];
@@ -120,8 +123,8 @@ namespace Business_system
 						book.Language = null;
 					}
 					return book;
-                    
-                case "Movie":
+
+				case "Movie":
 					Movie movie = new Movie();
 					movie.ID = int.Parse(line[0]);
 					movie.Name = line[1];
@@ -154,7 +157,7 @@ namespace Business_system
 					}
 					return videogame;
 
-                default:
+				default:
 					Product product = new Product();
 					product.ID = int.Parse(line[0]);
 					product.Name = line[1];
@@ -162,49 +165,32 @@ namespace Business_system
 					product.Qty = int.Parse(line[3]);
 					return product;
 
-            }
+			}
 		}
 
-		private Book createBookFromString(string[] line)
+		public async Task<List<string[]>> ReadCSVFile(string filename)
 		{
-            Book book = new Book();
-            int id, price, qty;
-            BookFormat format = (BookFormat)Enum.Parse(typeof(BookFormat), line[7]);
-
-
-            if (int.TryParse(line[0], out var id_num) && int.TryParse(line[2], out var price_num) && int.TryParse(line[3], out var qty_num))
-            {
-                id = id_num;
-                price = price_num;
-                qty = qty_num;
-            }
-            return book;
-		}
-
-
-		public async Task<List<string[]>> ReadCSVFile (string filename)
-        {
-            List<string[]> data = new List<string[]>();
+			List<string[]> data = new List<string[]>();
 			StorageFolder localFolder = ApplicationData.Current.LocalFolder;
 			var file = await localFolder.GetFileAsync(filename);
-            IList<string> lines = await FileIO.ReadLinesAsync(file);
+			IList<string> lines = await FileIO.ReadLinesAsync(file);
 
-            foreach (var line in lines)
-            {
-                string[] parts = line.Split(';');
-                data.Add(parts);
-            }
-            return data;
+			foreach (var line in lines)
+			{
+				string[] parts = line.Split(';');
+				data.Add(parts);
+			}
+			return data;
 		}
 
-        internal async Task WriteToCsv(string filename, List<Product> products)
-        {
-            StringBuilder content = new StringBuilder();
-            content.AppendLine("ID; Name; Price; Qty; Product;");
-            foreach (var product in products)
-            {
-                content.AppendLine(string.Join(";", product.ToCsv()));
-            }
+		internal async Task WriteToCsv(string filename, List<Product> products)
+		{
+			StringBuilder content = new StringBuilder();
+			content.AppendLine("ID; Name; Price; Qty; Product;");
+			foreach (var product in products)
+			{
+				content.AppendLine(string.Join(";", product.ToCsv()));
+			}
 			StorageFolder localFolder = ApplicationData.Current.LocalFolder;
 			var file = await localFolder.GetFileAsync(filename);
 			await FileIO.WriteTextAsync(file, content.ToString());
@@ -217,7 +203,7 @@ namespace Business_system
 
 		private async void Save_Click(object sender, RoutedEventArgs e)
 		{
-            await WriteToCsv("data.csv", masterProducts);
+			await WriteToCsv("data.csv", masterProducts);
 		}
 
 		private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
@@ -244,34 +230,142 @@ namespace Business_system
 		{
 			AddProductDialog addDialog = new AddProductDialog();
 			var result = await addDialog.ShowAsync();
-			if(result == ContentDialogResult.Primary)
+			if (result == ContentDialogResult.Primary)
 			{
 				Product newProduct = addDialog.NewProduct;
 				newProduct.ID = ++id_counter;
+				while (isIdUsedInMasterdata(newProduct.ID))
+				{
+					newProduct.ID = ++id_counter;
+				}
 				masterProducts.Add(newProduct);
-				updateList();
+				updateMasterProductsList();
 			}
+		}
+		private bool isIdUsedInMasterdata(int id)
+		{
+			for (int i = 0; i < masterProducts.Count; i++)
+			{
+				if (masterProducts[i].ID == id) return true;
+			}
+			return false;
 		}
 		private void NewProduct_Click(object sender, RoutedEventArgs e)
 		{
 			ShowAddProductDialog();
 		}
-
-		private void RemoveProduct_Click(object sender, RoutedEventArgs e)
+		private void DeliveryButton_Click(object sender, RoutedEventArgs e)
 		{
-
+			deliveryProducts.Clear();
+			updateDeliveryProductsList();
+			DeliveryList.Visibility = Visibility.Visible;
+			DoneButton.Visibility = Visibility.Visible;
+			CancelButton.Visibility = Visibility.Visible;
+			DeliveryButton.Visibility = Visibility.Collapsed;
+			ProductList.ItemClick -= ProductList_ItemClick;
+			ProductList.ItemClick += ProductList_AddItemToDelivery;
+			deliveryEnabled = true;
+		}
+		private void DoneButton_Click(object sender, RoutedEventArgs e)
+		{
+			RegisterDelivery();
+			HideDeliveryUI();
 		}
 
-		private void ProductList_ItemClick(object sender, ItemClickEventArgs e)
+		private void RegisterDelivery()
+		{
+			//validate forms
+			
+			for (int i = 0; i < deliveryProducts.Count; i++)
+			{
+				for(int j = 0; j < masterProducts.Count; j++)
+				{
+					if (deliveryProducts[i].ID == masterProducts[j].ID)
+					{
+						masterProducts[j].IncreaseQty(deliveryProducts[i].Qty);
+					}
+				}
+			}
+
+			updateMasterProductsList();
+			HideDeliveryUI();
+		}
+
+		private void CancelButton_Click(object sender, RoutedEventArgs e)
+		{
+			HideDeliveryUI();
+		}
+		private void HideDeliveryUI()
+		{
+			DeliveryButton.Visibility = Visibility.Visible;
+			DeliveryList.Visibility = Visibility.Collapsed;
+			DoneButton.Visibility = Visibility.Collapsed;
+			CancelButton.Visibility = Visibility.Collapsed;
+			ProductList.ItemClick -= ProductList_AddItemToDelivery;
+			ProductList.ItemClick += ProductList_ItemClick;
+			deliveryEnabled = false;
+		}
+		private void ProductList_AddItemToDelivery(object sender, ItemClickEventArgs e)
+		{
+			
+			var clickedItem = (Product)e.ClickedItem;
+			clickedItem.Qty = 0;
+			if (!deliveryProducts.Contains(clickedItem))
+			{
+				deliveryProducts.Add(clickedItem);
+				updateDeliveryProductsList();
+			}
+			
+		}
+		private void updateDeliveryProductsList()
+		{
+			var displayItems = new ObservableCollection<Product>(deliveryProducts);
+			DeliveryList.ItemsSource = displayItems;
+		}
+		private void DeliveryList_ItemClick(object sender, ItemClickEventArgs e)
 		{
 			var clickedItem = (Product)e.ClickedItem;
+			deliveryProducts.Remove(clickedItem);
+			updateDeliveryProductsList();
+		}
 
-			var typeClicked = clickedItem.ProductType.ToString();
-			switch(typeClicked)
+		private async void ProductList_ItemClick(object sender, ItemClickEventArgs e)
+		{
+			var clickedItem = (Product)e.ClickedItem;
+			ProductInfoDialog productInfoDialog = new ProductInfoDialog(clickedItem);
+			var result = await productInfoDialog.ShowAsync();
+			if(result == ContentDialogResult.Secondary)
 			{
-				case "Book":
-
+				if(clickedItem.Qty > 0)
+				{
+					await RemoveProductDialog(clickedItem, $"You are about to remove a product. \nNote: There is still {clickedItem.Qty} piece(s) left on stock of this item!");
+				}
+				else
+				{
+					await RemoveProductDialog(clickedItem,"You are about to remove a product.");
+				}
 			}
+		}
+		private async Task RemoveProductDialog(Product clickedItem, string message)
+		{
+			
+			MessageDialog removeProductDialog = new MessageDialog(message);
+			removeProductDialog.Title = "Remove Product?";
+			removeProductDialog.Commands.Add(new UICommand("Remove", x =>
+			{
+				removeProductFromMasterdata(clickedItem);
+			}));
+			removeProductDialog.Commands.Add(new UICommand("Cancel", x =>
+			{
+				//I want to relaunch the ProductInfoDialog when cancelling
+				return;
+			}));
+			await removeProductDialog.ShowAsync();
+		}
+		private void removeProductFromMasterdata(Product product)
+		{
+			masterProducts.Remove(product);
+			updateMasterProductsList();
 		}
 	}
 }

@@ -40,9 +40,6 @@
 			</Grid>
 		</Grid>
 		
-		<!--List Cell-->
-
-		
 
 		<!-- Kassa UI -->
 		<StackPanel Name="KassaPanel" Visibility="Collapsed" Grid.Column="0" Grid.Row="1">
@@ -173,7 +170,7 @@
 										<TextBlock Text="{Binding Name}"		Grid.Column="1"/>
 										<TextBlock Text="{Binding ProductType}" Grid.Column="2"/>
 										<TextBlock Text="{Binding Price}"		Grid.Column="3"/>
-										<TextBox Tag="{Binding ID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Qty"			Grid.Column="4"/>
+										<TextBox Text="{Binding ChangingProperty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="4"/>
 
 									</Grid>
 								</StackPanel>

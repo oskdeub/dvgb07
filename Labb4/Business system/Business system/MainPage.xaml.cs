@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -248,6 +249,7 @@ namespace Business_system
 			{
 				if (masterProducts[i].ID == id) return true;
 			}
+
 			return false;
 		}
 		private void NewProduct_Click(object sender, RoutedEventArgs e)
@@ -266,29 +268,69 @@ namespace Business_system
 			ProductList.ItemClick += ProductList_AddItemToDelivery;
 			deliveryEnabled = true;
 		}
-		private void DoneButton_Click(object sender, RoutedEventArgs e)
+		private async void DoneButton_Click(object sender, RoutedEventArgs e)
 		{
-			RegisterDelivery();
-			HideDeliveryUI();
+			bool validation = await validateChangingProperties();
+			if (validation)
+			{
+				RegisterDelivery();
+				HideDeliveryUI();
+			}
+		}
+
+		private async Task<bool> validateChangingProperties()
+		{
+			foreach (var product in deliveryProducts)
+			{
+				if(int.TryParse(product.ChangingProperty, out int qty))
+				{
+					if (qty < 0)
+					{
+						//value is negative
+						await ErrorDialog($"Product id {product.ID}: delivery quantity is not a positive number. Please try again with a positive number.");
+						return false;
+					}
+				} else
+				{
+					//value is not an int
+					if (product.ChangingProperty == string.Empty)
+					{
+						await ErrorDialog($"Product id {product.ID}: delivery quantity is empty, which is not allowed. Please enter a delivery quantity or remove it from delivery.");
+						return false;
+					} else
+					{
+						await ErrorDialog($"Product id {product.ID}: delivery quantity is not a number. Please try again with a positive number.");
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+
+		private async Task ErrorDialog(string message)
+		{
+			MessageDialog ErrorDialog = new MessageDialog(message);
+			ErrorDialog.Title = "Error!";
+			ErrorDialog.Commands.Add(new UICommand("OK", x =>
+			{
+				
+			}));
+			await ErrorDialog.ShowAsync();
 		}
 
 		private void RegisterDelivery()
 		{
-			//validate forms
-			
-			for (int i = 0; i < deliveryProducts.Count; i++)
+			//Pre: validated ChangingProperty of all delvieryProducts
+			foreach (var deliveryProduct in deliveryProducts)
 			{
-				for(int j = 0; j < masterProducts.Count; j++)
+				int qty = int.Parse(deliveryProduct.ChangingProperty);
+				var masterProduct = masterProducts.FirstOrDefault(p => p.ID == deliveryProduct.ID);
+				if (masterProduct != null)
 				{
-					if (deliveryProducts[i].ID == masterProducts[j].ID)
-					{
-						masterProducts[j].IncreaseQty(deliveryProducts[i].Qty);
-					}
+					masterProduct.IncreaseQty(qty);
 				}
 			}
-
 			updateMasterProductsList();
-			HideDeliveryUI();
 		}
 
 		private void CancelButton_Click(object sender, RoutedEventArgs e)
@@ -297,6 +339,7 @@ namespace Business_system
 		}
 		private void HideDeliveryUI()
 		{
+			deliveryProducts.Clear();
 			DeliveryButton.Visibility = Visibility.Visible;
 			DeliveryList.Visibility = Visibility.Collapsed;
 			DoneButton.Visibility = Visibility.Collapsed;
@@ -307,15 +350,13 @@ namespace Business_system
 		}
 		private void ProductList_AddItemToDelivery(object sender, ItemClickEventArgs e)
 		{
-			
 			var clickedItem = (Product)e.ClickedItem;
-			clickedItem.Qty = 0;
+			
 			if (!deliveryProducts.Contains(clickedItem))
 			{
 				deliveryProducts.Add(clickedItem);
 				updateDeliveryProductsList();
 			}
-			
 		}
 		private void updateDeliveryProductsList()
 		{

@@ -8,45 +8,37 @@ using System.Threading.Tasks;
 
 namespace Business_system
 {
-	public class Product : ICsvSerializable
+	public class Product : ICsvSerializable, INotifyPropertyChanged
 	{
 		public int ID { get; set; }
 		public string Name { get; set; }
 		public int Price { get; set; }
 		public int Qty {  get; set; }
+		private string changingProp;
+		
 		public ProductType? ProductType { get; set; }
-
-		protected Product(int ID, string Name, int Price, int Qty)
-		{
-			this.ID = ID;
-			this.Name = Name;
-			this.Price = Price;
-			this.Qty = Qty;
-			this.ProductType = null;
-		}
-		protected Product(int ID, string Name, int Price, ProductType type)
-		{
-			this.ID = ID;
-			this.Name = Name;
-			this.Price = Price;
-			this.Qty = 0;
-			this.ProductType = type;
-		}
-
-		protected Product(int ID, string Name, int Price, int Qty, ProductType type)
-		{
-			this.ID = ID;
-			this.Name = Name;
-			this.Price = Price;
-			this.Qty = Qty;
-			this.ProductType = type;
-		}
 
 		public Product()
 		{
 		}
+		public string ChangingProperty
+		{//Referens: ChatGPT
+			get => changingProp;
+			set
+			{
+				if (changingProp != value)
+				{
+					changingProp = value;
+					OnPropertyChanged(nameof(ChangingProperty));
+				}
+			}
+		}
 
-
+		public event PropertyChangedEventHandler PropertyChanged;
+		protected void OnPropertyChanged(string propertyName)
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		}//Slut Referens
 		public void IncreaseQty(int amount)
 		{
 			//handle negative amount here?

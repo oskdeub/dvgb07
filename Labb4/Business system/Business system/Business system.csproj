@@ -125,6 +125,7 @@
     <Compile Include="Book.cs" />
     <Compile Include="BookFormat.cs" />
     <Compile Include="BookLanguage.cs" />
+    <Compile Include="Cart.cs" />
     <Compile Include="ICsvSerializable.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>

@@ -38,11 +38,11 @@ namespace Business_system
 		List<Book> bookList = new List<Book>();
 		List<Movie> movieList = new List<Movie>();
 		List<Videogame> videogameList = new List<Videogame>();
-		private bool deliveryEnabled;
+		List<Product> cartProducts = new List<Product>();
+		
 		private int id_counter;
 		public MainPage()
 		{
-			deliveryEnabled = false;
 			id_counter = 0;
 			this.InitializeComponent();
 		}
@@ -253,7 +253,7 @@ namespace Business_system
 			DeliveryButton.Visibility = Visibility.Collapsed;
 			ProductList.ItemClick -= ProductList_ItemClick;
 			ProductList.ItemClick += ProductList_AddItemToDelivery;
-			deliveryEnabled = true;
+			
 		}
 		private async void DoneButton_Click(object sender, RoutedEventArgs e)
 		{
@@ -339,7 +339,7 @@ namespace Business_system
 			CancelButton.Visibility = Visibility.Collapsed;
 			ProductList.ItemClick -= ProductList_AddItemToDelivery;
 			ProductList.ItemClick += ProductList_ItemClick;
-			deliveryEnabled = false;
+			
 		}
 		private void ProductList_AddItemToDelivery(object sender, ItemClickEventArgs e)
 		{
@@ -361,7 +361,7 @@ namespace Business_system
 			var clickedItem = (Product)e.ClickedItem;
 			deliveryProducts.Remove(clickedItem);
 			clickedItem.ChangingProperty = string.Empty;
-			//updateDeliveryProductsList();
+			updateDeliveryProductsList();
 		}
 
 		private async void ProductList_ItemClick(object sender, ItemClickEventArgs e)
@@ -439,8 +439,25 @@ namespace Business_system
 		}
 		private void ListView_ItemClick(object sender, ItemClickEventArgs e)
 		{
-			
+			var clickedItem = (Product)e.ClickedItem;
+			clickedItem.ChangingProperty = string.Empty;
+			if (!cartProducts.Contains(clickedItem))
+			{
+				cartProducts.Add(clickedItem);
+				updateCartList();
+			}
 		}
-		
+		private void updateCartList()
+		{
+			var displayItems = new ObservableCollection<Product>(cartProducts);
+			CartList.ItemsSource = displayItems;
+		}
+		private void CartList_ItemClick(object sender, ItemClickEventArgs e)
+		{
+			var clickedItem = (Product)e.ClickedItem;
+			cartProducts.Remove(clickedItem);
+			clickedItem.ChangingProperty = string.Empty;
+			updateDeliveryProductsList();
+		}
 	}
 }

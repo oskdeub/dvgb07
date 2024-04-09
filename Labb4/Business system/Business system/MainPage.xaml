@@ -42,9 +42,9 @@
 		
 
 		<!-- Kassa UI -->
-		<StackPanel Name="KassaPanel" Visibility="Visible" Grid.Column="0" Grid.Row="1">
-			
-			<Grid>
+		
+
+			<Grid Name="KassaPanel" Visibility="Collapsed" Grid.Column="0" Grid.Row="1">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="2*"></ColumnDefinition>
 					<ColumnDefinition Width="1*"></ColumnDefinition>
@@ -52,9 +52,9 @@
 
 				<Grid Grid.Column="0">
 					<Grid.RowDefinitions>
-						<RowDefinition></RowDefinition>
-						<RowDefinition></RowDefinition>
-						<RowDefinition></RowDefinition>
+						<RowDefinition Height="*"></RowDefinition>
+						<RowDefinition Height="*"></RowDefinition>
+						<RowDefinition Height="*"></RowDefinition>
 					</Grid.RowDefinitions>
 					<!--BOOK-->
 					<ListView Name="BookListView" Grid.Row="0" 
@@ -112,10 +112,11 @@
 										<TextBlock Text="{Binding ID}"			Grid.Column="0"/>
 										<TextBlock Text="{Binding Name}"		Grid.Column="1"/>
 										<TextBlock Text="{Binding Price}"		Grid.Column="2"/>
-										<TextBlock Text="{Binding Author}"		Grid.Column="3"/>
-										<TextBlock Text="{Binding bookGenre}"	Grid.Column="4"/>
-										<TextBlock Text="{Binding BookFormat}"	Grid.Column="5"/>
-										<TextBlock Text="{Binding Language}"	Grid.Column="6"/>
+										<TextBlock Text="{Binding Qty}"			Grid.Column="3"/>
+										<TextBlock Text="{Binding Author}"		Grid.Column="4"/>
+										<TextBlock Text="{Binding bookGenre}"	Grid.Column="5"/>
+										<TextBlock Text="{Binding BookFormat}"	Grid.Column="6"/>
+										<TextBlock Text="{Binding Language}"	Grid.Column="7"/>
 										
 									</Grid>
 								</StackPanel>
@@ -140,7 +141,7 @@
 										<ColumnDefinition Width="150"></ColumnDefinition>
 										<ColumnDefinition Width="75"></ColumnDefinition>
 										<ColumnDefinition Width="75"></ColumnDefinition>
-										<ColumnDefinition Width="50"></ColumnDefinition>
+										<ColumnDefinition Width="75"></ColumnDefinition>
 										<ColumnDefinition Width="50"></ColumnDefinition>
 									</Grid.ColumnDefinitions>
 									<TextBlock Text="Movies" FontSize="16" Grid.ColumnSpan="6" Margin="4, 0, 0, 0"></TextBlock>
@@ -165,15 +166,15 @@
 											<ColumnDefinition Width="150"></ColumnDefinition>
 											<ColumnDefinition Width="75"></ColumnDefinition>
 											<ColumnDefinition Width="75"></ColumnDefinition>
-											<ColumnDefinition Width="50"></ColumnDefinition>
+											<ColumnDefinition Width="75"></ColumnDefinition>
 											<ColumnDefinition Width="50"></ColumnDefinition>
 										</Grid.ColumnDefinitions>
 										<TextBlock Text="{Binding ID}"			Grid.Column="0"/>
 										<TextBlock Text="{Binding Name}"		Grid.Column="1"/>
 										<TextBlock Text="{Binding Price}"		Grid.Column="2"/>
 										<TextBlock Text="{Binding Qty}"			Grid.Column="3"/>
-										<TextBlock Text="{Binding MovieFormat}"	Grid.Column="3"/>
-										<TextBlock Text="{Binding Playtime}"	Grid.Column="3"/>
+										<TextBlock Text="{Binding MovieFormat}"	Grid.Column="4"/>
+										<TextBlock Text="{Binding Playtime}"	Grid.Column="5"/>
 									</Grid>
 								</StackPanel>
 							</DataTemplate>
@@ -235,21 +236,21 @@
 				</Grid>
 				
 			</Grid>
-		</StackPanel>
+	
 		<!-- END Kassa UI -->
 		
 		<!-- Lager UI -->
-		<StackPanel Name="LagerPanel" Visibility="Collapsed" Grid.Column="0" Grid.Row="1" Margin="16,0,16,0">
-			
-			<Grid>
+		
+
+			<Grid Name="LagerPanel" Visibility="Visible" Grid.Column="0" Grid.Row="1" Margin="16,0,16,0">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto"></RowDefinition>
-					<RowDefinition ></RowDefinition>
-					<RowDefinition ></RowDefinition>
+					
+					<RowDefinition Height="7*"></RowDefinition>
 				</Grid.RowDefinitions>
 				
-				<TextBlock Grid.Row="0" Text="Stock UI" FontSize="25"/>
-				<Grid Grid.Row="1" Margin="16">
+				
+				<Grid Grid.Row="0" Margin="16">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition></ColumnDefinition>
 						<ColumnDefinition></ColumnDefinition>
@@ -258,13 +259,14 @@
 						<ColumnDefinition></ColumnDefinition>
 						<ColumnDefinition></ColumnDefinition>
 					</Grid.ColumnDefinitions>
-					<Button Content="New product"	Grid.Column="0" Click="NewProduct_Click" CornerRadius="5"></Button>
-					<Button Content="Delivery" Name="DeliveryButton" Grid.Column="3" Click="DeliveryButton_Click" CornerRadius="5"></Button>
-					<Button Content="Done" Name="DoneButton" Grid.Column="4" Visibility="Collapsed" CornerRadius="5" Click="DoneButton_Click"></Button>
-					<Button Content="Cancel" Name="CancelButton" Grid.Column="5" Visibility="Collapsed" CornerRadius="5" Click="CancelButton_Click"></Button>
+					<TextBlock Grid.Column="0" Text="Stock UI" FontSize="25"/>
+					<Button Content="New product"	Grid.Column="1"	Click="NewProduct_Click" CornerRadius="5"></Button>
+					<Button Content="Delivery"	Name="DeliveryButton"	Grid.Column="3"	Click="DeliveryButton_Click" CornerRadius="5"></Button>
+					<Button Content="Done"		Name="DoneButton"		Grid.Column="4"	Click="DoneButton_Click"	Visibility="Collapsed" CornerRadius="5" ></Button>
+					<Button Content="Cancel"	Name="CancelButton"		Grid.Column="5" Click="CancelButton_Click"	Visibility="Collapsed" CornerRadius="5" ></Button>
 				</Grid>
 
-				<Grid Grid.Row="3">
+				<Grid Grid.Row="2">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="*"></ColumnDefinition>
 						<ColumnDefinition Width="*"></ColumnDefinition>
@@ -375,8 +377,6 @@
 
 			</Grid>
 				
-			
-		</StackPanel>
 		<!-- END Lager UI -->
 		
 		<!--Button cell-->

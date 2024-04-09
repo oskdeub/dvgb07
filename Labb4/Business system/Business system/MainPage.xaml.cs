@@ -66,6 +66,7 @@ namespace Business_system
 			masterProducts.AddRange(parseCsvData(data));
 
 			updateMasterProductsList();
+			PopulateSubclassLists();
 		}
 
 		internal List<Product> parseCsvData(List<string[]> data)
@@ -318,6 +319,12 @@ namespace Business_system
 			}
 			updateMasterProductsList();
 		}
+		private void ClearChangingProperties() {
+			foreach(var product in masterProducts)
+			{
+				product.ChangingProperty = string.Empty;
+			}
+		}
 
 		private void CancelButton_Click(object sender, RoutedEventArgs e)
 		{
@@ -337,7 +344,7 @@ namespace Business_system
 		private void ProductList_AddItemToDelivery(object sender, ItemClickEventArgs e)
 		{
 			var clickedItem = (Product)e.ClickedItem;
-			
+			clickedItem.ChangingProperty = string.Empty;
 			if (!deliveryProducts.Contains(clickedItem))
 			{
 				deliveryProducts.Add(clickedItem);
@@ -353,7 +360,8 @@ namespace Business_system
 		{
 			var clickedItem = (Product)e.ClickedItem;
 			deliveryProducts.Remove(clickedItem);
-			updateDeliveryProductsList();
+			clickedItem.ChangingProperty = string.Empty;
+			//updateDeliveryProductsList();
 		}
 
 		private async void ProductList_ItemClick(object sender, ItemClickEventArgs e)
@@ -416,6 +424,7 @@ namespace Business_system
 					videogameList.Add(videogame);
 				}
 			}
+			PupulateSubclassListViews();
 		}
 		private void PupulateSubclassListViews()
 		{

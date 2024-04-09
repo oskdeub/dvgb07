@@ -35,6 +35,9 @@ namespace Business_system
 	{
 		List<Product> masterProducts = new List<Product>();
 		List<Product> deliveryProducts = new List<Product>();
+		List<Book> bookList = new List<Book>();
+		List<Movie> movieList = new List<Movie>();
+		List<Videogame> videogameList = new List<Videogame>();
 		private bool deliveryEnabled;
 		private int id_counter;
 		public MainPage()
@@ -63,26 +66,6 @@ namespace Business_system
 			masterProducts.AddRange(parseCsvData(data));
 
 			updateMasterProductsList();
-
-			/*
-			var dItems = new ObservableCollection<string>();
-			foreach (var line in data.Skip(1))
-			{
-				var lineDisplay = string.Join("; ", line);
-				dItems.Add(lineDisplay);
-				id_counter++;
-			}
-			CsvList.ItemsSource = dItems;
-
-			XAML
-			<ListView Name="CsvList" Grid.Column="1">
-				<ListView.ItemTemplate>
-					<DataTemplate>
-						<TextBlock Text="{Binding}" />
-					</DataTemplate>
-				</ListView.ItemTemplate>
-			</ListView>
-			*/
 		}
 
 		internal List<Product> parseCsvData(List<string[]> data)
@@ -220,6 +203,7 @@ namespace Business_system
 				{
 					case "Kassa":
 						KassaPanel.Visibility = Visibility.Visible;
+						PopulateSubclassLists();
 						break;
 					case "Lager":
 						LagerPanel.Visibility = Visibility.Visible;
@@ -256,6 +240,8 @@ namespace Business_system
 		{
 			ShowAddProductDialog();
 		}
+
+		// DELIVERY ---------------------------------------------------------------
 		private void DeliveryButton_Click(object sender, RoutedEventArgs e)
 		{
 			deliveryProducts.Clear();
@@ -387,6 +373,8 @@ namespace Business_system
 				}
 			}
 		}
+
+		// REMOVE PRODUCT ----------------------------------------------------------
 		private async Task RemoveProductDialog(Product clickedItem, string message)
 		{
 			
@@ -408,5 +396,42 @@ namespace Business_system
 			masterProducts.Remove(product);
 			updateMasterProductsList();
 		}
+
+		// CASHIER -----------------------------------------------------------------
+		private void PopulateSubclassLists()
+		{
+			bookList.Clear();
+			movieList.Clear();
+			videogameList.Clear();
+			foreach (var product in masterProducts)
+			{
+				if(product is Book book)
+				{
+					bookList.Add(book);
+				} else if(product is Movie movie)
+				{
+					movieList.Add(movie);
+				} else if(product is Videogame videogame)
+				{
+					videogameList.Add(videogame);
+				}
+			}
+		}
+		private void PupulateSubclassListViews()
+		{
+			var bookListViewItems = new ObservableCollection<Book>(bookList);
+			BookListView.ItemsSource = bookListViewItems;
+
+			var movieListViewItems = new ObservableCollection<Movie>(movieList);
+			MovieListView.ItemsSource = movieListViewItems;
+
+			var videogameListViewItems = new ObservableCollection<Videogame>(videogameList);
+			VideogameListView.ItemsSource = videogameListViewItems;
+		}
+		private void ListView_ItemClick(object sender, ItemClickEventArgs e)
+		{
+			
+		}
+		
 	}
 }

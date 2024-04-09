@@ -42,13 +42,204 @@
 		
 
 		<!-- Kassa UI -->
-		<StackPanel Name="KassaPanel" Visibility="Collapsed" Grid.Column="0" Grid.Row="1">
-			<TextBlock Text="Cashier UI"/>
+		<StackPanel Name="KassaPanel" Visibility="Visible" Grid.Column="0" Grid.Row="1">
+			
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="2*"></ColumnDefinition>
+					<ColumnDefinition Width="1*"></ColumnDefinition>
+				</Grid.ColumnDefinitions>
+
+				<Grid Grid.Column="0">
+					<Grid.RowDefinitions>
+						<RowDefinition></RowDefinition>
+						<RowDefinition></RowDefinition>
+						<RowDefinition></RowDefinition>
+					</Grid.RowDefinitions>
+					<!--BOOK-->
+					<ListView Name="BookListView" Grid.Row="0" 
+					  ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+					  ScrollViewer.VerticalScrollBarVisibility="Auto"
+					  ItemClick="ListView_ItemClick" IsItemClickEnabled="True"
+					  Margin="16, 0, 16, 0" BorderThickness="1" BorderBrush="Black">
+						<ListView.Header>
+							<StackPanel Orientation="Horizontal">
+								<Grid>
+									<Grid.RowDefinitions>
+										<RowDefinition></RowDefinition>
+										<RowDefinition></RowDefinition>
+									</Grid.RowDefinitions>
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Width="50"></ColumnDefinition>
+										<ColumnDefinition Width="150"></ColumnDefinition>
+										<ColumnDefinition Width="75"></ColumnDefinition>
+										<ColumnDefinition Width="75"></ColumnDefinition>
+										<ColumnDefinition Width="150"></ColumnDefinition>
+										<ColumnDefinition Width="100"></ColumnDefinition>
+										<ColumnDefinition Width="100"></ColumnDefinition>
+										<ColumnDefinition Width="50"></ColumnDefinition>
+									</Grid.ColumnDefinitions>
+
+									<TextBlock Text="Books" FontSize="16" Grid.ColumnSpan="8" Margin="4, 0, 0, 0"></TextBlock>
+									
+									<TextBlock Text="ID"		Grid.Column="0" Grid.Row="1" Margin="4" FontWeight="Bold"/>
+									<TextBlock Text="Name"		Grid.Column="1" Grid.Row="1" Margin="4" FontWeight="Bold"/>
+									<TextBlock Text="Price"		Grid.Column="2" Grid.Row="1" Margin="4" FontWeight="Bold"/>
+									<TextBlock Text="Qty"		Grid.Column="3" Grid.Row="1" Margin="4" FontWeight="Bold"/>
+									<TextBlock Text="Author"	Grid.Column="4" Grid.Row="1" Margin="4" FontWeight="Bold"/>
+									<TextBlock Text="Genre"		Grid.Column="5" Grid.Row="1" Margin="4" FontWeight="Bold"/>
+									<TextBlock Text="Format"	Grid.Column="6" Grid.Row="1" Margin="4" FontWeight="Bold"/>
+									<TextBlock Text="Language"	Grid.Column="7" Grid.Row="1" Margin="4" FontWeight="Bold"/>
+
+								</Grid>
+
+							</StackPanel>
+						</ListView.Header>
+						<ListView.ItemTemplate>
+							<DataTemplate x:DataType="local:Book">
+								<StackPanel Orientation="Horizontal" >
+									<Grid>
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="50"></ColumnDefinition>
+											<ColumnDefinition Width="150"></ColumnDefinition>
+											<ColumnDefinition Width="75"></ColumnDefinition>
+											<ColumnDefinition Width="75"></ColumnDefinition>
+											<ColumnDefinition Width="150"></ColumnDefinition>
+											<ColumnDefinition Width="100"></ColumnDefinition>
+											<ColumnDefinition Width="100"></ColumnDefinition>
+											<ColumnDefinition Width="50"></ColumnDefinition>
+										</Grid.ColumnDefinitions>
+										<TextBlock Text="{Binding ID}"			Grid.Column="0"/>
+										<TextBlock Text="{Binding Name}"		Grid.Column="1"/>
+										<TextBlock Text="{Binding Price}"		Grid.Column="2"/>
+										<TextBlock Text="{Binding Author}"		Grid.Column="3"/>
+										<TextBlock Text="{Binding bookGenre}"	Grid.Column="4"/>
+										<TextBlock Text="{Binding BookFormat}"	Grid.Column="5"/>
+										<TextBlock Text="{Binding Language}"	Grid.Column="6"/>
+										
+									</Grid>
+								</StackPanel>
+							</DataTemplate>
+						</ListView.ItemTemplate>
+					</ListView>
+					<!--Movie-->
+					<ListView Name="MovieListView" Grid.Row="1" 
+					  ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+					  ScrollViewer.VerticalScrollBarVisibility="Auto"
+					  ItemClick="ListView_ItemClick" IsItemClickEnabled="True"
+					  Margin="16, 0, 16, 0" BorderThickness="1" BorderBrush="Black">
+						<ListView.Header>
+							<StackPanel Orientation="Horizontal">
+								<Grid>
+									<Grid.RowDefinitions>
+										<RowDefinition></RowDefinition>
+										<RowDefinition></RowDefinition>
+									</Grid.RowDefinitions>
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Width="50"></ColumnDefinition>
+										<ColumnDefinition Width="150"></ColumnDefinition>
+										<ColumnDefinition Width="75"></ColumnDefinition>
+										<ColumnDefinition Width="75"></ColumnDefinition>
+										<ColumnDefinition Width="50"></ColumnDefinition>
+										<ColumnDefinition Width="50"></ColumnDefinition>
+									</Grid.ColumnDefinitions>
+									<TextBlock Text="Movies" FontSize="16" Grid.ColumnSpan="6" Margin="4, 0, 0, 0"></TextBlock>
+									
+									<TextBlock Text="ID"		Grid.Column="0" Grid.Row="1" Margin="4" FontWeight="Bold"/>
+									<TextBlock Text="Name"		Grid.Column="1" Grid.Row="1" Margin="4" FontWeight="Bold"/>
+									<TextBlock Text="Price"		Grid.Column="2" Grid.Row="1" Margin="4" FontWeight="Bold"/>
+									<TextBlock Text="Qty"		Grid.Column="3" Grid.Row="1" Margin="4" FontWeight="Bold"/>
+									<TextBlock Text="Format"	Grid.Column="4" Grid.Row="1" Margin="4" FontWeight="Bold"/>
+									<TextBlock Text="Playtime"	Grid.Column="5" Grid.Row="1" Margin="4" FontWeight="Bold"/>
+
+								</Grid>
+
+							</StackPanel>
+						</ListView.Header>
+						<ListView.ItemTemplate>
+							<DataTemplate x:DataType="local:Movie">
+								<StackPanel Orientation="Horizontal" >
+									<Grid>
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="50"></ColumnDefinition>
+											<ColumnDefinition Width="150"></ColumnDefinition>
+											<ColumnDefinition Width="75"></ColumnDefinition>
+											<ColumnDefinition Width="75"></ColumnDefinition>
+											<ColumnDefinition Width="50"></ColumnDefinition>
+											<ColumnDefinition Width="50"></ColumnDefinition>
+										</Grid.ColumnDefinitions>
+										<TextBlock Text="{Binding ID}"			Grid.Column="0"/>
+										<TextBlock Text="{Binding Name}"		Grid.Column="1"/>
+										<TextBlock Text="{Binding Price}"		Grid.Column="2"/>
+										<TextBlock Text="{Binding Qty}"			Grid.Column="3"/>
+										<TextBlock Text="{Binding MovieFormat}"	Grid.Column="3"/>
+										<TextBlock Text="{Binding Playtime}"	Grid.Column="3"/>
+									</Grid>
+								</StackPanel>
+							</DataTemplate>
+						</ListView.ItemTemplate>
+					</ListView>
+					<!-- Videogame -->
+					<ListView Name="VideogameListView" Grid.Row="2" 
+					  ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+					  ScrollViewer.VerticalScrollBarVisibility="Auto"
+					  ItemClick="ListView_ItemClick" IsItemClickEnabled="True"
+					  Margin="16, 0, 16, 0" BorderThickness="1" BorderBrush="Black">
+						<ListView.Header>
+							<StackPanel Orientation="Horizontal">
+								<Grid>
+									<Grid.RowDefinitions>
+										<RowDefinition></RowDefinition>
+										<RowDefinition></RowDefinition>
+									</Grid.RowDefinitions>
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Width="50"></ColumnDefinition>
+										<ColumnDefinition Width="150"></ColumnDefinition>
+										<ColumnDefinition Width="75"></ColumnDefinition>
+										<ColumnDefinition Width="75"></ColumnDefinition>
+										<ColumnDefinition Width="100"></ColumnDefinition>
+									</Grid.ColumnDefinitions>
+									<TextBlock Text="Videogames" FontSize="16" Grid.ColumnSpan="5" Margin="4, 0, 0, 0"></TextBlock>
+									
+									<TextBlock Text="ID"		Grid.Column="0" Grid.Row="1" Margin="4" FontWeight="Bold"/>
+									<TextBlock Text="Name"		Grid.Column="1" Grid.Row="1" Margin="4" FontWeight="Bold"/>
+									<TextBlock Text="Price"		Grid.Column="2" Grid.Row="1" Margin="4" FontWeight="Bold"/>
+									<TextBlock Text="Qty"		Grid.Column="3" Grid.Row="1" Margin="4" FontWeight="Bold"/>
+									<TextBlock Text="Platform"	Grid.Column="4" Grid.Row="1" Margin="4" FontWeight="Bold"/>
+
+								</Grid>
+
+							</StackPanel>
+						</ListView.Header>
+						<ListView.ItemTemplate>
+							<DataTemplate x:DataType="local:Videogame">
+								<StackPanel Orientation="Horizontal" >
+									<Grid>
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="50"></ColumnDefinition>
+											<ColumnDefinition Width="150"></ColumnDefinition>
+											<ColumnDefinition Width="75"></ColumnDefinition>
+											<ColumnDefinition Width="75"></ColumnDefinition>
+											<ColumnDefinition Width="100"></ColumnDefinition>
+										</Grid.ColumnDefinitions>
+										<TextBlock Text="{Binding ID}"			Grid.Column="0"/>
+										<TextBlock Text="{Binding Name}"		Grid.Column="1"/>
+										<TextBlock Text="{Binding Price}"		Grid.Column="2"/>
+										<TextBlock Text="{Binding Qty}"			Grid.Column="3"/>
+										<TextBlock Text="{Binding Platform}"	Grid.Column="4"/>
+									</Grid>
+								</StackPanel>
+							</DataTemplate>
+						</ListView.ItemTemplate>
+					</ListView>
+				</Grid>
+				
+			</Grid>
 		</StackPanel>
 		<!-- END Kassa UI -->
 		
 		<!-- Lager UI -->
-		<StackPanel Name="LagerPanel" Visibility="Visible" Grid.Column="0" Grid.Row="1" Margin="16,0,16,0">
+		<StackPanel Name="LagerPanel" Visibility="Collapsed" Grid.Column="0" Grid.Row="1" Margin="16,0,16,0">
 			
 			<Grid>
 				<Grid.RowDefinitions>

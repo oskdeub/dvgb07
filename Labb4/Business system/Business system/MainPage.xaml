@@ -244,7 +244,8 @@
 			<Grid Grid.Column="1">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="auto"></RowDefinition>
-					<RowDefinition ></RowDefinition>
+					<RowDefinition></RowDefinition>
+					<RowDefinition Height="auto"></RowDefinition>
 				</Grid.RowDefinitions>
 				<Grid Grid.Row="0" Margin="16, 6, 6, 6">
 					<Grid.ColumnDefinitions>
@@ -253,10 +254,26 @@
 						<ColumnDefinition></ColumnDefinition>
 					</Grid.ColumnDefinitions>
 					<TextBlock Text="Cart" FontSize="16"></TextBlock>
+					
+				</Grid>
+				<Grid Grid.Row="2" Margin="16, 6, 6, 6">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition></ColumnDefinition>
+						<ColumnDefinition></ColumnDefinition>
+						<ColumnDefinition></ColumnDefinition>
+					</Grid.ColumnDefinitions>
+					<!-- Total Price -->
+					<Grid BorderBrush="Black" BorderThickness="2">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition></ColumnDefinition>
+							<ColumnDefinition></ColumnDefinition>
+						</Grid.ColumnDefinitions>
+						<TextBlock Text="Total"></TextBlock>
+						<TextBlock Name="TotalPriceTextBlock" Text="233" Grid.Column="1"></TextBlock>
+					</Grid>
 					<Button Content="Register" Grid.Column="1"></Button>
 					<Button Content="Clear" Grid.Column="2"></Button>
 				</Grid>
-			
 
 				<ListView Name="CartList" Grid.Row="1" 
 						  ScrollViewer.HorizontalScrollBarVisibility="Auto"
@@ -300,7 +317,7 @@
 									<TextBlock Text="{Binding Name}"		Grid.Column="1" Width="150" TextTrimming="CharacterEllipsis"/>
 									<TextBlock Text="{Binding ProductType}" Grid.Column="2" Width="100" TextTrimming="CharacterEllipsis"/>
 									<TextBlock Text="{Binding Price}"		Grid.Column="3" Width="50"	TextTrimming="CharacterEllipsis"/>
-									<TextBox Text="{Binding ChangingProperty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="4" Width="50"/>
+									<TextBox Text="{Binding ChangingProperty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="4" />
 
 								</Grid>
 							</StackPanel>

@@ -16,11 +16,8 @@
 
 		<!-- Shared UI -->
 		<Grid Grid.Row="0" Grid.Column="1">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition></ColumnDefinition>
-				<ColumnDefinition></ColumnDefinition>
-			</Grid.ColumnDefinitions>
-			<NavigationView PaneDisplayMode="Top" IsSettingsVisible="False" IsBackButtonVisible="Collapsed" SelectionChanged="NavigationView_SelectionChanged" Grid.ColumnSpan="2">
+
+			<NavigationView PaneDisplayMode="Top" IsSettingsVisible="False" IsBackButtonVisible="Collapsed" SelectionChanged="NavigationView_SelectionChanged" >
 				<NavigationView.MenuItems>
 					<NavigationViewItem Content="Cashier" Tag="Kassa"></NavigationViewItem>
 					<NavigationViewItemSeparator Opacity="0"></NavigationViewItemSeparator>
@@ -29,20 +26,8 @@
 				</NavigationView.MenuItems>
 			</NavigationView>
 
-			<Grid Grid.Row="0" Grid.Column="1" Margin="0, 5, 0 ,0">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition></ColumnDefinition>
-					<ColumnDefinition></ColumnDefinition>
-				</Grid.ColumnDefinitions>
-				<Button Grid.Column="0" Click="Read_Click" Visibility="Collapsed">Read</Button>
-				<Button Grid.Column="1" Click="Save_Click" Visibility="Collapsed">Write</Button>
-
-			</Grid>
 		</Grid>
-
-
 		<!-- Kassa UI -->
-
 
 		<Grid Name="KassaPanel" Visibility="Visible" Grid.Column="0" Grid.Row="1">
 			<Grid.ColumnDefinitions>

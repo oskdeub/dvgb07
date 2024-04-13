@@ -29,7 +29,9 @@ namespace Business_system
 			
 			
 		}
-
+		/// <summary>
+		/// Visar produktinfo baserat på typ av produkt.
+		/// </summary>
 		private void DisplayProductFields()
 		{
 			BookPanel.Visibility = Visibility.Collapsed;
@@ -50,7 +52,9 @@ namespace Business_system
 			}
 				
 		}
-
+		/// <summary>
+		/// Fyller delad info
+		/// </summary>
 		private void PopulateCommonInfo()
 		{
 			NameTextBlock.Text = CurrentProduct.Name;

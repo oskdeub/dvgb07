@@ -42,16 +42,18 @@ namespace Business_system
 		List<Videogame> videogameList = new List<Videogame>();
 		List<Product> cartProducts = new List<Product>();
 		StorageFile CSVFile = null;
-		uint TotalPrice;
 		
 		private int id_counter;
 		public MainPage()
 		{
-			TotalPrice = 0;
 			id_counter = 0;
 			this.InitializeComponent();
 		}
-
+		/// <summary>
+		/// Funktion som körs när programmet laddas. Öppnar en FilePicker för att öppna en .csv-fil.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private async void Page_Loaded(object sender, RoutedEventArgs e)
 		{
 			await openFile();
@@ -65,7 +67,9 @@ namespace Business_system
 			}
 			
 		}
-
+		/// <summary>
+		/// Uppdaterar masterProducts och sparar dessa till fil.
+		/// </summary>
 		private void updateMasterProductsList()
 		{
 			id_counter = masterProducts.Count();
@@ -73,6 +77,10 @@ namespace Business_system
 			ProductList.ItemsSource = displayItems;
 			WriteToFile();
 		}
+		/// <summary>
+		/// Fyller masterProducts med produkter från csv-filens data.
+		/// </summary>
+		/// <param name="data"> csv-filens data </param>
 		public void populateList(List<string[]> data) {
 			//Clear before reading
 			masterProducts.Clear();
@@ -82,18 +90,26 @@ namespace Business_system
 			updateMasterProductsList();
 			updateSubclassLists();
 		}
-
+		/// <summary>
+		/// Parserar csv.filens data och gör varje rad till en produkt
+		/// </summary>
+		/// <param name="data"></param>
+		/// <returns></returns>
 		internal List<Product> parseCsvData(List<string[]> data)
 		{
 			var products = new List<Product>();
 			foreach (var line in data.Skip(1))
 			{
-				products.Add(parseProductFromCsvLine(line));
+				products.Add(parseProductFromString(line));
 			}
 			return products;
 		}
-
-		private Product parseProductFromCsvLine(string[] line)
+		/// <summary>
+		/// Hittar produktens typ och skapar därifrån det objektet typen är.
+		/// </summary>
+		/// <param name="line"></param>
+		/// <returns></returns>
+		private Product parseProductFromString(string[] line)
 		{
 			//Handle empty fields
 			switch (line[4])
@@ -137,7 +153,10 @@ namespace Business_system
 					{
 						movie.MovieFormat = null;
 					}
-					movie.Playtime = int.Parse(line[6]);
+					if (int.TryParse(line[6], out int x)){
+						movie.Playtime = x;
+					}
+					
 					return movie;
 
 				case "Videogame":
@@ -166,6 +185,10 @@ namespace Business_system
 
 			}
 		}
+		/// <summary>
+		/// Öppnar en fil och tilldelar den globala variabeln StorageFil CSVFile.
+		/// </summary>
+		/// <returns></returns>
 		private async Task openFile()
 		{
 			FileOpenPicker fileOpenPicker = new FileOpenPicker
@@ -176,6 +199,11 @@ namespace Business_system
 			fileOpenPicker.FileTypeFilter.Add(".csv");
 			CSVFile = await fileOpenPicker.PickSingleFileAsync();
 		}
+		/// <summary>
+		/// Läser från csv-filen
+		/// </summary>
+		/// <param name="file"></param>
+		/// <returns> En List<string> med alla rader i csv-filen </returns>
 		public async Task<List<string[]>> ReadCSVFile(StorageFile file)
 		{
 			List<string[]> data = new List<string[]>();
@@ -188,16 +216,27 @@ namespace Business_system
 			}
 			return data;
 		}
-		
+		/// <summary>
+		/// Skriver masterProducts till CSVFile.
+		/// </summary>
 		private async void WriteToFile()
 		{
 			await WriteToCsv(masterProducts);
 		}
+		/// <summary>
+		/// Läser från CSVFile
+		/// </summary>
+		/// <returns></returns>
 		private async Task ReadFromFile()
 		{
 			List<string[]> data = await ReadCSVFile(CSVFile);
 			populateList(data);
 		}
+		/// <summary>
+		/// Skriver products till CSVFile, rad för rad
+		/// </summary>
+		/// <param name="products"></param>
+		/// <returns></returns>
 		internal async Task WriteToCsv(List<Product> products)
 		{
 			StringBuilder content = new StringBuilder();
@@ -206,20 +245,14 @@ namespace Business_system
 			{
 				content.AppendLine(string.Join(";", product.ToCsv()));
 			}
-			StorageFolder localFolder = ApplicationData.Current.LocalFolder;
 			
 			await FileIO.WriteTextAsync(CSVFile, content.ToString());
 		}
-		private async void Read_Click(object sender, RoutedEventArgs e)
-		{
-			await ReadFromFile();
-		}
-
-		private async void Save_Click(object sender, RoutedEventArgs e)
-		{
-			await WriteToCsv(masterProducts);
-		}
-
+		/// <summary>
+		/// SelectionChanged-händelsens event handler för att hantera byte av Kassa och Lager
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
 		private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
 		{
 			if (args.SelectedItem is NavigationViewItem selectedItem)
@@ -233,7 +266,6 @@ namespace Business_system
 				{
 					case "Kassa":
 						KassaPanel.Visibility = Visibility.Visible;
-						TotalPrice = 0;
 						updateSubclassLists();
 						break;
 					case "Lager":
@@ -242,6 +274,9 @@ namespace Business_system
 				}
 			}
 		}
+		/// <summary>
+		/// Visar en Dialog för att lägga till en produkt
+		/// </summary>
 		private async void ShowAddProductDialog()
 		{
 			AddProductDialog addDialog = new AddProductDialog();
@@ -258,6 +293,11 @@ namespace Business_system
 				updateMasterProductsList();
 			}
 		}
+		/// <summary>
+		/// Kollar om ett id redan finns i masterProducts
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns>true om id:t redan finns i masterProducts, annars false</returns>
 		private bool isIdUsedInMasterdata(int id)
 		{
 			for (int i = 0; i < masterProducts.Count; i++)
@@ -267,12 +307,22 @@ namespace Business_system
 
 			return false;
 		}
+		/// <summary>
+		/// Händelsehanterare vid tryck på New Product-knappen
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void NewProduct_Click(object sender, RoutedEventArgs e)
 		{
 			ShowAddProductDialog();
 		}
 
 		// DELIVERY ---------------------------------------------------------------
+		/// <summary>
+		/// Visar delivery-rutan och ändrar ProductList.ItemClick till AddItemToDelivery.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void DeliveryButton_Click(object sender, RoutedEventArgs e)
 		{
 			deliveryProducts.Clear();
@@ -284,6 +334,11 @@ namespace Business_system
 			ProductList.ItemClick -= ProductList_ItemClick;
 			ProductList.ItemClick += ProductList_AddItemToDelivery;
 		}
+		/// <summary>
+		/// Klar med delivery, startar validering av TextBoxarna, eller snarare deras ChangingProperty
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private async void DoneButton_Click(object sender, RoutedEventArgs e)
 		{
 			bool validation = await validateChangingProperties(deliveryProducts);
@@ -293,7 +348,11 @@ namespace Business_system
 				HideDeliveryUI();
 			}
 		}
-
+		/// <summary>
+		/// Validerar alla ChangingProperty i products
+		/// </summary>
+		/// <param name="products"></param>
+		/// <returns>true om valideringen gick bra, annars false</returns>
 		private async Task<bool> validateChangingProperties(List<Product> products)
 		{
 			foreach (var product in products)
@@ -322,7 +381,11 @@ namespace Business_system
 			}
 			return true;
 		}
-
+		/// <summary>
+		/// Visar en error-dialog.
+		/// </summary>
+		/// <param name="message"></param>
+		/// <returns></returns>
 		private async Task ErrorDialog(string message)
 		{
 			MessageDialog ErrorDialog = new MessageDialog(message);
@@ -333,7 +396,9 @@ namespace Business_system
 			}));
 			await ErrorDialog.ShowAsync();
 		}
-
+		/// <summary>
+		/// Sköter uppdateringen av alla produkters qty-fält vid in-leverans.
+		/// </summary>
 		private void RegisterDelivery()
 		{
 			//Pre: validated ChangingProperty of all delvieryProducts
@@ -348,17 +413,28 @@ namespace Business_system
 			}
 			updateMasterProductsList();
 		}
+		/// <summary>
+		/// Rensar alla ChangingProperty så att dessa inte hänger med vid nästa delivery.
+		/// </summary>
 		private void ClearChangingProperties() {
 			foreach(var product in masterProducts)
 			{
 				product.ChangingProperty = string.Empty;
 			}
 		}
-
+		/// <summary>
+		/// Avbryter in-leverans och gömmer Delivery UI.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void CancelButton_Click(object sender, RoutedEventArgs e)
 		{
 			HideDeliveryUI();
+			ClearChangingProperties();
 		}
+		/// <summary>
+		/// Gömmer all UI för Delivery och återställer ProductList.ItemClick till ItemClick.
+		/// </summary>
 		private void HideDeliveryUI()
 		{
 			deliveryProducts.Clear();
@@ -370,6 +446,12 @@ namespace Business_system
 			ProductList.ItemClick += ProductList_ItemClick;
 			
 		}
+		/// <summary>
+		/// Händelse-event som lägger till en produkt i deliveryProducts från masterProducts.
+		/// Intressant är att inga kopior skapas utan produkterna länkas med reference till produkten i masterProducts.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void ProductList_AddItemToDelivery(object sender, ItemClickEventArgs e)
 		{
 			var clickedItem = (Product)e.ClickedItem;
@@ -380,11 +462,19 @@ namespace Business_system
 				updateDeliveryProductsList();
 			}
 		}
+		/// <summary>
+		/// Uppdaterar DeliveryList ListView och populerar dess lista med deliveryProducts.
+		/// </summary>
 		private void updateDeliveryProductsList()
 		{
 			var displayItems = new ObservableCollection<Product>(deliveryProducts);
 			DeliveryList.ItemsSource = displayItems;
 		}
+		/// <summary>
+		/// Vid klick i DeliveryList ska produkten tas bort från listan. Uppdaterar sedan UI.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void DeliveryList_ItemClick(object sender, ItemClickEventArgs e)
 		{
 			var clickedItem = (Product)e.ClickedItem;
@@ -392,7 +482,12 @@ namespace Business_system
 			clickedItem.ChangingProperty = string.Empty;
 			updateDeliveryProductsList();
 		}
-
+		/// <summary>
+		/// Visar information om en klickad produkt i ProductInfoDialog (se AddProductDialog.xaml)
+		/// Agerar baserat på resultatet av att klicka på Remove Product i dialogen, varpå en till Kontroll-Dialog visas
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private async void ProductList_ItemClick(object sender, ItemClickEventArgs e)
 		{
 			var clickedItem = (Product)e.ClickedItem;
@@ -412,6 +507,12 @@ namespace Business_system
 		}
 
 		// REMOVE PRODUCT ----------------------------------------------------------
+		/// <summary>
+		/// Visar en dialog som frågan användaren om den verkligen vill ta bort produkten.
+		/// </summary>
+		/// <param name="clickedItem"></param>
+		/// <param name="message"></param>
+		/// <returns></returns>
 		private async Task RemoveProductDialog(Product clickedItem, string message)
 		{
 			
@@ -428,6 +529,10 @@ namespace Business_system
 			}));
 			await removeProductDialog.ShowAsync();
 		}
+		/// <summary>
+		/// Tar bort en produkt ur masterProducts och uppdaterar sedan ui.
+		/// </summary>
+		/// <param name="product"></param>
 		private void removeProductFromMasterdata(Product product)
 		{
 			masterProducts.Remove(product);
@@ -435,6 +540,9 @@ namespace Business_system
 		}
 
 		// CASHIER -----------------------------------------------------------------
+		/// <summary>
+		/// Fyller subklasserna till Product:s listor.
+		/// </summary>
 		private void updateSubclassLists()
 		{
 			bookList.Clear();
@@ -455,6 +563,9 @@ namespace Business_system
 			}
 			PupulateSubclassListViews();
 		}
+		/// <summary>
+		/// Fyller subklassernas ListViews.
+		/// </summary>
 		private void PupulateSubclassListViews()
 		{
 			var bookListViewItems = new ObservableCollection<Book>(bookList);
@@ -466,22 +577,33 @@ namespace Business_system
 			var videogameListViewItems = new ObservableCollection<Videogame>(videogameList);
 			VideogameListView.ItemsSource = videogameListViewItems;
 		}
+		/// <summary>
+		/// Klickfunktion för samtliga subklass-listor. Fyller Kundkorgen!
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void ListView_ItemClick(object sender, ItemClickEventArgs e)
 		{
 			var clickedItem = (Product)e.ClickedItem;
 			clickedItem.ChangingProperty = "1";
-			if (!cartProducts.Contains(clickedItem))
+			if (!cartProducts.Contains(clickedItem) && clickedItem.Qty > 0)
 			{
 				cartProducts.Add(clickedItem);
 				updateCartList();
 			}
 		}
+		/// <summary>
+		/// Uppdaterar UI för kundkorgen
+		/// </summary>
 		private void updateCartList()
 		{
 			var displayItems = new ObservableCollection<Product>(cartProducts);
 			updateTotalPrice();
 			CartList.ItemsSource = displayItems;
 		}
+		/// <summary>
+		/// Uppdaterar priset som visas i TotalPriceTextBlock baserat på antalet i qty och produktens pris
+		/// </summary>
 		private void updateTotalPrice()
 		{
 			int totalPrice = 0;
@@ -498,8 +620,17 @@ namespace Business_system
 					}
 				}
 			}
+			if (totalPrice < 0)
+			{
+				TotalPriceTextBlock.Text = "Error, price too high";
+			}
 			TotalPriceTextBlock.Text = totalPrice.ToString();
 		}
+		/// <summary>
+		/// Tar bort ett klickat item i Kundkorgen och cartProducts. Uppdaterar därefter UI.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void CartList_ItemClick(object sender, ItemClickEventArgs e)
 		{
 			var clickedItem = (Product)e.ClickedItem;
@@ -508,6 +639,11 @@ namespace Business_system
 			updateCartList();
 		}
 
+		/// <summary>
+		/// Reagerar på TextBoxarna i Kundkorgen för att dra slutsats om det är en accepterad input och uppdaterar priset.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
 		{
 			var textBox = (TextBox)sender;
@@ -522,6 +658,10 @@ namespace Business_system
 				}
 			}
 		}
+		/// <summary>
+		/// Validerar kundkorgen för att motverka icke-numerisk inmatning.
+		/// </summary>
+		/// <returns></returns>
 		private async Task<bool> validateCart()
 		{
 			bool isValid = await validateChangingProperties(cartProducts);
@@ -538,6 +678,11 @@ namespace Business_system
 			}
 			return isValid;
 		}
+		/// <summary>
+		/// händelsedriven funktion som reagerar på knapptryck av Check out-knappen. Påbörjar köpet.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private async void CheckOutButton_Click(object sender, RoutedEventArgs e)
 		{
 			//check if enough qty on stock
@@ -550,6 +695,10 @@ namespace Business_system
 				await MakePurchaseDialog();
 			}
 		}
+		/// <summary>
+		/// En dialogruta för att acceptera (simulerad) betalning.
+		/// </summary>
+		/// <returns></returns>
 		private async Task MakePurchaseDialog()
 		{
 
@@ -565,7 +714,9 @@ namespace Business_system
 			}));
 			await makePurchaseDialog.ShowAsync();
 		}
-
+		/// <summary>
+		/// Uppdaterar qty av berörda produkter, uppdaterar sedan ui.
+		/// </summary>
 		private void makePurchase()
 		{
 			foreach (var product in cartProducts)
@@ -573,12 +724,19 @@ namespace Business_system
 				int qty = int.Parse(product.ChangingProperty);
 				product.SubtractQty(qty);
 			}
-
+			foreach (var product in cartProducts)
+			{
+				product.ChangingProperty = string.Empty;
+			}
 			cartProducts.Clear();
 			updateCartList();
 			updateSubclassLists();
 		}
-
+		/// <summary>
+		/// Rensar kundkorgen
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void ClearCartButton_Click(object sender, RoutedEventArgs e)
 		{
 			foreach(var product in cartProducts)

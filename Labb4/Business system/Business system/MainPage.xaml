@@ -34,8 +34,8 @@
 					<ColumnDefinition></ColumnDefinition>
 					<ColumnDefinition></ColumnDefinition>
 				</Grid.ColumnDefinitions>
-				<Button Grid.Column="0" Click="Open_Click">Read</Button>
-				<Button Grid.Column="1" Click="Save_Click">Write</Button>
+				<Button Grid.Column="0" Click="Read_Click" Visibility="Collapsed">Read</Button>
+				<Button Grid.Column="1" Click="Save_Click" Visibility="Collapsed">Write</Button>
 
 			</Grid>
 		</Grid>
@@ -46,12 +46,12 @@
 
 		<Grid Name="KassaPanel" Visibility="Visible" Grid.Column="0" Grid.Row="1">
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="2*"></ColumnDefinition>
-				<ColumnDefinition Width="1*"></ColumnDefinition>
+				<ColumnDefinition Width="5*"></ColumnDefinition>
+				<ColumnDefinition Width="3*"></ColumnDefinition>
 			</Grid.ColumnDefinitions>
 
 			
-			<Grid Grid.Column="0">
+			<Grid Grid.Column="0" Margin="16">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="*"></RowDefinition>
 					<RowDefinition Height="*"></RowDefinition>
@@ -63,7 +63,7 @@
 				      ScrollViewer.HorizontalScrollMode="Enabled"
 					  ScrollViewer.VerticalScrollBarVisibility="Auto"
 					  ItemClick="ListView_ItemClick" IsItemClickEnabled="True"
-					  Margin="16, 0, 16, 0" BorderThickness="1" BorderBrush="Black">
+					  BorderThickness="1" BorderBrush="Black">
 					<ListView.Header>
 						<Grid>
 							<Grid.RowDefinitions>
@@ -130,7 +130,7 @@
 					  ScrollViewer.HorizontalScrollMode="Enabled"
 					  ScrollViewer.VerticalScrollBarVisibility="Auto"
 					  ItemClick="ListView_ItemClick" IsItemClickEnabled="True"
-					  Margin="16, 0, 16, 0" BorderThickness="1" BorderBrush="Black">
+					  BorderThickness="1" BorderBrush="Black">
 					<ListView.Header>
 
 						<Grid>
@@ -188,7 +188,7 @@
 					  ScrollViewer.HorizontalScrollMode="Enabled"
 					  ScrollViewer.VerticalScrollBarVisibility="Auto"
 					  ItemClick="ListView_ItemClick" IsItemClickEnabled="True"
-					  Margin="16, 0, 16, 0" BorderThickness="1" BorderBrush="Black">
+					  BorderThickness="1" BorderBrush="Black">
 					<ListView.Header>
 
 						<Grid>
@@ -256,23 +256,32 @@
 					<TextBlock Text="Cart" FontSize="16"></TextBlock>
 					
 				</Grid>
-				<Grid Grid.Row="2" Margin="16, 6, 6, 6">
+				<Grid Grid.Row="2" Margin="16, 6, 6, 6" >
 					<Grid.ColumnDefinitions>
+						<ColumnDefinition></ColumnDefinition>
 						<ColumnDefinition></ColumnDefinition>
 						<ColumnDefinition></ColumnDefinition>
 						<ColumnDefinition></ColumnDefinition>
 					</Grid.ColumnDefinitions>
 					<!-- Total Price -->
-					<Grid BorderBrush="Black" BorderThickness="2">
+					<Grid Grid.Column="0" Grid.ColumnSpan="2" >
 						<Grid.ColumnDefinitions>
-							<ColumnDefinition></ColumnDefinition>
-							<ColumnDefinition></ColumnDefinition>
+							<ColumnDefinition Width="1*"></ColumnDefinition>
+							<ColumnDefinition Width="2*"></ColumnDefinition>
+							<ColumnDefinition Width="1*"></ColumnDefinition>
 						</Grid.ColumnDefinitions>
-						<TextBlock Text="Total"></TextBlock>
-						<TextBlock Name="TotalPriceTextBlock" Text="233" Grid.Column="1"></TextBlock>
+						<TextBlock Text="Total" FontSize="20"></TextBlock>
+
+						<Border Grid.Column="1"  BorderBrush="Black" BorderThickness="2" Margin="0,0,12,0">
+							<Viewbox StretchDirection="DownOnly">
+								<TextBlock Name="TotalPriceTextBlock" FontSize="20" ></TextBlock>
+							</Viewbox>
+						</Border>
+						<TextBlock Text="kr" FontSize="20" Grid.Column="2"></TextBlock>
 					</Grid>
-					<Button Content="Register" Grid.Column="1"></Button>
-					<Button Content="Clear" Grid.Column="2"></Button>
+					<!-- Cart Buttons -->
+					<Button Content="Check out" Grid.Column="2" Click="CheckOutButton_Click"></Button>
+					<Button Content="Clear" Grid.Column="3" Click="ClearCartButton_Click"></Button>
 				</Grid>
 
 				<ListView Name="CartList" Grid.Row="1" 
@@ -317,7 +326,7 @@
 									<TextBlock Text="{Binding Name}"		Grid.Column="1" Width="150" TextTrimming="CharacterEllipsis"/>
 									<TextBlock Text="{Binding ProductType}" Grid.Column="2" Width="100" TextTrimming="CharacterEllipsis"/>
 									<TextBlock Text="{Binding Price}"		Grid.Column="3" Width="50"	TextTrimming="CharacterEllipsis"/>
-									<TextBox Text="{Binding ChangingProperty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="4" />
+									<TextBox Text="{Binding ChangingProperty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="4" TextChanged="TextBox_TextChanged"/>
 
 								</Grid>
 							</StackPanel>

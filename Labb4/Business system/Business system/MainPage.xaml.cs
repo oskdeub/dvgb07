@@ -5,6 +5,7 @@ using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using System.Xml;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
+using Windows.Storage.Pickers;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -39,18 +41,29 @@ namespace Business_system
 		List<Movie> movieList = new List<Movie>();
 		List<Videogame> videogameList = new List<Videogame>();
 		List<Product> cartProducts = new List<Product>();
+		StorageFile CSVFile = null;
+		uint TotalPrice;
 		
 		private int id_counter;
 		public MainPage()
 		{
+			TotalPrice = 0;
 			id_counter = 0;
 			this.InitializeComponent();
 		}
 
 		private async void Page_Loaded(object sender, RoutedEventArgs e)
 		{
-			List<string[]> data = await ReadCSVFile("data.csv");
-			populateList(data);
+			await openFile();
+			if(CSVFile != null)
+			{
+				List<string[]> data = await ReadCSVFile(CSVFile);
+				populateList(data);
+			} else
+			{
+				await ErrorDialog("CSV-file is null.");
+			}
+			
 		}
 
 		private void updateMasterProductsList()
@@ -58,6 +71,7 @@ namespace Business_system
 			id_counter = masterProducts.Count();
 			var displayItems = new ObservableCollection<Product>(masterProducts);
 			ProductList.ItemsSource = displayItems;
+			WriteToFile();
 		}
 		public void populateList(List<string[]> data) {
 			//Clear before reading
@@ -66,7 +80,7 @@ namespace Business_system
 			masterProducts.AddRange(parseCsvData(data));
 
 			updateMasterProductsList();
-			PopulateSubclassLists();
+			updateSubclassLists();
 		}
 
 		internal List<Product> parseCsvData(List<string[]> data)
@@ -152,12 +166,19 @@ namespace Business_system
 
 			}
 		}
-
-		public async Task<List<string[]>> ReadCSVFile(string filename)
+		private async Task openFile()
+		{
+			FileOpenPicker fileOpenPicker = new FileOpenPicker
+			{
+				ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail,
+				SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary
+			};
+			fileOpenPicker.FileTypeFilter.Add(".csv");
+			CSVFile = await fileOpenPicker.PickSingleFileAsync();
+		}
+		public async Task<List<string[]>> ReadCSVFile(StorageFile file)
 		{
 			List<string[]> data = new List<string[]>();
-			StorageFolder localFolder = ApplicationData.Current.LocalFolder;
-			var file = await localFolder.GetFileAsync(filename);
 			IList<string> lines = await FileIO.ReadLinesAsync(file);
 
 			foreach (var line in lines)
@@ -167,8 +188,17 @@ namespace Business_system
 			}
 			return data;
 		}
-
-		internal async Task WriteToCsv(string filename, List<Product> products)
+		
+		private async void WriteToFile()
+		{
+			await WriteToCsv(masterProducts);
+		}
+		private async Task ReadFromFile()
+		{
+			List<string[]> data = await ReadCSVFile(CSVFile);
+			populateList(data);
+		}
+		internal async Task WriteToCsv(List<Product> products)
 		{
 			StringBuilder content = new StringBuilder();
 			content.AppendLine("ID; Name; Price; Qty; Product;");
@@ -177,18 +207,17 @@ namespace Business_system
 				content.AppendLine(string.Join(";", product.ToCsv()));
 			}
 			StorageFolder localFolder = ApplicationData.Current.LocalFolder;
-			var file = await localFolder.GetFileAsync(filename);
-			await FileIO.WriteTextAsync(file, content.ToString());
+			
+			await FileIO.WriteTextAsync(CSVFile, content.ToString());
 		}
-		private async void Open_Click(object sender, RoutedEventArgs e)
+		private async void Read_Click(object sender, RoutedEventArgs e)
 		{
-			List<string[]> data = await ReadCSVFile("data.csv");
-			populateList(data);
+			await ReadFromFile();
 		}
 
 		private async void Save_Click(object sender, RoutedEventArgs e)
 		{
-			await WriteToCsv("data.csv", masterProducts);
+			await WriteToCsv(masterProducts);
 		}
 
 		private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
@@ -204,7 +233,8 @@ namespace Business_system
 				{
 					case "Kassa":
 						KassaPanel.Visibility = Visibility.Visible;
-						PopulateSubclassLists();
+						TotalPrice = 0;
+						updateSubclassLists();
 						break;
 					case "Lager":
 						LagerPanel.Visibility = Visibility.Visible;
@@ -253,11 +283,10 @@ namespace Business_system
 			DeliveryButton.Visibility = Visibility.Collapsed;
 			ProductList.ItemClick -= ProductList_ItemClick;
 			ProductList.ItemClick += ProductList_AddItemToDelivery;
-			
 		}
 		private async void DoneButton_Click(object sender, RoutedEventArgs e)
 		{
-			bool validation = await validateChangingProperties();
+			bool validation = await validateChangingProperties(deliveryProducts);
 			if (validation)
 			{
 				RegisterDelivery();
@@ -265,16 +294,16 @@ namespace Business_system
 			}
 		}
 
-		private async Task<bool> validateChangingProperties()
+		private async Task<bool> validateChangingProperties(List<Product> products)
 		{
-			foreach (var product in deliveryProducts)
+			foreach (var product in products)
 			{
 				if(int.TryParse(product.ChangingProperty, out int qty))
 				{
 					if (qty < 0)
 					{
 						//value is negative
-						await ErrorDialog($"Product id {product.ID}: delivery quantity is not a positive number. Please try again with a positive number.");
+						await ErrorDialog($"Product id {product.ID}: quantity is not a positive number. Please try again with a positive number.");
 						return false;
 					}
 				} else
@@ -282,11 +311,11 @@ namespace Business_system
 					//value is not an int
 					if (product.ChangingProperty == string.Empty)
 					{
-						await ErrorDialog($"Product id {product.ID}: delivery quantity is empty, which is not allowed. Please enter a delivery quantity or remove it from delivery.");
+						await ErrorDialog($"Product id {product.ID}: quantity is empty, which is not allowed. Please enter a delivery quantity or remove it from delivery.");
 						return false;
 					} else
 					{
-						await ErrorDialog($"Product id {product.ID}: delivery quantity is not a number. Please try again with a positive number.");
+						await ErrorDialog($"Product id {product.ID}: quantity is not a number. Please try again with a positive number.");
 						return false;
 					}
 				}
@@ -406,7 +435,7 @@ namespace Business_system
 		}
 
 		// CASHIER -----------------------------------------------------------------
-		private void PopulateSubclassLists()
+		private void updateSubclassLists()
 		{
 			bookList.Clear();
 			movieList.Clear();
@@ -440,7 +469,7 @@ namespace Business_system
 		private void ListView_ItemClick(object sender, ItemClickEventArgs e)
 		{
 			var clickedItem = (Product)e.ClickedItem;
-			clickedItem.ChangingProperty = string.Empty;
+			clickedItem.ChangingProperty = "1";
 			if (!cartProducts.Contains(clickedItem))
 			{
 				cartProducts.Add(clickedItem);
@@ -450,14 +479,114 @@ namespace Business_system
 		private void updateCartList()
 		{
 			var displayItems = new ObservableCollection<Product>(cartProducts);
+			updateTotalPrice();
 			CartList.ItemsSource = displayItems;
+		}
+		private void updateTotalPrice()
+		{
+			int totalPrice = 0;
+			foreach (var product in cartProducts)
+			{
+				if(product.ChangingProperty != string.Empty)
+				{
+					if (int.TryParse(product.ChangingProperty, out int cartQty))
+					{
+						for (int i = 0; i < cartQty; i++)
+						{
+							totalPrice += product.Price;
+						}
+					}
+				}
+			}
+			TotalPriceTextBlock.Text = totalPrice.ToString();
 		}
 		private void CartList_ItemClick(object sender, ItemClickEventArgs e)
 		{
 			var clickedItem = (Product)e.ClickedItem;
 			cartProducts.Remove(clickedItem);
 			clickedItem.ChangingProperty = string.Empty;
-			updateDeliveryProductsList();
+			updateCartList();
+		}
+
+		private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			var textBox = (TextBox)sender;
+			if (textBox != null)
+			{
+				if (!int.TryParse(textBox.Text, out int _)){
+					textBox.Background = new SolidColorBrush(Windows.UI.Colors.Salmon);
+				} else
+				{
+					textBox.Background = new SolidColorBrush(Windows.UI.Colors.White);
+					updateTotalPrice();
+				}
+			}
+		}
+		private async Task<bool> validateCart()
+		{
+			bool isValid = await validateChangingProperties(cartProducts);
+			foreach (var product in cartProducts)
+			{
+				int qty = int.Parse(product.ChangingProperty);
+					if (product.Qty < qty)
+					{
+						//oopsie error! tried to sell more than we have on stock!
+						await ErrorDialog($"Tried to sell {qty} of ID: {product.ID} with only {product.Qty} pieces on stock. Lower cart qty and try again!");
+						isValid = false;
+					}
+				
+			}
+			return isValid;
+		}
+		private async void CheckOutButton_Click(object sender, RoutedEventArgs e)
+		{
+			//check if enough qty on stock
+			bool isValid = await validateCart();
+
+			// subtract qty
+
+			if (isValid)
+			{
+				await MakePurchaseDialog();
+			}
+		}
+		private async Task MakePurchaseDialog()
+		{
+
+			MessageDialog makePurchaseDialog = new MessageDialog("Awaiting payment...");
+			makePurchaseDialog.Title = "Check out";
+			makePurchaseDialog.Commands.Add(new UICommand("Payment Received", x =>
+			{
+				makePurchase();
+			}));
+			makePurchaseDialog.Commands.Add(new UICommand("Cancel", x =>
+			{
+				
+			}));
+			await makePurchaseDialog.ShowAsync();
+		}
+
+		private void makePurchase()
+		{
+			foreach (var product in cartProducts)
+			{
+				int qty = int.Parse(product.ChangingProperty);
+				product.SubtractQty(qty);
+			}
+
+			cartProducts.Clear();
+			updateCartList();
+			updateSubclassLists();
+		}
+
+		private void ClearCartButton_Click(object sender, RoutedEventArgs e)
+		{
+			foreach(var product in cartProducts)
+			{
+				product.ChangingProperty = string.Empty;
+			}
+			cartProducts.Clear();
+			updateCartList();
 		}
 	}
 }

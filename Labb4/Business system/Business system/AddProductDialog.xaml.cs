@@ -20,6 +20,9 @@ namespace Business_system
 	public sealed partial class AddProductDialog : ContentDialog
 	{
 		public Product NewProduct { get; private set; }
+		/// <summary>
+		/// Instansierar kompnenten och hämtar information från Enums.
+		/// </summary>
 		public AddProductDialog()
 		{
 			this.InitializeComponent();
@@ -28,6 +31,11 @@ namespace Business_system
 			MovieFormatComboBox.ItemsSource = Enum.GetValues(typeof(MovieFormat));
 			PlatformComboBox.ItemsSource = Enum.GetValues(typeof(VideogamePlatform));
 		}
+		/// <summary>
+		/// Huvudknappens händelse, kontrollerar inputfälten men stänger inte dialogen om valideringen inte går igenom.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
 		private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
 		{
 			if (!isFormValid())
@@ -38,6 +46,10 @@ namespace Business_system
 				NewProduct = ExtractProductInfo();
 			}
 		}
+		/// <summary>
+		/// – Kontrollerar alla nödvändiga inputfält och om dess värden är av rätt typer. 
+		/// </summary>
+		/// <returns></returns>
 		private bool isFormValid()
 		{
 			// Initial form validation: Name, Price given. QTY can be left empty
@@ -77,23 +89,12 @@ namespace Business_system
 					return false;
 			}
 		}
-		private bool isNegative(TextBox textBox)
-		{
-			if (textBox.Text != string.Empty)
-			{
-				if (int.TryParse(textBox.Text, out int result))
-				{
-					if (result < 0)
-					{
-						textBox.Text = "";
-						textBox.PlaceholderText = "Input must be a positive number!";
-						textBox.BorderBrush = new SolidColorBrush(Windows.UI.Colors.Red);
-						return true;
-					}
-				}
-			}
-			return false;
-		}
+		/// <summary>
+		/// Kontrollerar textbox.Text om det är en int och inte mindre än 0 (negativ).
+		/// </summary>
+		/// <param name="textBox"></param>
+		/// <returns></returns>
+	
 		private bool isFieldPositiveInteger(TextBox textBox)
 		{
 			if(textBox.Text != string.Empty)
@@ -118,7 +119,11 @@ namespace Business_system
 			return true;
 		}
 			
-
+		/// <summary>
+		/// Kontrollerar om ett nödvändigt fält inte är ifyllt
+		/// </summary>
+		/// <param name="textBox"></param>
+		/// <returns></returns>
 		private bool isRequiredFieldEmpty(TextBox textBox)
 		{
 			if (textBox.Text == string.Empty)
@@ -130,6 +135,11 @@ namespace Business_system
 			textBox.BorderBrush = default;
 			return false;
 		}
+		/// <summary>
+		/// – Extraherar först de delade attributen (ID, Name, Price, Qty) via GetCommonProductInfo()
+		/// och sedan produkttypsspecifika attribut från respektive subklass.
+		/// </summary>
+		/// <returns></returns>
 		private Product ExtractProductInfo()
 		{
 			var selectedProduct = ProductComboBox.SelectedItem as ComboBoxItem;
@@ -221,7 +231,6 @@ namespace Business_system
 
 			return movie;
 		}
-		
 
 		private Videogame ExtractVideogameInfo()
 		{
@@ -239,31 +248,14 @@ namespace Business_system
 			return videogame;
 		}
 
-		
-		/* Referens: ChatGPT */
-		private string FindTextBoxValueByTag(string tag)
-		{
-			//Because we're creating dynamic TextBoxes and applying Tags we can find these by searching in DynamicPanel.Children
-			var textBox = DynamicPanel.Children.OfType<TextBox>().FirstOrDefault(tb => tb.Tag?.ToString() == tag);
-			return textBox?.Text;
-		}
-		private T FindComboBoxValueByTag<T>(string tag) where T : Enum
-		{
-			var comboBox = DynamicPanel.Children.OfType<ComboBox>().FirstOrDefault(cb => cb.Tag?.ToString() == tag);
-			if (comboBox?.SelectedItem != null)
-			{
-				return (T)comboBox.SelectedItem;
-			}
-			return default;
-		}
-		/* Slut referens */
-		
-	
-
 		private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
 		{
 		}
-
+		/// <summary>
+		/// Visar de textboxar som hör till vald produkttyp, och gömmer de andra.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void ProductComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			AuthorTextBox.Visibility = Visibility.Collapsed;

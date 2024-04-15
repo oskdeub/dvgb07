@@ -63,9 +63,55 @@ namespace Business_system
 				populateList(data);
 			} else
 			{
-				await ErrorDialog("CSV-file is null.");
+				await ErrorDialog("No file found. Please restart program.");
+				
 			}
 			
+		}
+		/// <summary>
+		/// Öppnar en fil och tilldelar den globala variabeln StorageFil CSVFile.
+		/// </summary>
+		/// <returns></returns>
+		private async Task openFile()
+		{
+			FileOpenPicker fileOpenPicker = new FileOpenPicker
+			{
+				ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail,
+				SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary
+			};
+			fileOpenPicker.FileTypeFilter.Add(".csv");
+			CSVFile = await fileOpenPicker.PickSingleFileAsync();
+		}
+		/// <summary>
+		/// Läser från csv-filen
+		/// </summary>
+		/// <param name="file"></param>
+		/// <returns> En List<string> med alla rader i csv-filen </returns>
+		public async Task<List<string[]>> ReadCSVFile(StorageFile file)
+		{
+			List<string[]> data = new List<string[]>();
+			IList<string> lines = await FileIO.ReadLinesAsync(file);
+
+			foreach (var line in lines)
+			{
+				string[] parts = line.Split(';');
+				data.Add(parts);
+			}
+			return data;
+		}
+		/// <summary>
+		/// Fyller masterProducts med produkter från csv-filens data.
+		/// </summary>
+		/// <param name="data"> csv-filens data </param>
+		public void populateList(List<string[]> data)
+		{
+			//Clear before reading
+			masterProducts.Clear();
+			//Add all products to masterProducts
+			masterProducts.AddRange(parseCsvData(data));
+
+			updateMasterProductsList();
+			updateSubclassLists();
 		}
 		/// <summary>
 		/// Uppdaterar masterProducts och sparar dessa till fil.
@@ -77,19 +123,7 @@ namespace Business_system
 			ProductList.ItemsSource = displayItems;
 			WriteToFile();
 		}
-		/// <summary>
-		/// Fyller masterProducts med produkter från csv-filens data.
-		/// </summary>
-		/// <param name="data"> csv-filens data </param>
-		public void populateList(List<string[]> data) {
-			//Clear before reading
-			masterProducts.Clear();
-			//Add allez producten por favor
-			masterProducts.AddRange(parseCsvData(data));
-
-			updateMasterProductsList();
-			updateSubclassLists();
-		}
+		
 		/// <summary>
 		/// Parserar csv.filens data och gör varje rad till en produkt
 		/// </summary>
@@ -185,52 +219,14 @@ namespace Business_system
 
 			}
 		}
-		/// <summary>
-		/// Öppnar en fil och tilldelar den globala variabeln StorageFil CSVFile.
-		/// </summary>
-		/// <returns></returns>
-		private async Task openFile()
-		{
-			FileOpenPicker fileOpenPicker = new FileOpenPicker
-			{
-				ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail,
-				SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary
-			};
-			fileOpenPicker.FileTypeFilter.Add(".csv");
-			CSVFile = await fileOpenPicker.PickSingleFileAsync();
-		}
-		/// <summary>
-		/// Läser från csv-filen
-		/// </summary>
-		/// <param name="file"></param>
-		/// <returns> En List<string> med alla rader i csv-filen </returns>
-		public async Task<List<string[]>> ReadCSVFile(StorageFile file)
-		{
-			List<string[]> data = new List<string[]>();
-			IList<string> lines = await FileIO.ReadLinesAsync(file);
-
-			foreach (var line in lines)
-			{
-				string[] parts = line.Split(';');
-				data.Add(parts);
-			}
-			return data;
-		}
+		
+		
 		/// <summary>
 		/// Skriver masterProducts till CSVFile.
 		/// </summary>
 		private async void WriteToFile()
 		{
 			await WriteToCsv(masterProducts);
-		}
-		/// <summary>
-		/// Läser från CSVFile
-		/// </summary>
-		/// <returns></returns>
-		private async Task ReadFromFile()
-		{
-			List<string[]> data = await ReadCSVFile(CSVFile);
-			populateList(data);
 		}
 		/// <summary>
 		/// Skriver products till CSVFile, rad för rad
@@ -267,6 +263,8 @@ namespace Business_system
 					case "Kassa":
 						KassaPanel.Visibility = Visibility.Visible;
 						updateSubclassLists();
+						cartProducts.Clear();
+						updateCartList();
 						break;
 					case "Lager":
 						LagerPanel.Visibility = Visibility.Visible;

@@ -559,12 +559,12 @@ namespace Business_system
 					videogameList.Add(videogame);
 				}
 			}
-			PupulateSubclassListViews();
+			PopulateSubclassLists();
 		}
 		/// <summary>
 		/// Fyller subklassernas ListViews.
 		/// </summary>
-		private void PupulateSubclassListViews()
+		private void PopulateSubclassLists()
 		{
 			var bookListViewItems = new ObservableCollection<Book>(bookList);
 			BookListView.ItemsSource = bookListViewItems;
@@ -663,17 +663,21 @@ namespace Business_system
 		private async Task<bool> validateCart()
 		{
 			bool isValid = await validateChangingProperties(cartProducts);
-			foreach (var product in cartProducts)
+			if (isValid)
 			{
-				int qty = int.Parse(product.ChangingProperty);
+				foreach (var product in cartProducts)
+				{
+					int qty = int.Parse(product.ChangingProperty);
 					if (product.Qty < qty)
 					{
 						//oopsie error! tried to sell more than we have on stock!
 						await ErrorDialog($"Tried to sell {qty} of ID: {product.ID} with only {product.Qty} pieces on stock. Lower cart qty and try again!");
 						isValid = false;
 					}
-				
+
+				}
 			}
+			
 			return isValid;
 		}
 		/// <summary>
@@ -729,6 +733,7 @@ namespace Business_system
 			cartProducts.Clear();
 			updateCartList();
 			updateSubclassLists();
+			updateMasterProductsList();
 		}
 		/// <summary>
 		/// Rensar kundkorgen

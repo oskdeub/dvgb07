@@ -22,7 +22,7 @@ namespace Business_system
 		{
 		}
 		public string ChangingProperty
-		{//Referens: ChatGPT
+		{//Referens: INotifyPropertyChanged och dess funktioner är från ChatGPT, om än något tweakad för att passa in här.
 			get => changingProp;
 			set
 			{

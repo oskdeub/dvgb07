@@ -1,15 +1,16 @@
 ID; Name; Price; Qty; Product;
 1;Bello Gallico et Civili;449;5;Book;Julius Caesar;Historia;Hardcover;Latin
-2;How to Read a Book;149;3;Book;Mortimer J. Adler;Kurslitteratur;Pocket;
-4;Great Gatsby;79;3;Book;F. Scott Fitzgerald;Noir;Ebook;
+2;How to Read a Book;149;2;Book;Mortimer J. Adler;Kurslitteratur;Pocket;
+4;Great Gatsby;79;0;Book;F. Scott Fitzgerald;Noir;Ebook;
 5;House of Leaves;49;5;Book;Mark Z. Danielewski;Skräck;;
-6;Elden Ring;599;11;Videogame;Playstation_5
+6;Elden Ring;599;10;Videogame;Playstation_5
 7;Demon's Souls;499;8;Videogame;Playstation_5
 8;Microsoft Flight Simulator;499;4;Videogame;PC
 9;Planescape Torment;99;2;Videogame;PC
 10;Disco Elysium;399;6;Videogame;PC
 11;Nyckeln till frihet;99;3;Movie;DVD;142
-12;Gudfadern;99;1;Movie;DVD;152
+12;Gudfadern;99;0;Movie;DVD;152
 13;Konungens återkomst;199;0;Movie;Blu_ray;154
 14;Pulp fiction;199;0;Movie;Blu_ray;
 15;Schindlers list;99;1;Movie;DVD;
+16;Moby Dick;49;2;Book;Herman Melville;Äventyr;Pocket;

@@ -446,7 +446,7 @@
 									<TextBlock Text="{Binding Name}"		Grid.Column="1" Width="150" TextTrimming="CharacterEllipsis"/>
 									<TextBlock Text="{Binding ProductType}" Grid.Column="2" Width="100" TextTrimming="CharacterEllipsis"/>
 									<TextBlock Text="{Binding Price}"		Grid.Column="3" Width="50"	TextTrimming="CharacterEllipsis"/>
-									<TextBox Text="{Binding ChangingProperty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="4" Width="50"/>
+									<TextBox   Text="{Binding ChangingProperty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="4" />
 
 								</Grid>
 							</StackPanel>

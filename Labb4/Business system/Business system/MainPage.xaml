@@ -351,7 +351,7 @@
 
 					<Button Content="Fetch data" Grid.Column="0" Click="FetchData_Click" CornerRadius="5"></Button>
 					<TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Updated: " Margin="12,0,12,0"></TextBlock>
-					<TextBlock Name="FetchDataTextBox" Grid.Column="2" VerticalAlignment="Center">Test</TextBlock>
+					<TextBlock Name="FetchDataTextBox" Grid.Column="2" VerticalAlignment="Center" Text="-"></TextBlock>
 				</Grid>
 				
 				<Button Content="Delivery"	Name="DeliveryButton"	Grid.Column="4"	Click="DeliveryButton_Click" CornerRadius="5"></Button>

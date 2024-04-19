@@ -800,7 +800,13 @@ namespace Business_system
 					}
 				}
 			}
+			setUpdatedTime();
 			updateMasterProductsList();
+		}
+
+		private void setUpdatedTime()
+		{
+			FetchDataTextBox.Text = DateTime.Now.ToShortTimeString();
 		}
 
 		private async Task<Movie> parseXmlMovie(XmlNode movieNode)

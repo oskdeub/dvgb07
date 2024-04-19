@@ -52,24 +52,22 @@
 						<RowDefinition></RowDefinition>
 						<RowDefinition></RowDefinition>
 						<RowDefinition></RowDefinition>
-						<RowDefinition></RowDefinition>
 					</Grid.RowDefinitions>
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition></ColumnDefinition>
 						<ColumnDefinition></ColumnDefinition>
 					</Grid.ColumnDefinitions>
 
-					<TextBlock Grid.Row="0" Grid.Column="0" >Author:</TextBlock>
-					<TextBlock Grid.Row="0" Grid.Column="1" Name="AuthorTextBlock"></TextBlock>
+				
 
-					<TextBlock Grid.Row="1" Grid.Column="0">Genre:</TextBlock>
-					<TextBlock Grid.Row="1" Grid.Column="1" Name="BookGenreTextBlock"></TextBlock>
+					<TextBlock Grid.Row="0" Grid.Column="0">Genre:</TextBlock>
+					<TextBlock Grid.Row="0" Grid.Column="1" Name="BookGenreTextBlock"></TextBlock>
 
-					<TextBlock Grid.Row="2" Grid.Column="0">Format:</TextBlock>
-					<TextBlock Grid.Row="2" Grid.Column="1" Name="BookFormatTextBlock"></TextBlock>
+					<TextBlock Grid.Row="1" Grid.Column="0">Format:</TextBlock>
+					<TextBlock Grid.Row="1" Grid.Column="1" Name="BookFormatTextBlock"></TextBlock>
 
-					<TextBlock Grid.Row="3" Grid.Column="0">Language:</TextBlock>
-					<TextBlock Grid.Row="3" Grid.Column="1" Name="LanguageTextBlock"></TextBlock>
+					<TextBlock Grid.Row="2" Grid.Column="0">Language:</TextBlock>
+					<TextBlock Grid.Row="2" Grid.Column="1" Name="LanguageTextBlock"></TextBlock>
 
 				</Grid>
 			</StackPanel>

@@ -5,6 +5,7 @@ using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
@@ -155,22 +156,10 @@ namespace Business_system
 					book.Price = int.Parse(line[2]);
 					book.Qty = int.Parse(line[3]);
 					book.ProductType = ProductType.Book;
-					book.Author = line[5];
-					book.bookGenre = line[6];
-					if (Enum.TryParse<BookFormat>(line[7], out BookFormat bookFormat))
-					{
-						book.BookFormat = bookFormat;
-					} else
-					{
-						book.BookFormat = null;
-					}
-					if (Enum.TryParse<BookLanguage>(line[8], out BookLanguage language))
-					{
-						book.Language = language;
-					} else
-					{
-						book.Language = null;
-					}
+					book.bookGenre = line[5];
+					book.BookFormat = line[6];
+					book.Language = line[7];
+		
 					return book;
 
 				case "Movie":
@@ -180,13 +169,7 @@ namespace Business_system
 					movie.Price = int.Parse(line[2]);
 					movie.Qty = int.Parse(line[3]);
 					movie.ProductType = ProductType.Movie;
-					if (Enum.TryParse<MovieFormat>(line[5], out MovieFormat movieFormat))
-					{
-						movie.MovieFormat = movieFormat;
-					} else
-					{
-						movie.MovieFormat = null;
-					}
+					movie.MovieFormat = line[5];
 					if (int.TryParse(line[6], out int x)){
 						movie.Playtime = x;
 					}
@@ -200,13 +183,7 @@ namespace Business_system
 					videogame.Price = int.Parse(line[2]);
 					videogame.Qty = int.Parse(line[3]);
 					videogame.ProductType = ProductType.Videogame;
-					if (Enum.TryParse<VideogamePlatform>(line[5], out VideogamePlatform videogamePlatform))
-					{
-						videogame.Platform = videogamePlatform;
-					} else
-					{
-						videogame.Platform = null;
-					}
+					videogame.Platform = line[5];
 					return videogame;
 
 				default:
@@ -748,6 +725,219 @@ namespace Business_system
 			}
 			cartProducts.Clear();
 			updateCartList();
+		}
+
+		//Labb 5
+		static readonly HttpClient client = new HttpClient();
+		private async void FetchData_Click(object sender, RoutedEventArgs e)
+		{
+			await FetchProductsFromAPI();
+		}
+
+		public async Task FetchProductsFromAPI()
+		{
+			try
+			{
+				// HttpResponseMessage response = await client.GetAsync("https://hex.cse.kau.se/~jonavest/csharp-api/");
+				// response.EnsureSuccessStatusCode();
+				// string responseBody = await response.Content.ReadAsStringAsync();
+
+				string responseBody = await client.GetStringAsync("https://hex.cse.kau.se/~jonavest/csharp-api/");
+				Debug.WriteLine(responseBody);
+				loadXML(responseBody);
+				
+			} catch (HttpRequestException e)
+			{
+				await ErrorDialog($"Could not fetch data from central stock. \n {e}");
+			}
+		}
+		private async void loadXML(string xmlBody)
+		{
+			XmlDocument doc = new XmlDocument();
+			doc.LoadXml(xmlBody);
+
+			List<Product> pList = new List<Product>();
+			//kolla om det är error
+			
+			if(doc.FirstChild.FirstChild.Name == "error")
+			{
+				await ErrorDialog("Could not fetch data from central stock.");
+				return;
+			} else
+			{
+				XmlNode products = doc.SelectSingleNode("/response/products");
+				foreach (XmlNode product in products)
+				{
+					if (product.Name == "book")
+					{
+						pList.Add(await parseXmlBook(product));
+					} else if (product.Name == "game")
+					{
+						pList.Add(await parseXmlVideogame(product));
+					} else if (product.Name == "movie")
+					{
+						pList.Add(await parseXmlMovie(product));
+					} else
+					{
+						await ErrorDialog($"Could not define a product of type {product.Name}");
+					}
+				}
+				setFetchedProductsAsMaster(pList);
+			}
+		}
+
+		private void setFetchedProductsAsMaster(List<Product> fetchedProducts)
+		{
+			foreach (Product fetchedP  in fetchedProducts)
+			{
+				foreach (Product masterP in masterProducts)
+				{
+					if(fetchedP.ID == masterP.ID)
+					{
+						masterP.Price = fetchedP.Price;
+						masterP.Qty	= fetchedP.Qty;
+						break;
+					}
+				}
+			}
+			updateMasterProductsList();
+		}
+
+		private async Task<Movie> parseXmlMovie(XmlNode movieNode)
+		{
+			Movie movie = new Movie();
+
+			//ID
+			if (int.TryParse(movieNode["id"].InnerText, out int res))
+			{
+				movie.ID = res;
+			}
+			else
+			{
+				await ErrorDialog($"Fetched movie with id {movieNode["id"].InnerText} could not parse ID to integer");
+			}
+			//Name
+			movie.Name = movieNode["name"].InnerText;
+			//Price
+			if (int.TryParse(movieNode["price"].InnerText, out int res2))
+			{
+				movie.Price = res2;
+			}
+			else
+			{
+				await ErrorDialog($"Fetched movie with id {movieNode["id"].InnerText} could not parse price to integer");
+			}
+			//Qty/Stock
+			if (int.TryParse(movieNode["stock"].InnerText, out int res3))
+			{
+				movie.Qty = res3;
+			}
+			else
+			{
+				await ErrorDialog($"Fetched movie with id {movieNode["id"].InnerText} could not parse playtime to integer");
+			}
+			//Playtime
+			if (movieNode["playtime"] != null)
+			{
+				if (int.TryParse(movieNode["playtime"].InnerText, out int res4))
+				{
+					movie.Playtime = res4;
+				}
+				else
+				{
+					await ErrorDialog($"Fetched movie with id {movieNode["id"].InnerText} could not parse playtime to integer");
+				}
+			}
+			//Format
+			if (movieNode["format"] != null)
+			{
+				movie.MovieFormat = movieNode["format"].InnerText;
+			}
+			
+
+			return movie;
+		}
+
+		private async Task<Videogame> parseXmlVideogame(XmlNode videogameNode)
+		{
+			Videogame videogame = new Videogame();
+
+			if (int.TryParse(videogameNode["id"].InnerText, out int res))
+			{
+				videogame.ID = res;
+			}
+			else
+			{
+				await ErrorDialog($"Fetched game with id {videogameNode["id"].InnerText} could not parse ID to integer");
+			}
+			videogame.Name = videogameNode["name"].InnerText;
+			if (int.TryParse(videogameNode["price"].InnerText, out int res2))
+			{
+				videogame.Price = res2;
+			}
+			else
+			{
+				await ErrorDialog($"Fetched game with id {videogameNode["id"].InnerText} could not parse price to integer");
+			}
+			if (int.TryParse(videogameNode["stock"].InnerText, out int res3))
+			{
+				videogame.Qty = res3;
+			}
+			else
+			{
+				await ErrorDialog($"Fetched game with id {videogameNode["id"].InnerText} could not parse stock to integer");
+			}
+
+			if (videogameNode["platform"] != null)
+			{
+				videogame.Platform = videogameNode["platform"].InnerText;
+			}
+
+			return videogame;
+		}
+
+		private async Task<Book> parseXmlBook(XmlNode bookNode)
+		{
+			Book book = new Book();
+			
+			if (int.TryParse(bookNode["id"].InnerText, out int res))
+			{
+				book.ID = res;
+			} else
+			{
+				await ErrorDialog($"Fetched book with id {bookNode["id"].InnerText} could not parse ID to integer");
+			}
+			book.Name = bookNode["name"].InnerText;
+			if (int.TryParse(bookNode["price"].InnerText, out int res2))
+			{
+				book.Price = res2;
+			}
+			else
+			{
+				await ErrorDialog($"Fetched book with id {bookNode["id"].InnerText} could not parse price to integer");
+			}
+			if (int.TryParse(bookNode["stock"].InnerText, out int res3))
+			{
+				book.Qty = res3;
+			}
+			else
+			{
+				await ErrorDialog($"Fetched book with id {bookNode["id"].InnerText} could not parse stock to integer");
+			}
+
+			if (bookNode["format"] != null)
+			{
+				book.BookFormat = bookNode["format"].InnerText;
+			}
+			if (bookNode["genre"] != null)
+			{
+				book.bookGenre = bookNode["genre"].InnerText;
+			}
+			if (bookNode["language"] != null)
+			{
+				book.Language = bookNode["language"].InnerText;
+			}
+			return book;
 		}
 	}
 }

@@ -22,8 +22,7 @@
 		<StackPanel Name="InputPanel">
 			<TextBox Header="Name*" Name="NameTextBox"></TextBox>
 			<StackPanel Name="DynamicPanel">
-				
-				<TextBox Name="AuthorTextBox"		Header="Author"		Visibility="Collapsed"></TextBox>
+			
 				<TextBox Name="GenreTextBox"		Header="Genre"		Visibility="Collapsed"></TextBox>
 				<TextBox Name="BookFormatTextBox"	Header="Format"		Visibility="Collapsed"></TextBox>
 				<TextBox Name="BookLanguageTextBox" Header="Language"	Visibility="Collapsed"></TextBox>

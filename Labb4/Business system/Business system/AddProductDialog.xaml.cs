@@ -184,7 +184,6 @@ namespace Business_system
 			var book = new Book();
 			GetCommonProductInfo(book);
 
-			book.Author = AuthorTextBox.Text;
 			book.bookGenre = GenreTextBox.Text;
 			book.BookFormat = BookFormatTextBox.Text;
 			book.Language = BookLanguageTextBox.Text;
@@ -228,7 +227,6 @@ namespace Business_system
 		/// <param name="e"></param>
 		private void ProductComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			AuthorTextBox.Visibility = Visibility.Collapsed;
 			GenreTextBox.Visibility = Visibility.Collapsed;
 			BookFormatTextBox.Visibility = Visibility.Collapsed;
 			BookLanguageTextBox.Visibility = Visibility.Collapsed;
@@ -243,7 +241,6 @@ namespace Business_system
 				{
 					case "Book":
 						//AddBookFields();
-						AuthorTextBox.Visibility = Visibility.Visible;
 						GenreTextBox.Visibility = Visibility.Visible;
 						BookFormatTextBox.Visibility = Visibility.Visible;
 						BookLanguageTextBox.Visibility = Visibility.Visible;

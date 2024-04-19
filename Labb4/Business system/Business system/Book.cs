@@ -9,7 +9,7 @@ namespace Business_system
 {
 	internal class Book : Product, ICsvSerializable
 	{
-		public string Author { get; set; }
+		
 		public string bookGenre { get; set; }
 		public string BookFormat { get; set; }
 		public string Language { get; set; }
@@ -21,7 +21,6 @@ namespace Business_system
 		{
 			var csv_s = base.ToCsv().ToList();
 			csv_s.AddRange(new string[] { 
-				Author, 
 				bookGenre, 
 				BookFormat, 
 				Language 

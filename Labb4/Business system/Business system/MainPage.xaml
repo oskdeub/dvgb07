@@ -29,7 +29,7 @@
 		</Grid>
 		<!-- Kassa UI -->
 
-		<Grid Name="KassaPanel" Visibility="Visible" Grid.Column="0" Grid.Row="1">
+		<Grid Name="KassaPanel" Visibility="Collapsed" Grid.Column="0" Grid.Row="1">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="5*"></ColumnDefinition>
 				<ColumnDefinition Width="3*"></ColumnDefinition>
@@ -72,10 +72,9 @@
 							<TextBlock Text="Name"		Grid.Column="1" Grid.Row="1" Margin="4" FontWeight="Bold"/>
 							<TextBlock Text="Price"		Grid.Column="2" Grid.Row="1" Margin="4" FontWeight="Bold"/>
 							<TextBlock Text="Qty"		Grid.Column="3" Grid.Row="1" Margin="4" FontWeight="Bold"/>
-							<TextBlock Text="Author"	Grid.Column="4" Grid.Row="1" Margin="4" FontWeight="Bold"/>
-							<TextBlock Text="Genre"		Grid.Column="5" Grid.Row="1" Margin="4" FontWeight="Bold"/>
-							<TextBlock Text="Format"	Grid.Column="6" Grid.Row="1" Margin="4" FontWeight="Bold"/>
-							<TextBlock Text="Language"	Grid.Column="7" Grid.Row="1" Margin="4" FontWeight="Bold"/>
+							<TextBlock Text="Genre"		Grid.Column="4" Grid.Row="1" Margin="4" FontWeight="Bold"/>
+							<TextBlock Text="Format"	Grid.Column="5" Grid.Row="1" Margin="4" FontWeight="Bold"/>
+							<TextBlock Text="Language"	Grid.Column="6" Grid.Row="1" Margin="4" FontWeight="Bold"/>
 
 						</Grid>
 
@@ -99,10 +98,9 @@
 								<TextBlock Text="{Binding Name}"		Grid.Column="1" Width="150" TextTrimming="CharacterEllipsis"/>
 								<TextBlock Text="{Binding Price}"		Grid.Column="2" Width="75"	TextTrimming="CharacterEllipsis"/>
 								<TextBlock Text="{Binding Qty}"			Grid.Column="3" Width="75"	TextTrimming="CharacterEllipsis"/>
-								<TextBlock Text="{Binding Author}"		Grid.Column="4" Width="150" TextTrimming="CharacterEllipsis"/>
-								<TextBlock Text="{Binding bookGenre}"	Grid.Column="5" Width="100" TextTrimming="CharacterEllipsis"/>
-								<TextBlock Text="{Binding BookFormat}"	Grid.Column="6" Width="100" TextTrimming="CharacterEllipsis"/>
-								<TextBlock Text="{Binding Language}"	Grid.Column="7" Width="75"	TextTrimming="CharacterEllipsis"/>
+								<TextBlock Text="{Binding bookGenre}"	Grid.Column="4" Width="100" TextTrimming="CharacterEllipsis"/>
+								<TextBlock Text="{Binding BookFormat}"	Grid.Column="5" Width="100" TextTrimming="CharacterEllipsis"/>
+								<TextBlock Text="{Binding Language}"	Grid.Column="6" Width="75"	TextTrimming="CharacterEllipsis"/>
 
 							</Grid>
 
@@ -326,7 +324,7 @@
 		<!-- Lager UI -->
 
 
-		<Grid Name="LagerPanel" Visibility="Collapsed" Grid.Column="0" Grid.Row="1" Margin="16,0,16,0">
+		<Grid Name="LagerPanel" Visibility="Visible" Grid.Column="0" Grid.Row="1" Margin="16,0,16,0">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="Auto"></RowDefinition>
 				<RowDefinition Height="7*"></RowDefinition>
@@ -340,12 +338,25 @@
 					<ColumnDefinition></ColumnDefinition>
 					<ColumnDefinition></ColumnDefinition>
 					<ColumnDefinition></ColumnDefinition>
+					<ColumnDefinition></ColumnDefinition>
 				</Grid.ColumnDefinitions>
 				<TextBlock Grid.Column="0" Text="Stock UI" FontSize="25"/>
 				<Button Content="New product"	Grid.Column="1"	Click="NewProduct_Click" CornerRadius="5"></Button>
-				<Button Content="Delivery"	Name="DeliveryButton"	Grid.Column="3"	Click="DeliveryButton_Click" CornerRadius="5"></Button>
-				<Button Content="Done"		Name="DoneButton"		Grid.Column="4"	Click="DoneButton_Click"	Visibility="Collapsed" CornerRadius="5" ></Button>
-				<Button Content="Cancel"	Name="CancelButton"		Grid.Column="5" Click="CancelButton_Click"	Visibility="Collapsed" CornerRadius="5" ></Button>
+				<Grid Grid.Column="2" Grid.ColumnSpan="2">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto"></ColumnDefinition>
+						<ColumnDefinition Width="Auto"></ColumnDefinition>
+						<ColumnDefinition></ColumnDefinition>
+					</Grid.ColumnDefinitions>
+
+					<Button Content="Fetch data" Grid.Column="0" Click="FetchData_Click" CornerRadius="5"></Button>
+					<TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Updated: " Margin="12,0,12,0"></TextBlock>
+					<TextBlock Name="FetchDataTextBox" Grid.Column="2" VerticalAlignment="Center">Test</TextBlock>
+				</Grid>
+				
+				<Button Content="Delivery"	Name="DeliveryButton"	Grid.Column="4"	Click="DeliveryButton_Click" CornerRadius="5"></Button>
+				<Button Content="Done"		Name="DoneButton"		Grid.Column="5"	Click="DoneButton_Click"	Visibility="Collapsed" CornerRadius="5" ></Button>
+				<Button Content="Cancel"	Name="CancelButton"		Grid.Column="6" Click="CancelButton_Click"	Visibility="Collapsed" CornerRadius="5" ></Button>
 			</Grid>
 
 			<Grid Grid.Row="2">

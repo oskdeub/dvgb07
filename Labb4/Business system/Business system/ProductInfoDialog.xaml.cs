@@ -65,7 +65,6 @@ namespace Business_system
 
 		private void PopulateBookInfo(Book book)
 		{
-			AuthorTextBlock.Text = book.Author;
 			BookGenreTextBlock.Text = book.bookGenre;
 			BookFormatTextBlock.Text = book.BookFormat;
 			LanguageTextBlock.Text = book.Language;

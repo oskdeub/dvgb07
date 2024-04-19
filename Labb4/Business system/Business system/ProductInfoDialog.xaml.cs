@@ -67,17 +67,17 @@ namespace Business_system
 		{
 			AuthorTextBlock.Text = book.Author;
 			BookGenreTextBlock.Text = book.bookGenre;
-			BookFormatTextBlock.Text = book.BookFormat.ToString();
-			LanguageTextBlock.Text = book.Language.ToString();
+			BookFormatTextBlock.Text = book.BookFormat;
+			LanguageTextBlock.Text = book.Language;
 		}
 		private void PopulateMovieInfo(Movie movie)
 		{
-			MovieFormatTextBlock.Text = movie.MovieFormat.ToString();
+			MovieFormatTextBlock.Text = movie.MovieFormat;
 			PlaytimeTextBlock.Text = movie.Playtime.ToString();
 		}
 		private void PopulateVideogameInfo(Videogame videogame)
 		{
-			PlatformTextBlock.Text = videogame.Platform.ToString();
+			PlatformTextBlock.Text = videogame.Platform;
 		}
 		private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
 		{

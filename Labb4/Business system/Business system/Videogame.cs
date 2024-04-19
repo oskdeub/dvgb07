@@ -8,7 +8,7 @@ namespace Business_system
 {
 	internal class Videogame : Product
 	{
-		public VideogamePlatform? Platform { get; set; }
+		public string Platform { get; set; }
 		
 		public Videogame() : base() {
 			ProductType = Business_system.ProductType.Videogame;
@@ -18,7 +18,7 @@ namespace Business_system
 		{
 			var csv_s = base.ToCsv().ToList();
 			csv_s.AddRange(new string[] { 
-				Platform.ToString() 
+				Platform
 			});
 			return csv_s.ToArray();
 		}

@@ -754,45 +754,18 @@ namespace Business_system
 			// specifikt await client.GetStringAsync();
 			try
 			{
-				// HttpResponseMessage response = await client.GetAsync("https://hex.cse.kau.se/~jonavest/csharp-api/");
-				// response.EnsureSuccessStatusCode();
-				// string responseBody = await response.Content.ReadAsStringAsync();
-
 				string responseBody = await client.GetStringAsync("https://hex.cse.kau.se/~jonavest/csharp-api/");
 				Debug.WriteLine(responseBody);
 				loadXML(responseBody);
 				return true;
-				
 			} catch (HttpRequestException e)
 			{
 				await ErrorDialog($"Could not fetch data from central stock. \n {e}");
 				return false;
 			} 
-
-
 			// Slut referens
-			
 		}
-		/// <summary>
-		/// Kontrollerar om det är ett Error-response 
-		/// https://hex.cse.kau.se/~jonavest/csharp-api/?action=error
-		/// </summary>
-		/// <param name="response"></param>
-		/// <returns>Sant om det är ett error-respons, annars falskt</returns>
-		private async Task<bool> isErrorResponse (string response)
-		{
-			XmlDocument doc = new XmlDocument();
-			doc.LoadXml(response);
-
-			if (doc.FirstChild.FirstChild.Name == "error")
-			{
-				await ErrorDialog("Error in response from central warehouse. Try again.");
-				return true;
-			} else
-			{
-				return false;
-			}
-		}
+		
 		/// <summary>
 		/// Påbörjan parseringen av svaret från API:t. 
 		/// Sammanställer en lista av produkter som sedan hanteras vidare av 
@@ -830,6 +803,27 @@ namespace Business_system
 					}
 				}
 				setFetchedProductsAsMaster(pList);
+			}
+		}
+		/// <summary>
+		/// Kontrollerar om det är ett Error-response 
+		/// https://hex.cse.kau.se/~jonavest/csharp-api/?action=error
+		/// </summary>
+		/// <param name="response"></param>
+		/// <returns>Sant om det är ett error-respons, annars falskt</returns>
+		private async Task<bool> isErrorResponse(string response)
+		{
+			XmlDocument doc = new XmlDocument();
+			doc.LoadXml(response);
+
+			if (doc.FirstChild.FirstChild.Name == "error")
+			{
+				await ErrorDialog("Error in response from central warehouse. Try again.");
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 		/// <summary>

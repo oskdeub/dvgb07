@@ -708,7 +708,7 @@ namespace Business_system
 			foreach (var product in cartProducts)
 			{
 				int qty = int.Parse(product.ChangingProperty);
-				product.SubtractQty(qty)
+				product.SubtractQty(qty);
 			}
 			foreach (var product in cartProducts)
 			{

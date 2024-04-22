@@ -661,6 +661,7 @@ namespace Business_system
 		}
 		/// <summary>
 		/// händelsedriven funktion som reagerar på knapptryck av Check out-knappen. Påbörjar köpet.
+		/// Synkar till centrallagret, genomför köpet, sedan synkar igen.
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
@@ -733,13 +734,21 @@ namespace Business_system
 			updateCartList();
 		}
 
-		//Labb 5
+		// ~~~~~~~~~~~~~ Labb 5 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		static readonly HttpClient client = new HttpClient();
+		/// <summary>
+		/// Klick-händelse för "Fetch data"-knappen. Kör fetchProductStockFromServer().
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private async void FetchData_Click(object sender, RoutedEventArgs e)
 		{
 			await fetchProductStockFromServer();
 		}
-
+		/// <summary>
+		/// Hämtar produkter från centrallagret. loadXML laddar in svaret från API:t.
+		/// </summary>
+		/// <returns>Sant om allt gått bra :)</returns>
 		public async Task<bool> fetchProductStockFromServer()
 		{   //Referens: https://learn.microsoft.com/en-us/dotnet/api/system.net.http.httpclient?view=net-8.0
 			// specifikt await client.GetStringAsync();
@@ -764,6 +773,12 @@ namespace Business_system
 			// Slut referens
 			
 		}
+		/// <summary>
+		/// Kontrollerar om det är ett Error-response 
+		/// https://hex.cse.kau.se/~jonavest/csharp-api/?action=error
+		/// </summary>
+		/// <param name="response"></param>
+		/// <returns>Sant om det är ett error-respons, annars falskt</returns>
 		private async Task<bool> isErrorResponse (string response)
 		{
 			XmlDocument doc = new XmlDocument();
@@ -778,6 +793,12 @@ namespace Business_system
 				return false;
 			}
 		}
+		/// <summary>
+		/// Påbörjan parseringen av svaret från API:t. 
+		/// Sammanställer en lista av produkter som sedan hanteras vidare av 
+		/// setFetchedProductsAsMaster()
+		/// </summary>
+		/// <param name="xmlBody">Responsen från API:t</param>
 		private async void loadXML(string xmlBody)
 		{
 			XmlDocument doc = new XmlDocument();
@@ -811,7 +832,11 @@ namespace Business_system
 				setFetchedProductsAsMaster(pList);
 			}
 		}
-
+		/// <summary>
+		/// Uppdaterar pris och stock från centrallagret till masterProducts.
+		/// UI-uppdatering av listan.
+		/// </summary>
+		/// <param name="fetchedProducts">Hämtade produkter från centrallagret</param>
 		private void setFetchedProductsAsMaster(List<Product> fetchedProducts)
 		{
 			foreach (Product fetchedP  in fetchedProducts)
@@ -830,16 +855,27 @@ namespace Business_system
 			updateMasterProductsList();
 		}
 
+		/// <summary>
+		/// Uppdaterar "Senast hämtad"-textbox i UI
+		/// </summary>
 		private void setUpdatedTime()
 		{
 			FetchDataTextBox.Text = DateTime.Now.ToShortTimeString();
 		}
-
-		private async void PublishButton_Click(object sender, RoutedEventArgs e)
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private async void SyncButton_Click(object sender, RoutedEventArgs e)
 		{
 			await updateProductStockOnServer(masterProducts);
 		}
-
+		/// <summary>
+		/// Uppdaterar centrallagret med produkterna i productList (endast stock).
+		/// </summary>
+		/// <param name="productList"></param>
+		/// <returns></returns>
 		public async Task updateProductStockOnServer(List<Product> productList)
 		{  
 			foreach (Product product in productList)
@@ -848,6 +884,12 @@ namespace Business_system
 			}
 		}
 
+		/// <summary>
+		/// Uppdaterar en produkt i centrallagret (endast stock)
+		/// </summary>
+		/// <param name="id">Produktens id</param>
+		/// <param name="stock">Produktens antal</param>
+		/// <returns>Hoppar ur funktionen vid fel</returns>
 		private async Task UpdateSingleProductStockOnServer(int id, int stock)
 		{
 			// Referens https://learn.microsoft.com/en-us/dotnet/api/system.net.http.httpclient?view=net-8.0
@@ -869,7 +911,11 @@ namespace Business_system
 			}
 			//Slut Referens
 		}
-
+		/// <summary>
+		/// Parserar en Movie-nod.
+		/// </summary>
+		/// <param name="movieNode">XML-nod med Movie-attribut</param>
+		/// <returns>Movie</returns>
 		private async Task<Movie> parseXmlMovie(XmlNode movieNode)
 		{
 			Movie movie = new Movie();
@@ -924,7 +970,11 @@ namespace Business_system
 
 			return movie;
 		}
-
+		/// <summary>
+		/// Parserar en Videogame-nod.
+		/// </summary>
+		/// <param name="videogameNode">XML-nod med Videogame-attribut</param>
+		/// <returns>Videogame</returns>
 		private async Task<Videogame> parseXmlVideogame(XmlNode videogameNode)
 		{
 			Videogame videogame = new Videogame();
@@ -962,7 +1012,11 @@ namespace Business_system
 
 			return videogame;
 		}
-
+		/// <summary>
+		/// Parserar en Book-nod.
+		/// </summary>
+		/// <param name="bookNode">XML-nod med Book-attribut</param>
+		/// <returns>Book</returns>
 		private async Task<Book> parseXmlBook(XmlNode bookNode)
 		{
 			Book book = new Book();

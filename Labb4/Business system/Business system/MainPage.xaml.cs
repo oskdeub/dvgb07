@@ -669,13 +669,17 @@ namespace Business_system
 			//check if enough qty on stock
 			bool isValid = await validateCart();
 
-			// subtract qty
 
 			if (isValid)
 			{
+				// synkronisera till centrallagret
+				await updateProductStockOnServer(masterProducts);
+				// utföra försäljningen
 				await MakePurchaseDialog();
+				await updateProductStockOnServer(masterProducts);
 			}
 		}
+
 		/// <summary>
 		/// En dialogruta för att acceptera (simulerad) betalning.
 		/// </summary>
@@ -703,7 +707,7 @@ namespace Business_system
 			foreach (var product in cartProducts)
 			{
 				int qty = int.Parse(product.ChangingProperty);
-				product.SubtractQty(qty);
+				product.SubtractQty(qty)
 			}
 			foreach (var product in cartProducts)
 			{
@@ -733,10 +737,10 @@ namespace Business_system
 		static readonly HttpClient client = new HttpClient();
 		private async void FetchData_Click(object sender, RoutedEventArgs e)
 		{
-			await FetchProductsFromAPI();
+			await fetchProductStockFromServer();
 		}
 
-		public async Task FetchProductsFromAPI()
+		public async Task<bool> fetchProductStockFromServer()
 		{   //Referens: https://learn.microsoft.com/en-us/dotnet/api/system.net.http.httpclient?view=net-8.0
 			// specifikt await client.GetStringAsync();
 			try
@@ -748,12 +752,17 @@ namespace Business_system
 				string responseBody = await client.GetStringAsync("https://hex.cse.kau.se/~jonavest/csharp-api/");
 				Debug.WriteLine(responseBody);
 				loadXML(responseBody);
+				return true;
 				
 			} catch (HttpRequestException e)
 			{
 				await ErrorDialog($"Could not fetch data from central stock. \n {e}");
-			}
+				return false;
+			} 
+
+
 			// Slut referens
+			
 		}
 		private async Task<bool> isErrorResponse (string response)
 		{
@@ -828,25 +837,30 @@ namespace Business_system
 
 		private async void PublishButton_Click(object sender, RoutedEventArgs e)
 		{
-			await PublishProductsWithAPI(masterProducts);
+			await updateProductStockOnServer(masterProducts);
 		}
 
-		public async Task PublishProductsWithAPI(List<Product> productList)
-		{   // Referens https://learn.microsoft.com/en-us/dotnet/api/system.net.http.httpclient?view=net-8.0
+		public async Task updateProductStockOnServer(List<Product> productList)
+		{  
+			foreach (Product product in productList)
+			{
+				await UpdateSingleProductStockOnServer(product.ID, product.Qty);
+			}
+		}
+
+		private async Task UpdateSingleProductStockOnServer(int id, int stock)
+		{
+			// Referens https://learn.microsoft.com/en-us/dotnet/api/system.net.http.httpclient?view=net-8.0
 			// specifikt await client.GetStringAsync();
 			try
 			{
-
 				string URLstart = "https://hex.cse.kau.se/~jonavest/csharp-api/?action=update&id=";
 				string URLstock = "&stock=";
-				foreach (Product product in productList)
+				string API_URL = URLstart + id.ToString() + URLstock + stock.ToString();
+				string responseBody = await client.GetStringAsync(API_URL);
+				if (isErrorResponse(responseBody).Result)
 				{
-					string API_URL = URLstart + product.ID + URLstock + product.Qty;
-					string responseBody = await client.GetStringAsync(API_URL);
-					if(isErrorResponse(responseBody).Result)
-					{
-						return;
-					}
+					return;
 				}
 			}
 			catch (HttpRequestException e)

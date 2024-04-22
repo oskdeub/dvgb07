@@ -24,6 +24,7 @@ using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using static System.Net.WebRequestMethods;
 
 
 
@@ -122,6 +123,7 @@ namespace Business_system
 			id_counter = masterProducts.Count();
 			var displayItems = new ObservableCollection<Product>(masterProducts);
 			ProductList.ItemsSource = displayItems;
+			updateSubclassLists();
 			WriteToFile();
 		}
 		
@@ -302,10 +304,10 @@ namespace Business_system
 		{
 			deliveryProducts.Clear();
 			updateDeliveryProductsList();
+			DeliveryButton.IsEnabled = false;
+			DoneButton.IsEnabled = true;
+			CancelButton.IsEnabled = true;
 			DeliveryList.Visibility = Visibility.Visible;
-			DoneButton.Visibility = Visibility.Visible;
-			CancelButton.Visibility = Visibility.Visible;
-			DeliveryButton.Visibility = Visibility.Collapsed;
 			ProductList.ItemClick -= ProductList_ItemClick;
 			ProductList.ItemClick += ProductList_AddItemToDelivery;
 		}
@@ -413,10 +415,10 @@ namespace Business_system
 		private void HideDeliveryUI()
 		{
 			deliveryProducts.Clear();
-			DeliveryButton.Visibility = Visibility.Visible;
+			DeliveryButton.IsEnabled = true;
 			DeliveryList.Visibility = Visibility.Collapsed;
-			DoneButton.Visibility = Visibility.Collapsed;
-			CancelButton.Visibility = Visibility.Collapsed;
+			DoneButton.IsEnabled = false;
+			CancelButton.IsEnabled = false;
 			ProductList.ItemClick -= ProductList_AddItemToDelivery;
 			ProductList.ItemClick += ProductList_ItemClick;
 			
@@ -735,7 +737,8 @@ namespace Business_system
 		}
 
 		public async Task FetchProductsFromAPI()
-		{
+		{   //Referens: https://learn.microsoft.com/en-us/dotnet/api/system.net.http.httpclient?view=net-8.0
+			// specifikt await client.GetStringAsync();
 			try
 			{
 				// HttpResponseMessage response = await client.GetAsync("https://hex.cse.kau.se/~jonavest/csharp-api/");
@@ -750,6 +753,21 @@ namespace Business_system
 			{
 				await ErrorDialog($"Could not fetch data from central stock. \n {e}");
 			}
+			// Slut referens
+		}
+		private async Task<bool> isErrorResponse (string response)
+		{
+			XmlDocument doc = new XmlDocument();
+			doc.LoadXml(response);
+
+			if (doc.FirstChild.FirstChild.Name == "error")
+			{
+				await ErrorDialog("Error in response from central warehouse. Try again.");
+				return true;
+			} else
+			{
+				return false;
+			}
 		}
 		private async void loadXML(string xmlBody)
 		{
@@ -758,10 +776,9 @@ namespace Business_system
 
 			List<Product> pList = new List<Product>();
 			//kolla om det är error
-			
-			if(doc.FirstChild.FirstChild.Name == "error")
+
+			if (isErrorResponse(xmlBody).Result)
 			{
-				await ErrorDialog("Could not fetch data from central stock.");
 				return;
 			} else
 			{
@@ -807,6 +824,36 @@ namespace Business_system
 		private void setUpdatedTime()
 		{
 			FetchDataTextBox.Text = DateTime.Now.ToShortTimeString();
+		}
+
+		private async void PublishButton_Click(object sender, RoutedEventArgs e)
+		{
+			await PublishProductsWithAPI(masterProducts);
+		}
+
+		public async Task PublishProductsWithAPI(List<Product> productList)
+		{   // Referens https://learn.microsoft.com/en-us/dotnet/api/system.net.http.httpclient?view=net-8.0
+			// specifikt await client.GetStringAsync();
+			try
+			{
+
+				string URLstart = "https://hex.cse.kau.se/~jonavest/csharp-api/?action=update&id=";
+				string URLstock = "&stock=";
+				foreach (Product product in productList)
+				{
+					string API_URL = URLstart + product.ID + URLstock + product.Qty;
+					string responseBody = await client.GetStringAsync(API_URL);
+					if(isErrorResponse(responseBody).Result)
+					{
+						return;
+					}
+				}
+			}
+			catch (HttpRequestException e)
+			{
+				await ErrorDialog($"Could not fetch data from central stock. \n {e}");
+			}
+			//Slut Referens
 		}
 
 		private async Task<Movie> parseXmlMovie(XmlNode movieNode)
@@ -945,5 +992,6 @@ namespace Business_system
 			}
 			return book;
 		}
+
 	}
 }

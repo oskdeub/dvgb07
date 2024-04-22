@@ -14,7 +14,7 @@
 			<RowDefinition Height="1*"></RowDefinition>
 		</Grid.RowDefinitions>
 
-		<!-- Shared UI -->
+		<!-- Navigation UI -->
 		<Grid Grid.Row="0" Grid.Column="1">
 
 			<NavigationView PaneDisplayMode="Top" IsSettingsVisible="False" IsBackButtonVisible="Collapsed" SelectionChanged="NavigationView_SelectionChanged" >
@@ -22,7 +22,6 @@
 					<NavigationViewItem Content="Cashier" Tag="Kassa"></NavigationViewItem>
 					<NavigationViewItemSeparator Opacity="0"></NavigationViewItemSeparator>
 					<NavigationViewItem Content="Stock" Tag="Lager"></NavigationViewItem>
-
 				</NavigationView.MenuItems>
 			</NavigationView>
 
@@ -330,33 +329,43 @@
 				<RowDefinition Height="7*"></RowDefinition>
 			</Grid.RowDefinitions>
 
-			<Grid Grid.Row="0" Margin="16">
+			<Grid Grid.Row="0" Margin="16" Padding="2">
 				<Grid.ColumnDefinitions>
-					<ColumnDefinition></ColumnDefinition>
-					<ColumnDefinition></ColumnDefinition>
-					<ColumnDefinition></ColumnDefinition>
-					<ColumnDefinition></ColumnDefinition>
+					<ColumnDefinition Width="Auto"></ColumnDefinition>
+					<ColumnDefinition ></ColumnDefinition>
+					<ColumnDefinition Width="Auto"></ColumnDefinition>
+					<ColumnDefinition Width="Auto"></ColumnDefinition>
 					<ColumnDefinition></ColumnDefinition>
 					<ColumnDefinition></ColumnDefinition>
 					<ColumnDefinition></ColumnDefinition>
 				</Grid.ColumnDefinitions>
-				<TextBlock Grid.Column="0" Text="Stock UI" FontSize="25"/>
-				<Button Content="New product"	Grid.Column="1"	Click="NewProduct_Click" CornerRadius="5"></Button>
+				<TextBlock Text="Stock UI"		Grid.Column="0" FontSize="25"/>
+				<Button Content="New product"	Grid.Column="1"	Click="NewProduct_Click" HorizontalAlignment="Center" CornerRadius="5"></Button>
+				<!-- Fetch data panel -->
 				<Grid Grid.Column="2" Grid.ColumnSpan="2">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="Auto"></ColumnDefinition>
 						<ColumnDefinition Width="Auto"></ColumnDefinition>
-						<ColumnDefinition></ColumnDefinition>
+						<ColumnDefinition Width="Auto"></ColumnDefinition>
 					</Grid.ColumnDefinitions>
 
-					<Button Content="Fetch data" Grid.Column="0" Click="FetchData_Click" CornerRadius="5"></Button>
-					<TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Updated: " Margin="12,0,12,0"></TextBlock>
-					<TextBlock Name="FetchDataTextBox" Grid.Column="2" VerticalAlignment="Center" Text="-"></TextBlock>
+					<Button Content="Fetch data"	Grid.Column="0" Click="FetchData_Click" CornerRadius="5"></Button>
+					<TextBlock Text="Updated: "		Grid.Column="1" VerticalAlignment="Center"  Margin="12,0,12,0"></TextBlock>
+					<TextBlock Name="FetchDataTextBox" Grid.Column="2" VerticalAlignment="Center" Text="-" Width="85"></TextBlock>
+				</Grid>
+
+				<Button Content="Publish data"	Grid.Column="4" Name="PublishButton" Click="PublishButton_Click" Margin="12,0,12,0" CornerRadius="5"></Button>
+				<Button Content="Delivery"		Grid.Column="5" Name="DeliveryButton" Click="DeliveryButton_Click" IsEnabled="True" CornerRadius="5"></Button>
+				
+				<Grid Grid.Column="6">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition></ColumnDefinition>
+						<ColumnDefinition></ColumnDefinition>
+					</Grid.ColumnDefinitions>
+					<Button Content="Done"		Name="DoneButton"		Grid.Column="0"	Click="DoneButton_Click"	IsEnabled="False" CornerRadius="5" ></Button>
+					<Button Content="Cancel"	Name="CancelButton"		Grid.Column="1" Click="CancelButton_Click"	IsEnabled="False" CornerRadius="5" ></Button>
 				</Grid>
 				
-				<Button Content="Delivery"	Name="DeliveryButton"	Grid.Column="4"	Click="DeliveryButton_Click" CornerRadius="5"></Button>
-				<Button Content="Done"		Name="DoneButton"		Grid.Column="5"	Click="DoneButton_Click"	Visibility="Collapsed" CornerRadius="5" ></Button>
-				<Button Content="Cancel"	Name="CancelButton"		Grid.Column="6" Click="CancelButton_Click"	Visibility="Collapsed" CornerRadius="5" ></Button>
 			</Grid>
 
 			<Grid Grid.Row="2">

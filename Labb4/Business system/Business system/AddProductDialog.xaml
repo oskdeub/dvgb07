@@ -22,16 +22,15 @@
 		<StackPanel Name="InputPanel">
 			<TextBox Header="Name*" Name="NameTextBox"></TextBox>
 			<StackPanel Name="DynamicPanel">
-				
-				<TextBox Name="AuthorTextBox" Header="Author" Visibility="Collapsed"></TextBox>
-				<TextBox Name="GenreTextBox" Header="Genre" Visibility="Collapsed"></TextBox>
-				<ComboBox Name="BookFormatComboBox" Header="Format" Visibility="Collapsed" PlaceholderText="Select"></ComboBox>
-				<ComboBox Name="BookLanguageComboBox" Header="Language" Visibility="Collapsed" PlaceholderText="Select"></ComboBox>
+			
+				<TextBox Name="GenreTextBox"		Header="Genre"		Visibility="Collapsed"></TextBox>
+				<TextBox Name="BookFormatTextBox"	Header="Format"		Visibility="Collapsed"></TextBox>
+				<TextBox Name="BookLanguageTextBox" Header="Language"	Visibility="Collapsed"></TextBox>
 
-				<TextBox Name="PlaytimeTextBox" Header="Playtime" Visibility="Collapsed"></TextBox>
-				<ComboBox Name="MovieFormatComboBox" Header="Format" Visibility="Collapsed" PlaceholderText="Select"></ComboBox>
+				<TextBox Name="PlaytimeTextBox"		Header="Playtime" Visibility="Collapsed"></TextBox>
+				<TextBox Name="MovieFormatTextBox" Header="Format" Visibility="Collapsed"></TextBox>
 
-				<ComboBox Name="PlatformComboBox" Header="Platform" Visibility="Collapsed" PlaceholderText="Select"></ComboBox>
+				<TextBox Name="PlatformTextBox"	Header="Platform" Visibility="Collapsed"></TextBox>
 				
 			</StackPanel>
 			<TextBox Header="Price*" Name="PriceTextBox" InputScope="Number"></TextBox>

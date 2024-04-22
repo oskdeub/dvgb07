@@ -26,10 +26,10 @@ namespace Business_system
 		public AddProductDialog()
 		{
 			this.InitializeComponent();
-			BookFormatComboBox.ItemsSource = Enum.GetValues(typeof(BookFormat));
-			BookLanguageComboBox.ItemsSource = Enum.GetValues(typeof (BookLanguage));
-			MovieFormatComboBox.ItemsSource = Enum.GetValues(typeof(MovieFormat));
-			PlatformComboBox.ItemsSource = Enum.GetValues(typeof(VideogamePlatform));
+			//BookFormatComboBox.ItemsSource = Enum.GetValues(typeof(BookFormat));
+			//BookLanguageComboBox.ItemsSource = Enum.GetValues(typeof (BookLanguage));
+			//MovieFormatComboBox.ItemsSource = Enum.GetValues(typeof(MovieFormat));
+			//PlatformComboBox.ItemsSource = Enum.GetValues(typeof(VideogamePlatform));
 		}
 		/// <summary>
 		/// Huvudknappens händelse, kontrollerar inputfälten men stänger inte dialogen om valideringen inte går igenom.
@@ -184,25 +184,9 @@ namespace Business_system
 			var book = new Book();
 			GetCommonProductInfo(book);
 
-			book.Author = AuthorTextBox.Text;
 			book.bookGenre = GenreTextBox.Text;
-			
-			if (BookFormatComboBox.SelectedItem is BookFormat selectedBookFormat)
-			{
-				book.BookFormat = selectedBookFormat;
-			} else
-			{
-				book.BookFormat = null;
-			}
-
-			if (BookLanguageComboBox.SelectedItem is BookLanguage selectedLanguage)
-			{
-				book.Language = selectedLanguage;
-			}
-			else
-			{
-				book.Language = null;
-			}
+			book.BookFormat = BookFormatTextBox.Text;
+			book.Language = BookLanguageTextBox.Text;
 
 			return book;
 		}
@@ -219,15 +203,7 @@ namespace Business_system
 			{
 				movie.Playtime = null;
 			}
-
-			if (MovieFormatComboBox.SelectedItem is MovieFormat selectedFormat)
-			{
-				movie.MovieFormat = selectedFormat;
-			}
-			else
-			{
-				movie.MovieFormat = null;
-			}
+			movie.MovieFormat = MovieFormatTextBox.Text;
 
 			return movie;
 		}
@@ -236,15 +212,8 @@ namespace Business_system
 		{
 			var videogame = new Videogame();
 			GetCommonProductInfo(videogame);
-
-			if(PlatformComboBox.SelectedItem is VideogamePlatform selectedPlatform)
-			{
-				videogame.Platform = selectedPlatform;
-			} else
-			{
-				videogame.Platform = null;
-			}
-
+			videogame.Platform = PlatformTextBox.Text;
+			
 			return videogame;
 		}
 
@@ -258,13 +227,12 @@ namespace Business_system
 		/// <param name="e"></param>
 		private void ProductComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			AuthorTextBox.Visibility = Visibility.Collapsed;
 			GenreTextBox.Visibility = Visibility.Collapsed;
-			BookFormatComboBox.Visibility = Visibility.Collapsed;
-			BookLanguageComboBox.Visibility = Visibility.Collapsed;
+			BookFormatTextBox.Visibility = Visibility.Collapsed;
+			BookLanguageTextBox.Visibility = Visibility.Collapsed;
 			PlaytimeTextBox.Visibility = Visibility.Collapsed;
-			MovieFormatComboBox.Visibility = Visibility.Collapsed;
-			PlatformComboBox.Visibility = Visibility.Collapsed;
+			MovieFormatTextBox.Visibility = Visibility.Collapsed;
+			PlatformTextBox.Visibility = Visibility.Collapsed;
 
 			var type = ProductComboBox.SelectedItem as ComboBoxItem;
 			if (type != null)
@@ -273,19 +241,18 @@ namespace Business_system
 				{
 					case "Book":
 						//AddBookFields();
-						AuthorTextBox.Visibility = Visibility.Visible;
 						GenreTextBox.Visibility = Visibility.Visible;
-						BookFormatComboBox.Visibility = Visibility.Visible;
-						BookLanguageComboBox.Visibility = Visibility.Visible;
+						BookFormatTextBox.Visibility = Visibility.Visible;
+						BookLanguageTextBox.Visibility = Visibility.Visible;
 						break;
 					case "Movie":
 						//AddMovieFields();
 						PlaytimeTextBox.Visibility = Visibility.Visible;
-						MovieFormatComboBox.Visibility = Visibility.Visible;
+						MovieFormatTextBox.Visibility = Visibility.Visible;
 						break;
 					case "Videogame":
 						//AddVideogameFields();
-						PlatformComboBox.Visibility = Visibility.Visible;
+						PlatformTextBox.Visibility = Visibility.Visible;
 						break;
 				}
 			}

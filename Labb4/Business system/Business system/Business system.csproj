@@ -123,24 +123,18 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Book.cs" />
-    <Compile Include="BookFormat.cs" />
-    <Compile Include="BookLanguage.cs" />
-    <Compile Include="Cart.cs" />
     <Compile Include="ICsvSerializable.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Movie.cs" />
-    <Compile Include="MovieFormat.cs" />
     <Compile Include="Product.cs" />
-    <Compile Include="ProductFactory.cs" />
     <Compile Include="ProductInfoDialog.xaml.cs">
       <DependentUpon>ProductInfoDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="ProductType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Videogame.cs" />
-    <Compile Include="VideogamePlatform.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

@@ -5,6 +5,7 @@ using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
@@ -23,6 +24,7 @@ using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using static System.Net.WebRequestMethods;
 
 
 
@@ -121,6 +123,7 @@ namespace Business_system
 			id_counter = masterProducts.Count();
 			var displayItems = new ObservableCollection<Product>(masterProducts);
 			ProductList.ItemsSource = displayItems;
+			updateSubclassLists();
 			WriteToFile();
 		}
 		
@@ -155,22 +158,10 @@ namespace Business_system
 					book.Price = int.Parse(line[2]);
 					book.Qty = int.Parse(line[3]);
 					book.ProductType = ProductType.Book;
-					book.Author = line[5];
-					book.bookGenre = line[6];
-					if (Enum.TryParse<BookFormat>(line[7], out BookFormat bookFormat))
-					{
-						book.BookFormat = bookFormat;
-					} else
-					{
-						book.BookFormat = null;
-					}
-					if (Enum.TryParse<BookLanguage>(line[8], out BookLanguage language))
-					{
-						book.Language = language;
-					} else
-					{
-						book.Language = null;
-					}
+					book.bookGenre = line[5];
+					book.BookFormat = line[6];
+					book.Language = line[7];
+		
 					return book;
 
 				case "Movie":
@@ -180,13 +171,7 @@ namespace Business_system
 					movie.Price = int.Parse(line[2]);
 					movie.Qty = int.Parse(line[3]);
 					movie.ProductType = ProductType.Movie;
-					if (Enum.TryParse<MovieFormat>(line[5], out MovieFormat movieFormat))
-					{
-						movie.MovieFormat = movieFormat;
-					} else
-					{
-						movie.MovieFormat = null;
-					}
+					movie.MovieFormat = line[5];
 					if (int.TryParse(line[6], out int x)){
 						movie.Playtime = x;
 					}
@@ -200,13 +185,7 @@ namespace Business_system
 					videogame.Price = int.Parse(line[2]);
 					videogame.Qty = int.Parse(line[3]);
 					videogame.ProductType = ProductType.Videogame;
-					if (Enum.TryParse<VideogamePlatform>(line[5], out VideogamePlatform videogamePlatform))
-					{
-						videogame.Platform = videogamePlatform;
-					} else
-					{
-						videogame.Platform = null;
-					}
+					videogame.Platform = line[5];
 					return videogame;
 
 				default:
@@ -325,10 +304,10 @@ namespace Business_system
 		{
 			deliveryProducts.Clear();
 			updateDeliveryProductsList();
+			DeliveryButton.IsEnabled = false;
+			DoneButton.IsEnabled = true;
+			CancelButton.IsEnabled = true;
 			DeliveryList.Visibility = Visibility.Visible;
-			DoneButton.Visibility = Visibility.Visible;
-			CancelButton.Visibility = Visibility.Visible;
-			DeliveryButton.Visibility = Visibility.Collapsed;
 			ProductList.ItemClick -= ProductList_ItemClick;
 			ProductList.ItemClick += ProductList_AddItemToDelivery;
 		}
@@ -436,10 +415,10 @@ namespace Business_system
 		private void HideDeliveryUI()
 		{
 			deliveryProducts.Clear();
-			DeliveryButton.Visibility = Visibility.Visible;
+			DeliveryButton.IsEnabled = true;
 			DeliveryList.Visibility = Visibility.Collapsed;
-			DoneButton.Visibility = Visibility.Collapsed;
-			CancelButton.Visibility = Visibility.Collapsed;
+			DoneButton.IsEnabled = false;
+			CancelButton.IsEnabled = false;
 			ProductList.ItemClick -= ProductList_AddItemToDelivery;
 			ProductList.ItemClick += ProductList_ItemClick;
 			
@@ -682,6 +661,7 @@ namespace Business_system
 		}
 		/// <summary>
 		/// händelsedriven funktion som reagerar på knapptryck av Check out-knappen. Påbörjar köpet.
+		/// Synkar till centrallagret, genomför köpet, sedan synkar igen.
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
@@ -690,13 +670,17 @@ namespace Business_system
 			//check if enough qty on stock
 			bool isValid = await validateCart();
 
-			// subtract qty
 
 			if (isValid)
 			{
+				// synkronisera till centrallagret
+				await updateProductStockOnServer(masterProducts);
+				// utföra försäljningen
 				await MakePurchaseDialog();
+				await updateProductStockOnServer(masterProducts);
 			}
 		}
+
 		/// <summary>
 		/// En dialogruta för att acceptera (simulerad) betalning.
 		/// </summary>
@@ -749,5 +733,327 @@ namespace Business_system
 			cartProducts.Clear();
 			updateCartList();
 		}
+
+		// ~~~~~~~~~~~~~ Labb 5 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		static readonly HttpClient client = new HttpClient();
+		/// <summary>
+		/// Klick-händelse för "Fetch data"-knappen. Kör fetchProductStockFromServer().
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private async void FetchData_Click(object sender, RoutedEventArgs e)
+		{
+			await fetchProductStockFromServer();
+		}
+		/// <summary>
+		/// Hämtar produkter från centrallagret. loadXML laddar in svaret från API:t.
+		/// </summary>
+		/// <returns>Sant om allt gått bra :)</returns>
+		public async Task<bool> fetchProductStockFromServer()
+		{   //Referens: https://learn.microsoft.com/en-us/dotnet/api/system.net.http.httpclient?view=net-8.0
+			// specifikt await client.GetStringAsync();
+			try
+			{
+				string responseBody = await client.GetStringAsync("https://hex.cse.kau.se/~jonavest/csharp-api/");
+				Debug.WriteLine(responseBody);
+				loadXML(responseBody);
+				return true;
+			} catch (HttpRequestException e)
+			{
+				await ErrorDialog($"Could not fetch data from central stock. \n {e}");
+				return false;
+			} 
+			// Slut referens
+		}
+		
+		/// <summary>
+		/// Påbörjan parseringen av svaret från API:t. 
+		/// Sammanställer en lista av produkter som sedan hanteras vidare av 
+		/// setFetchedProductsAsMaster()
+		/// </summary>
+		/// <param name="xmlBody">Responsen från API:t</param>
+		private async void loadXML(string xmlBody)
+		{
+			XmlDocument doc = new XmlDocument();
+			doc.LoadXml(xmlBody);
+
+			List<Product> pList = new List<Product>();
+			//kolla om det är error
+
+			if (isErrorResponse(xmlBody).Result)
+			{
+				return;
+			} else
+			{
+				XmlNode products = doc.SelectSingleNode("/response/products");
+				foreach (XmlNode product in products)
+				{
+					if (product.Name == "book")
+					{
+						pList.Add(await parseXmlBook(product));
+					} else if (product.Name == "game")
+					{
+						pList.Add(await parseXmlVideogame(product));
+					} else if (product.Name == "movie")
+					{
+						pList.Add(await parseXmlMovie(product));
+					} else
+					{
+						await ErrorDialog($"Could not define a product of type {product.Name}");
+					}
+				}
+				setFetchedProductsAsMaster(pList);
+			}
+		}
+		/// <summary>
+		/// Kontrollerar om det är ett Error-response 
+		/// https://hex.cse.kau.se/~jonavest/csharp-api/?action=error
+		/// </summary>
+		/// <param name="response"></param>
+		/// <returns>Sant om det är ett error-respons, annars falskt</returns>
+		private async Task<bool> isErrorResponse(string response)
+		{
+			XmlDocument doc = new XmlDocument();
+			doc.LoadXml(response);
+
+			if (doc.FirstChild.FirstChild.Name == "error")
+			{
+				await ErrorDialog("Error in response from central warehouse. Try again.");
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		/// <summary>
+		/// Uppdaterar pris och stock från centrallagret till masterProducts.
+		/// UI-uppdatering av listan.
+		/// </summary>
+		/// <param name="fetchedProducts">Hämtade produkter från centrallagret</param>
+		private void setFetchedProductsAsMaster(List<Product> fetchedProducts)
+		{
+			foreach (Product fetchedP  in fetchedProducts)
+			{
+				foreach (Product masterP in masterProducts)
+				{
+					if(fetchedP.ID == masterP.ID)
+					{
+						masterP.Price = fetchedP.Price;
+						masterP.Qty	= fetchedP.Qty;
+						break;
+					}
+				}
+			}
+			setUpdatedTime();
+			updateMasterProductsList();
+		}
+
+		/// <summary>
+		/// Uppdaterar "Senast hämtad"-textbox i UI
+		/// </summary>
+		private void setUpdatedTime()
+		{
+			FetchDataTextBox.Text = DateTime.Now.ToShortTimeString();
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private async void SyncButton_Click(object sender, RoutedEventArgs e)
+		{
+			await updateProductStockOnServer(masterProducts);
+		}
+		/// <summary>
+		/// Uppdaterar centrallagret med produkterna i productList (endast stock).
+		/// </summary>
+		/// <param name="productList"></param>
+		/// <returns></returns>
+		public async Task updateProductStockOnServer(List<Product> productList)
+		{  
+			foreach (Product product in productList)
+			{
+				await UpdateSingleProductStockOnServer(product.ID, product.Qty);
+			}
+		}
+
+		/// <summary>
+		/// Uppdaterar en produkt i centrallagret (endast stock)
+		/// </summary>
+		/// <param name="id">Produktens id</param>
+		/// <param name="stock">Produktens antal</param>
+		/// <returns>Hoppar ur funktionen vid fel</returns>
+		private async Task UpdateSingleProductStockOnServer(int id, int stock)
+		{
+			// Referens https://learn.microsoft.com/en-us/dotnet/api/system.net.http.httpclient?view=net-8.0
+			// specifikt await client.GetStringAsync();
+			try
+			{
+				string URLstart = "https://hex.cse.kau.se/~jonavest/csharp-api/?action=update&id=";
+				string URLstock = "&stock=";
+				string API_URL = URLstart + id.ToString() + URLstock + stock.ToString();
+				string responseBody = await client.GetStringAsync(API_URL);
+				if (isErrorResponse(responseBody).Result)
+				{
+					return;
+				}
+			}
+			catch (HttpRequestException e)
+			{
+				await ErrorDialog($"Could not fetch data from central stock. \n {e}");
+			}
+			//Slut Referens
+		}
+		/// <summary>
+		/// Parserar en Movie-nod.
+		/// </summary>
+		/// <param name="movieNode">XML-nod med Movie-attribut</param>
+		/// <returns>Movie</returns>
+		private async Task<Movie> parseXmlMovie(XmlNode movieNode)
+		{
+			Movie movie = new Movie();
+
+			//ID
+			if (int.TryParse(movieNode["id"].InnerText, out int res))
+			{
+				movie.ID = res;
+			}
+			else
+			{
+				await ErrorDialog($"Fetched movie with id {movieNode["id"].InnerText} could not parse ID to integer");
+			}
+			//Name
+			movie.Name = movieNode["name"].InnerText;
+			//Price
+			if (int.TryParse(movieNode["price"].InnerText, out int res2))
+			{
+				movie.Price = res2;
+			}
+			else
+			{
+				await ErrorDialog($"Fetched movie with id {movieNode["id"].InnerText} could not parse price to integer");
+			}
+			//Qty/Stock
+			if (int.TryParse(movieNode["stock"].InnerText, out int res3))
+			{
+				movie.Qty = res3;
+			}
+			else
+			{
+				await ErrorDialog($"Fetched movie with id {movieNode["id"].InnerText} could not parse playtime to integer");
+			}
+			//Playtime
+			if (movieNode["playtime"] != null)
+			{
+				if (int.TryParse(movieNode["playtime"].InnerText, out int res4))
+				{
+					movie.Playtime = res4;
+				}
+				else
+				{
+					await ErrorDialog($"Fetched movie with id {movieNode["id"].InnerText} could not parse playtime to integer");
+				}
+			}
+			//Format
+			if (movieNode["format"] != null)
+			{
+				movie.MovieFormat = movieNode["format"].InnerText;
+			}
+			
+
+			return movie;
+		}
+		/// <summary>
+		/// Parserar en Videogame-nod.
+		/// </summary>
+		/// <param name="videogameNode">XML-nod med Videogame-attribut</param>
+		/// <returns>Videogame</returns>
+		private async Task<Videogame> parseXmlVideogame(XmlNode videogameNode)
+		{
+			Videogame videogame = new Videogame();
+
+			if (int.TryParse(videogameNode["id"].InnerText, out int res))
+			{
+				videogame.ID = res;
+			}
+			else
+			{
+				await ErrorDialog($"Fetched game with id {videogameNode["id"].InnerText} could not parse ID to integer");
+			}
+			videogame.Name = videogameNode["name"].InnerText;
+			if (int.TryParse(videogameNode["price"].InnerText, out int res2))
+			{
+				videogame.Price = res2;
+			}
+			else
+			{
+				await ErrorDialog($"Fetched game with id {videogameNode["id"].InnerText} could not parse price to integer");
+			}
+			if (int.TryParse(videogameNode["stock"].InnerText, out int res3))
+			{
+				videogame.Qty = res3;
+			}
+			else
+			{
+				await ErrorDialog($"Fetched game with id {videogameNode["id"].InnerText} could not parse stock to integer");
+			}
+
+			if (videogameNode["platform"] != null)
+			{
+				videogame.Platform = videogameNode["platform"].InnerText;
+			}
+
+			return videogame;
+		}
+		/// <summary>
+		/// Parserar en Book-nod.
+		/// </summary>
+		/// <param name="bookNode">XML-nod med Book-attribut</param>
+		/// <returns>Book</returns>
+		private async Task<Book> parseXmlBook(XmlNode bookNode)
+		{
+			Book book = new Book();
+			
+			if (int.TryParse(bookNode["id"].InnerText, out int res))
+			{
+				book.ID = res;
+			} else
+			{
+				await ErrorDialog($"Fetched book with id {bookNode["id"].InnerText} could not parse ID to integer");
+			}
+			book.Name = bookNode["name"].InnerText;
+			if (int.TryParse(bookNode["price"].InnerText, out int res2))
+			{
+				book.Price = res2;
+			}
+			else
+			{
+				await ErrorDialog($"Fetched book with id {bookNode["id"].InnerText} could not parse price to integer");
+			}
+			if (int.TryParse(bookNode["stock"].InnerText, out int res3))
+			{
+				book.Qty = res3;
+			}
+			else
+			{
+				await ErrorDialog($"Fetched book with id {bookNode["id"].InnerText} could not parse stock to integer");
+			}
+
+			if (bookNode["format"] != null)
+			{
+				book.BookFormat = bookNode["format"].InnerText;
+			}
+			if (bookNode["genre"] != null)
+			{
+				book.bookGenre = bookNode["genre"].InnerText;
+			}
+			if (bookNode["language"] != null)
+			{
+				book.Language = bookNode["language"].InnerText;
+			}
+			return book;
+		}
+
 	}
 }

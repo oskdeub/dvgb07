@@ -835,14 +835,22 @@ namespace Business_system
 		{
 			foreach (Product fetchedP  in fetchedProducts)
 			{
+				bool isUpdated = false;
 				foreach (Product masterP in masterProducts)
 				{
+					
 					if(fetchedP.ID == masterP.ID)
 					{
 						masterP.Price = fetchedP.Price;
 						masterP.Qty	= fetchedP.Qty;
+						isUpdated = true;
 						break;
 					}
+				}
+
+				if (!isUpdated) 
+				{
+					masterProducts.Add(fetchedP);
 				}
 			}
 			setUpdatedTime();

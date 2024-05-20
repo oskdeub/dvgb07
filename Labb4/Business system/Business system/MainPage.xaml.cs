@@ -828,6 +828,7 @@ namespace Business_system
 		}
 		/// <summary>
 		/// Uppdaterar pris och stock från centrallagret till masterProducts.
+		/// Finns inte produkten så läggs den till i masterProducts.
 		/// UI-uppdatering av listan.
 		/// </summary>
 		/// <param name="fetchedProducts">Hämtade produkter från centrallagret</param>
